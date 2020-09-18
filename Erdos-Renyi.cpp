@@ -24,7 +24,7 @@ class Node{
 
 public:
     // constructor of node, default node is empty (status -1)
-    Node(_status = -1, vector<Edge*> EdgesOfNode, vector<Node*> Neighbours){_EdgesOfNode = EdgesOfNode; _Neighbours = Neighbours;}
+    Node(vector<Edge*> EdgesOfNode, vector<Node*> Neighbours){_EdgesOfNode = EdgesOfNode; _Neighbours = Neighbours; _status = -1;}
 
     // DESTRUCTOR NEEDED?
 
