@@ -17,13 +17,15 @@ class Node{
     int _status;
 
     // pointer to edges attached to that node
-    vector<Edge*> _EdgesOfNode; // QUESTION: I construct a node, but I don't have edges yet, how can I point to the edges then?
+    vector<Edge*> _EdgesOfNode; 
+    // QUESTION: I construct a node, but I don't have edges yet, how can I point to the edges then?
 
     // pointer to neighbours of node
     vector<Node*> _Neighbours;
+    // QUESTION: How to determine neighbours of a node?
 
 public:
-    // constructor of node, default node is empty (status -1)
+    // constructor of node, default node is empty (status -1) with no edges and no neighbours
     Node(){_status = -1;}
 
     // DESTRUCTOR NEEDED?
