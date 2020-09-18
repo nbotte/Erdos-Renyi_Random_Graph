@@ -57,6 +57,41 @@ class Edge{
     // needs function that returns those nodes
     // needs function that adds and removes an edge
 
+    // status = false: no edge, status = true: edge
+    bool _status;
+    // start and end node of an edge
+    Node _start;
+    Node _end;
+
+    // pointer to the pair of nodes that the edge connects
+    vector<Node *> _PairOfNodes;
+
+public:
+    // constructor of the edge (default edge is non-existing, status = false)
+    Edge(){_status = false}    
+
+    // basic public functions
+    bool status() const {return _status;}
+    Node start() const {return _start;}
+    Node end() const {return _end;}
+    vector<Node *> PairOfNodes() const {return _PairOfNodes;}
+
+    // functions that adds/removes an edge between two nodes
+    void add(Node v, Node w){
+        if (_status == false){
+            _status = true;
+            _start = v;
+            _end = w;
+            _PairOfNodes.push_back(_start);
+            _PairOfNodes.push_back(_end);
+        }
+    void remove(Node v, Node w){
+        if (_status == true){
+            _status = false;
+            _PairOfNodes.clear();
+        }
+    }
+
 };
 
 class Erdos_Renyi_Network{
@@ -64,4 +99,47 @@ class Erdos_Renyi_Network{
     // needs function to construct N nodes
     // needs function to create edges with probability p (faster than N^2 ?)
 
+    vector<Node> _NodeList;
+    vector<Edge> _EdgeList;
+    int _NumberOfNodes;
+    double _EdgeProbability;
+
+public: 
+    // constructor of graph
+    Erdos_Renyi_Network(const double EdgeProbability, const int NumberOfNodes){
+        _EdgeProbability = EdgeProbability;
+        _NumberOfNodes = NumberOfNodes;
+        for (int i = 0; i <= NumberOfNodes - 1; i++){
+            Node v;
+            v.add(i);
+            _NodeList.push_back(v);
+        }
+        // for now all the edges are added, just as as test!
+        for (int n = 0; n <= NumberOfNodes - 1; n++){
+            for (int m = 0; m <= NumberOfNodes - 1; m++){
+                if (n != m){
+                    Edge e;
+                    e.add(n, m);
+                    _EdgeList.push_back(e);
+                }
+            }
+        }
+    }
+
+    // basic public functions
+    vector<Node> NodeList() const {return _NodeList}
+    vector<edge> EdgeList() const {return _EdgeList}
+
 };
+
+int main(){
+    double p = 0.1;
+    int N = 100;
+    Erdos_Renyi_Network graph = Erdos_Renyi_Network(p, N);
+    edges = graph.EdgeList();
+    nodes = graph.NodesList();
+
+    cout << edges;
+    cout << nodes;
+
+}
