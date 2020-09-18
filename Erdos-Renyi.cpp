@@ -48,9 +48,15 @@ public:
 };
 
 class Edge{
+    // needs pointer to nodes it connect
+    // needs function that returns those nodes
+    // needs function that adds and removes an edge
 
 };
 
 class Erdos_Renyi_Network{
+    // object of this class will be an edge list and a node list
+    // needs function to construct N nodes
+    // needs function to create edges with probability p (faster than N^2 ?)
 
 };
