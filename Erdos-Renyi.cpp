@@ -12,6 +12,9 @@
 using namespace std;
 
 class Node{
+    // this class should also contain a function initialize_opinion that initializes the opinion (A or B) of the particular node (randomly)
+    // also a function opinion is needed that determines the opinion of the node based on the opinion of the neighbours
+    // Question: should these functions be incorporated in this class or should I make a different class that deals with the opinion dynamics?
 
     // represents the status of the node: -1 is empty, >=0 is index of node
     int _status;
