@@ -8,138 +8,155 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
-#include <time.h>
+#include <list>
+#include <unordered_set>
+#include <random>
+#include <algorithm>
 using namespace std;
 
 class Node{
-    // this class should also contain a function initialize_opinion that initializes the opinion (A or B) of the particular node (randomly)
-    // also a function opinion is needed that determines the opinion of the node based on the opinion of the neighbours
-    // Question: should these functions be incorporated in this class or should I make a different class that deals with the opinion dynamics?
-
-    // represents the status of the node: -1 is empty, >=0 is index of node
-    int _status;
-
-    // pointer to edges attached to that node
-    vector<Edge*> _EdgesOfNode; 
-    // QUESTION: I construct a node, but I don't have edges yet, how can I point to the edges then?
-
-    // pointer to neighbours of node
-    vector<Node*> _Neighbours;
-    // QUESTION: How to determine neighbours of a node?
+    int _index; // declare index variable (= name of node)
+    unordered_set<Edge> _outEdges; // declare outEdges variable (= set of edges attached to the node)
 
 public:
-    // constructor of node, default node is empty (status -1) with no edges and no neighbours
-    Node(){_status = -1;}
+    // constructor, construct a node by defining its name and a set of outgoing edges
+    Node(int index){_index=index; _outEdges=unordered_set<Edge>();}
 
-    // DESTRUCTOR NEEDED?
+    // getter, provides read-only access to data member with corresponding name
+    int index() const {return _index;}
 
-    // basis public functions
-    int status() const {return _status;}
-    vector<Edge*> EdgesOfNode() const {return _EdgesOfNode;}    
-    vector<Node*> Neighbours() const {return _Neighbours;}
-
-    // functions to add and remove node (= change status from or to empty)
-    // takes as argument the index of the node you want to add or remove
-    void add(int index){
-        if (_status == -1){
-            _status = index;
-        }
+    // function to add an edge to the set of outgoing edges
+    void addEdge(Edge e){
+        _outEdges.insert(e);
     }
-    void remove(int index){
-        if (_status == index){
-            _status = -1;
+
+    // function to remove an edge from the set of outgoing edges
+    void removeEdge(Edge e){
+        _outEdges.erase(e);
+    }
+
+    // function that gives the neighbours of the node
+    unordered_set<Node> neighbours(){
+        unordered_set<Node> neighbours;
+        // loop over set of outgoing edges of node
+        for (auto i = _outEdges.begin(); i != _outEdges.end(); ++i){
+            Edge e = *i;
+            if (e._inNode.index() != _index){
+                neighbours.insert(e._inNode);
+            }
+            else {
+                neighbours.insert(e._outNode);
+            }
         }
+        return neighbours;
+    }
+
+    // print function
+    void print(Node n){
+        cout << n.index() << " - Neighbours: " << n.neighbours() << endl;
     }
 };
 
 class Edge{
-    // needs pointer to nodes it connect
-    // needs function that returns those nodes
-    // needs function that adds and removes an edge
-
-    // status = false: no edge, status = true: edge
-    bool _status;
-    // start and end node of an edge
-    Node _start;
-    Node _end;
-
-    // pointer to the pair of nodes that the edge connects
-    vector<Node *> _PairOfNodes;
+    Node _inNode; // declare inNode variable
+    Node _outNode; // declare outNode variable
 
 public:
-    // constructor of the edge (default edge is non-existing, status = false)
-    Edge(){_status = false}    
+    // constructor, construct edge by defining its inNode and its outNode
+    Edge(Node inNode, Node outNode){_inNode=inNode; _outNode=outNode;}
 
-    // basic public functions
-    bool status() const {return _status;}
-    Node start() const {return _start;}
-    Node end() const {return _end;}
-    vector<Node *> PairOfNodes() const {return _PairOfNodes;}
+    // getter, provides read-only access to data member with corresponding name
+    Node inNode() const {return _inNode;}
+    Node outNode() const {return _outNode;}
 
-    // functions that adds/removes an edge between two nodes
-    void add(Node v, Node w){
-        if (_status == false){
-            _status = true;
-            _start = v;
-            _end = w;
-            _PairOfNodes.push_back(_start);
-            _PairOfNodes.push_back(_end);
-        }
-    void remove(Node v, Node w){
-        if (_status == true){
-            _status = false;
-            _PairOfNodes.clear();
-        }
-    }
-
+    // print function
+    void print(Edge e){
+        cout << e.inNode() << '-' << e.outNode() << endl;
+    
 };
 
 class Erdos_Renyi_Network{
-    // object of this class will be an edge list and a node list
-    // needs function to construct N nodes
-    // needs function to create edges with probability p (faster than N^2 ?)
+    int _numberOfNodes; // total number of nodes in the graph
+    double _edgeProbability; // the probablility of having an edge between any pair of nodes
+    list<Node> _nodelist; // list of nodes in graph
+    list<Edge> _edgelist; // list of edges in graph
 
-    vector<Node> _NodeList;
-    vector<Edge> _EdgeList;
-    int _NumberOfNodes;
-    double _EdgeProbability;
-
-public: 
-    // constructor of graph
-    Erdos_Renyi_Network(const double EdgeProbability, const int NumberOfNodes){
-        _EdgeProbability = EdgeProbability;
-        _NumberOfNodes = NumberOfNodes;
-        for (int i = 0; i <= NumberOfNodes - 1; i++){
-            Node v;
-            v.add(i);
-            _NodeList.push_back(v);
+public:
+    // constructor, construct graph by making the nodes and the edges with a given probability
+    Erdos_Renyi_Network(int numberOfNodes, double edgeProbability){
+        _numberOfNodes = numberOfNodes;
+        _edgeProbability = edgeProbability;
+        
+        // add nodes to the graph
+        for (int i = 0; i <= _numberOfNodes; i++){
+            addNode(i);
         }
-        // for now all the edges are added, just as as test!
-        for (int n = 0; n <= NumberOfNodes - 1; n++){
-            for (int m = 0; m <= NumberOfNodes - 1; m++){
-                if (n != m){
-                    Edge e;
-                    e.add(n, m);
-                    _EdgeList.push_back(e);
+        // add edges to graph with a certain probability
+        random_device rd; // will be used to obtain a seed for the random number engine
+        mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+        uniform_real_distribution<> dis(0.0, 1.0);
+        for (int i = 0; i <= _numberOfNodes; i++){
+            for (int j = i; j <= _numberOfNodes; j++){
+                double r = dis(gen);
+                if (r < _edgeProbability){
+                    Node inNode = Node(i);
+                    Node outNode = Node(j);
+                    addEdge(inNode, outNode);
                 }
             }
         }
     }
 
-    // basic public functions
-    vector<Node> NodeList() const {return _NodeList}
-    vector<edge> EdgeList() const {return _EdgeList}
+    // function to add a node to the graph
+    void addNode(int index){
+        Node n = Node(index);
+        _nodelist.insert(n);
+    }
 
+    // function to add an edge to the graph
+    void addEdge(Node inNode, Node outNode){
+        Edge e = Edge(inNode, outNode);
+        // check if edge is already there
+        if (contains(_edgelist, e) == false){
+            _edgelist.insert(e);
+            inNode.addEdge(e); // add this new edge to the set of edges attached to inNode
+            outNode.addEdge(e); // add this new edge to the set of edges attached to outNode
+        }
+    }
+
+    // function to remove an edge from the graph
+    void removeEdge(Edge e){
+        _edgelist.remove(e); // remove edge from edgelist
+        e._inNode.removeEdge(e); // remove edge from the set of edges attached to inNode
+        e._outNode.removeEdge(e); // remove edge from the set of edges ettached to outNode
+    }
+
+    // function to remove a node from the graph
+    void removeNode(Node n){
+        unordered_set<Edge> edges = n._outEdges;
+        // remove all edges attached to node that needs to be removed
+        for (auto i = edges.begin(); i != edges.end(); ++i){
+            Edge e = *i;
+            removeEdge(e);
+        _nodelist.remove(n); // remove node from nodelist
+    }
+
+    // function to check if an element is in list
+    bool contains(const list<Edge> &list, Edge e){
+	    return find(list.begin(), list.end(), e) != list.end();
+    }
 };
 
 int main(){
     double p = 0.1;
     int N = 100;
     Erdos_Renyi_Network graph = Erdos_Renyi_Network(p, N);
-    edges = graph.EdgeList();
-    nodes = graph.NodesList();
+    vector<edge> edges = graph.EdgeList();
+    vector<node> nodes = graph.NodeList();
 
     cout << edges;
     cout << nodes;
 
-}
+};
+
+// maybe also include adjecency matrix
