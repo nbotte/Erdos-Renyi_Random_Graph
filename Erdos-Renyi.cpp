@@ -2,84 +2,81 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include <math.h>
+//#include <math.h>
 #include <string>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <vector>
-#include <list>
-#include <unordered_set>
 #include <random>
 #include <algorithm>
 using namespace std;
 
-class Node{
-    int _index; // declare index variable (= name of node)
-    unordered_set<Edge> _outEdges; // declare outEdges variable (= set of edges attached to the node)
-
-public:
-    // constructor, construct a node by defining its name and a set of outgoing edges
-    Node(int index){_index=index; _outEdges=unordered_set<Edge>();}
-
-    // getter, provides read-only access to data member with corresponding name
-    int index() const {return _index;}
-
-    // function to add an edge to the set of outgoing edges
-    void addEdge(Edge e){
-        _outEdges.insert(e);
-    }
-
-    // function to remove an edge from the set of outgoing edges
-    void removeEdge(Edge e){
-        _outEdges.erase(e);
-    }
-
-    // function that gives the neighbours of the node
-    unordered_set<Node> neighbours(){
-        unordered_set<Node> neighbours;
-        // loop over set of outgoing edges of node
-        for (auto i = _outEdges.begin(); i != _outEdges.end(); ++i){
-            Edge e = *i;
-            if (e._inNode.index() != _index){
-                neighbours.insert(e._inNode);
-            }
-            else {
-                neighbours.insert(e._outNode);
-            }
-        }
-        return neighbours;
-    }
-
-    // print function
-    void print(Node n){
-        cout << n.index() << " - Neighbours: " << n.neighbours() << endl;
-    }
-};
+class Node;
 
 class Edge{
-    Node _inNode; // declare inNode variable
-    Node _outNode; // declare outNode variable
+    Node* _inNode; // declare inNode variable
+    Node* _outNode; // declare outNode variable
 
 public:
     // constructor, construct edge by defining its inNode and its outNode
-    Edge(Node inNode, Node outNode){_inNode=inNode; _outNode=outNode;}
+    Edge(Node* inNode, Node* outNode){_inNode=inNode; _outNode=outNode;}
 
-    // getter, provides read-only access to data member with corresponding name
-    Node inNode() const {return _inNode;}
-    Node outNode() const {return _outNode;}
+    // getter, provides access to data member with corresponding name
+    Node* inNode() {return _inNode;}
+    Node* outNode() {return _outNode;}
 
+    // THIS FUNCTION DOESN'T WORK
     // print function
-    void print(Edge e){
-        cout << e.inNode() << '-' << e.outNode() << endl;
-    
+    /*void print(){
+        cout << to_string((int) *_inNode) << '-' << to_string((int) *_outNode) << endl;
+    }*/
 };
 
-class Erdos_Renyi_Network{
+class Node{
+    int _index; // declare index variable (= name of node)
+    vector<Edge*> _outEdges; // declare outEdges variable (= vector of edges attached to the node)
+    
+public:
+    // constructor, construct a node by defining its name and a vector of outgoing edges
+    Node(int index){_index=index; _outEdges=vector<Edge*>();}
+
+    // getter, provides access to data member with corresponding name
+    int index() {return _index;}
+    vector<Edge*> outEdges() {return _outEdges;}
+
+    // function to add an edge to the set of outgoing edges
+    void addEdge(Edge* e){
+        _outEdges.push_back(e);
+    }
+
+    // function to remove an edge from the set of outgoing edges
+    void removeEdge(Edge* e){
+        _outEdges.erase(remove(_outEdges.begin(), _outEdges.end(), e), _outEdges.end());
+    }
+
+    // function that gives the neighbours of the node
+    vector<Node> neighbours(){
+        vector<Node> neighbours;
+        // loop over vector of outgoing edges of node
+        for (int i = 0; i < _outEdges.size(); ++i){
+            Edge* e = _outEdges[i];
+            if (e->inNode()->_index != _index){
+                neighbours.push_back(*e->inNode());
+            }
+            else {
+                neighbours.push_back(*e->outNode());
+            }
+        }
+        return neighbours;
+    }  
+};
+
+/*class Erdos_Renyi_Network{
     int _numberOfNodes; // total number of nodes in the graph
     double _edgeProbability; // the probablility of having an edge between any pair of nodes
-    list<Node> _nodelist; // list of nodes in graph
-    list<Edge> _edgelist; // list of edges in graph
+    vector<Node> _nodelist; // list of nodes in graph
+    vector<Edge> _edgelist; // list of edges in graph
 
 public:
     // constructor, construct graph by making the nodes and the edges with a given probability
@@ -95,8 +92,8 @@ public:
         random_device rd; // will be used to obtain a seed for the random number engine
         mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
         uniform_real_distribution<> dis(0.0, 1.0);
-        for (int i = 0; i <= _numberOfNodes; i++){
-            for (int j = i; j <= _numberOfNodes; j++){
+        for (int i = 0; i < _numberOfNodes; i++){
+            for (int j = i; j < _numberOfNodes; j++){
                 double r = dis(gen);
                 if (r < _edgeProbability){
                     Node inNode = Node(i);
@@ -110,7 +107,7 @@ public:
     // function to add a node to the graph
     void addNode(int index){
         Node n = Node(index);
-        _nodelist.insert(n);
+        _nodelist.push_back(n);
     }
 
     // function to add an edge to the graph
@@ -118,7 +115,7 @@ public:
         Edge e = Edge(inNode, outNode);
         // check if edge is already there
         if (contains(_edgelist, e) == false){
-            _edgelist.insert(e);
+            _edgelist.push_back(e);
             inNode.addEdge(e); // add this new edge to the set of edges attached to inNode
             outNode.addEdge(e); // add this new edge to the set of edges attached to outNode
         }
@@ -126,37 +123,61 @@ public:
 
     // function to remove an edge from the graph
     void removeEdge(Edge e){
-        _edgelist.remove(e); // remove edge from edgelist
-        e._inNode.removeEdge(e); // remove edge from the set of edges attached to inNode
-        e._outNode.removeEdge(e); // remove edge from the set of edges ettached to outNode
+        _edgelist.erase(e); // remove edge from edgelist
+        e.inNode().removeEdge(e); // remove edge from the set of edges attached to inNode
+        e.outNode().removeEdge(e); // remove edge from the set of edges ettached to outNode
     }
 
     // function to remove a node from the graph
     void removeNode(Node n){
-        unordered_set<Edge> edges = n._outEdges;
+        vector<Edge> edges = n.outEdges();
         // remove all edges attached to node that needs to be removed
-        for (auto i = edges.begin(); i != edges.end(); ++i){
-            Edge e = *i;
+        for (int i = 0; i <= edges.size(); ++i){
+            Edge e = edges.at(i);
             removeEdge(e);
-        _nodelist.remove(n); // remove node from nodelist
+        }
+        _nodelist.erase(n.index()); // remove node from nodelist NOT GOOD YET!!
     }
 
-    // function to check if an element is in list
-    bool contains(const list<Edge> &list, Edge e){
-	    return find(list.begin(), list.end(), e) != list.end();
+    // function to check if an element is in vector
+    bool contains(const vector<Edge> &vec, Edge e){
+	    return find(vec.begin(), vec.end(), e) != vec.end();
     }
-};
+
+    // print function 
+    void print(){
+        cout << 'Nodes: ';
+        for (int i = 0; i < _nodelist.size(); i++){
+            cout << _nodelist.at(i) << ' '; 
+        }
+        cout << endl;
+        cout << 'Edges: ';
+        for (int i = 0; i < _edgelist.size(); i++){
+            cout << _edgelist.at(i) << ' '; 
+        }
+        cout << endl;
+    }
+};*/
 
 int main(){
-    double p = 0.1;
+    double p = 0.01;
     int N = 100;
-    Erdos_Renyi_Network graph = Erdos_Renyi_Network(p, N);
-    vector<edge> edges = graph.EdgeList();
-    vector<node> nodes = graph.NodeList();
-
-    cout << edges;
-    cout << nodes;
-
+    Node n = Node(1);
+    Node m = Node(2);
+    Edge e = Edge(&n, &m);
+    n.addEdge(&e);
+    m.addEdge(&e);
+    cout << m.index() << endl;
+    // print function --> seems to work
+    for (int i = 0; i < m.neighbours().size(); i++){
+        cout << m.neighbours()[i].index() << ' ';
+    }
+    cout << endl;
+    
 };
 
 // maybe also include adjecency matrix
+// https://stackoverflow.com/questions/4964482/how-to-create-two-classes-in-c-which-use-each-other-as-data --> explains 
+// how to use 2 classes that reference each other, maybe reconstruct with header files?
+// debug network class!
+// node and edge class seem to be okay, but is there a nicer way?
