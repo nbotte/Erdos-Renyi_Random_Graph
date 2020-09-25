@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <functional>
 #include <algorithm>
 using namespace std;
 
@@ -72,6 +73,7 @@ public:
     }  
 };
 
+
 /*class Erdos_Renyi_Network{
     int _numberOfNodes; // total number of nodes in the graph
     double _edgeProbability; // the probablility of having an edge between any pair of nodes
@@ -83,11 +85,33 @@ public:
     Erdos_Renyi_Network(int numberOfNodes, double edgeProbability){
         _numberOfNodes = numberOfNodes;
         _edgeProbability = edgeProbability;
-        
-        // add nodes to the graph
-        for (int i = 0; i <= _numberOfNodes; i++){
-            addNode(i);
+    }
+
+
+    // function to add a node to the graph
+    void addNode(Node n){
+        _nodelist.push_back(n);
+        cout << _nodelist[n.index()]->index();
+    }
+
+    // function to add an edge to the graph
+    void addEdge(Edge e){
+        // check if edge is already there
+        if (contains(_edgelist, e) == false){
+            _edgelist.push_back(e);
+            e.inNode()->addOutEdge(&e); // add this new edge to the set of edges attached to inNode
+            e.outNode()->addOutEdge(&e); // add this new edge to the set of edges attached to outNode
         }
+    }
+
+    void addAllNodes(){
+        // add nodes to the graph
+        for (int i = 0; i < _numberOfNodes; i++){
+            addNode(Node(i));
+        }
+    }
+
+    void addAllEdges(){
         // add edges to graph with a certain probability
         random_device rd; // will be used to obtain a seed for the random number engine
         mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
@@ -98,86 +122,93 @@ public:
                 if (r < _edgeProbability){
                     Node inNode = Node(i);
                     Node outNode = Node(j);
-                    addEdge(inNode, outNode);
+                    Edge e = Edge(&inNode, &outNode);
+                    addEdge(e);
                 }
             }
         }
     }
 
-    // function to add a node to the graph
-    void addNode(int index){
-        Node n = Node(index);
-        _nodelist.push_back(n);
-    }
-
-    // function to add an edge to the graph
-    void addEdge(Node inNode, Node outNode){
-        Edge e = Edge(inNode, outNode);
-        // check if edge is already there
-        if (contains(_edgelist, e) == false){
-            _edgelist.push_back(e);
-            inNode.addEdge(e); // add this new edge to the set of edges attached to inNode
-            outNode.addEdge(e); // add this new edge to the set of edges attached to outNode
-        }
-    }
-
     // function to remove an edge from the graph
-    void removeEdge(Edge e){
-        _edgelist.erase(e); // remove edge from edgelist
-        e.inNode().removeEdge(e); // remove edge from the set of edges attached to inNode
-        e.outNode().removeEdge(e); // remove edge from the set of edges ettached to outNode
+    void removeEdge(Edge* e){
+        _edgelist.erase(remove(_edgelist.begin(), _edgelist.end(), e), _edgelist.end()); // remove edge from edgelist
+        e->inNode()->removeOutEdge(e); // remove edge from the set of edges attached to inNode
+        e->outNode()->removeOutEdge(e); // remove edge from the set of edges ettached to outNode
     }
 
     // function to remove a node from the graph
-    void removeNode(Node n){
-        vector<Edge> edges = n.outEdges();
+    void removeNode(Node* n){
+        vector<Edge*> edges = n->outEdges();
         // remove all edges attached to node that needs to be removed
         for (int i = 0; i <= edges.size(); ++i){
-            Edge e = edges.at(i);
+            Edge* e = edges[i];
             removeEdge(e);
         }
-        _nodelist.erase(n.index()); // remove node from nodelist NOT GOOD YET!!
+        _nodelist.erase(remove(_nodelist.begin(), _nodelist.end(), n), _nodelist.end()); // remove node from nodelist NOT GOOD YET!!
+    }
+
+    // function that implements a comparison of 2 edges (== operator), returns a bool
+    static bool equalEdge(Edge* e1, Edge* e2){
+        if((e1->inNode()->index() == e2->inNode()->index() && e1->outNode()->index() == e2->outNode()->index()) ||
+        (e1->inNode()->index() == e2->outNode()->index() && e1->outNode()->index() == e2->inNode()->index())){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     // function to check if an element is in vector
-    bool contains(const vector<Edge> &vec, Edge e){
-	    return find(vec.begin(), vec.end(), e) != vec.end();
+    bool contains(const vector<Edge*> vec, Edge* e){
+	    return find_if(vec.begin(), vec.end(), bind(equalEdge, std::placeholders::_1, e)) != vec.end();
     }
 
     // print function 
     void print(){
-        cout << 'Nodes: ';
-        for (int i = 0; i < _nodelist.size(); i++){
-            cout << _nodelist.at(i) << ' '; 
+        cout << "Nodes: ";
+        for (int i = 0; i < _nodelist.size(); ++i){
+            cout << _nodelist[i]->index() << ' '; 
         }
         cout << endl;
-        cout << 'Edges: ';
+        cout << "Edges: ";
         for (int i = 0; i < _edgelist.size(); i++){
-            cout << _edgelist.at(i) << ' '; 
+            cout << _edgelist[i]->inNode()->index() << '-' << _edgelist[i]->outNode()->index(); 
         }
         cout << endl;
     }
 };*/
 
 int main(){
-    double p = 0.01;
-    int N = 100;
+    // This example seem to work as expected
     Node n = Node(1);
     Node m = Node(2);
-    Edge e = Edge(&n, &m);
-    n.addEdge(&e);
-    m.addEdge(&e);
-    cout << m.index() << endl;
-    // print function --> seems to work
-    for (int i = 0; i < m.neighbours().size(); i++){
-        cout << m.neighbours()[i].index() << ' ';
+    Node k = Node(0);
+    Node l = Node(3);
+
+    Edge e1 = Edge(&n, &m);
+    Edge e2 = Edge(&n, &k);
+    Edge e3 = Edge(&n, &l);
+    Edge e4 = Edge(&m, &k);
+    Edge e5 = Edge(&l, &k);
+
+    n.addEdge(&e1);
+    m.addEdge(&e1);
+    n.addEdge(&e2);
+    k.addEdge(&e2);
+    n.addEdge(&e3);
+    l.addEdge(&e3);
+    m.addEdge(&e4);
+    k.addEdge(&e4);
+    l.addEdge(&e5);
+    k.addEdge(&e5);
+
+    vector<Node> neigh = n.neighbours();
+    for (int i = 0; i < neigh.size(); i++){
+        cout << neigh[i].index() << endl;   
     }
-    cout << endl;
-    
 };
 
 // maybe also include adjecency matrix
 // https://stackoverflow.com/questions/4964482/how-to-create-two-classes-in-c-which-use-each-other-as-data --> explains 
 // how to use 2 classes that reference each other, maybe reconstruct with header files?
-// debug network class!
-// node and edge class seem to be okay, but is there a nicer way?
+// TOTAL MESS, maybe start again from version on github?
