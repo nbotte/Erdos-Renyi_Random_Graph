@@ -36,41 +36,41 @@ public:
 
 class Node{
     int _index; // declare index variable (= name of node)
-    vector<Edge*> _outEdges; // declare outEdges variable (= vector of edges attached to the node)
+    vector<int> _neigh; // declare neigh variable (= vector of indices of nodes neighbouring the current node)
     
 public:
     // constructor, construct a node by defining its name and a vector of outgoing edges
-    Node(int index){_index=index; _outEdges=vector<Edge*>();}
+    Node(int index){_index=index; _neigh=vector<int>();}
 
     // getter, provides access to data member with corresponding name
     int index() {return _index;}
-    vector<Edge*> outEdges() {return _outEdges;}
+    vector<int> neigh() {return _neigh;}
 
     // function to add an edge to the set of outgoing edges
-    void addOutEdge(Edge* e){
-        _outEdges.push_back(e);
+    void addNeigh(int index){
+        _neigh.push_back(index);
+        cout << _neigh.size() << ' '; // always gives size equal to 1
     }
 
-    // function to remove an edge from the set of outgoing edges
-    void removeOutEdge(Edge* e){
+    // function to remove an edge from the set of outgoing edges NEEDS TO BE CHANGED
+    /*void removeOutEdge(Edge* e){
         _outEdges.erase(remove(_outEdges.begin(), _outEdges.end(), e), _outEdges.end());
     }
 
-    // function that gives the neighbours of the node
+    // function that gives the neighbours of the node STILL NECESSARY?
     vector<Node*> neighbours(){
         vector<Node*> neighbours;
         // loop over vector of outgoing edges of node
         for (int i = 0; i < _outEdges.size(); ++i){
-            Edge* e =  _outEdges[i];
-            if (e->inNode()->_index != _index){
-                neighbours.push_back(e->inNode());
+            if (_outEdges[i]->inNode()->_index != _index){
+                neighbours.push_back(_outEdges[i]->inNode());
             }
             else {
-                neighbours.push_back(e->outNode());
+                neighbours.push_back(_outEdges[i]->outNode());
             }
         }
         return neighbours;
-    }  
+    }  */
 };
 
 
@@ -86,9 +86,9 @@ public:
         _numberOfNodes = numberOfNodes;
         _edgeProbability = edgeProbability;
 
-        _nodelist.reserve(_numberOfNodes);
-        _edgelist.reserve(pow(_numberOfNodes, 2));
-        // add nodes to the graph
+        _nodelist.reserve(_numberOfNodes); // needed?
+        _edgelist.reserve(pow(_numberOfNodes, 2)); //needed?
+        // add nodes to the graph 
         for (int i = 0; i < _numberOfNodes; i++){
             Node* n = new Node(i);
             addNode(n);
@@ -103,8 +103,7 @@ public:
                 Node* inNode = new Node(i);
                 Node* outNode = new Node(j);
                 if (r < _edgeProbability){
-                    Edge* e = new Edge(inNode, outNode);
-                    addEdge(e);
+                    addEdge(inNode, outNode);
                 }
             }
         }
@@ -121,18 +120,21 @@ public:
     }
 
     // function to add an edge to the graph
-    void addEdge(Edge* e){
+    void addEdge(Node* n, Node* m){
+        Edge* e = new Edge(n, m);
         // check if edge is already there
         if (contains(_edgelist, e) == false){
             _edgelist.push_back(e);
-            e->inNode()->addOutEdge(e); // add this new edge to the set of edges attached to inNode
-            e->outNode()->addOutEdge(e); // add this new edge to the set of edges attached to outNode
+            Node N = *n;
+            Node M = *m;
+            N.addNeigh(N.index()); // add this new edge to the set of edges attached to inNode
+            M.addNeigh(M.index()); // add this new edge to the set of edges attached to outNode
         }
     }
 
     // function to remove an edge from the graph
     // NOT TESTED YET
-    void removeEdge(Edge* e){
+   /* void removeEdge(Edge* e){
         _edgelist.erase(remove(_edgelist.begin(), _edgelist.end(), e), _edgelist.end()); // remove edge from edgelist
         e->inNode()->removeOutEdge(e); // remove edge from the set of edges attached to inNode
         e->outNode()->removeOutEdge(e); // remove edge from the set of edges ettached to outNode
@@ -148,7 +150,7 @@ public:
             removeEdge(e);
         }
         _nodelist.erase(remove(_nodelist.begin(), _nodelist.end(), n), _nodelist.end()); // remove node from nodelist NOT GOOD YET!!
-    }
+    }*/
 
     // function that implements a comparison of 2 edges (== operator), returns a bool
     static bool equalEdge(Edge* e1, Edge* e2){
@@ -214,14 +216,21 @@ int main(){
     int N = 100;
     double p = 0.01;
     Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p);
-    g.print();
+    //g.print();
 
     // this part is not okay, problem with neighbours
     vector<Node*> nodes = g.nodelist();
-    cout << nodes[0]->neighbours()[0]->index();
+    Node n = *nodes[3];
+    cout << n.neigh().size() << ' '; // gives always size equal to 0, so there must be a problem with the construction with vector of neighbours when I build the graph
+    /*for (int i = 0; i < nodes.size(); i++){
+        cout << nodes[0]->neigh()[i] << ' ';
+    }*/
+    //cout << nodes[0]->neighbours()[0]->index();
 };
 
 // maybe also include adjecency matrix
 // https://stackoverflow.com/questions/4964482/how-to-create-two-classes-in-c-which-use-each-other-as-data --> explains 
 // how to use 2 classes that reference each other, maybe reconstruct with header files?
 // Not a mess anymore, declaring new pointers by 'new' seems to be the trick! However, they should also be manually be removed from memory, where in the code should this be done? In destructor?
+
+// TO DO: test neighbours when you make nodes and edges individually + make/test neighbour remove function in node class + test remove node/edge functions in graph class
