@@ -30,24 +30,47 @@ public:
 
 class Node{
     int _index; // declare index variable (= name of node)
-    vector<int> _neigh; // declare neigh variable (= vector of indices of nodes neighbouring the current node)
+    vector<Node*> _neigh; // declare neigh variable (= vector of pointers to nodes neighbouring the current node)
+    //bool _active; // declare active variable (= determines if node is active or not)
+    int _opinion; // declare opinion variable (= opinion of node, choice between 0 and 1)
     
 public:
     // constructor, construct a node by defining its name and a vector of neighbours
-    Node(int index){_index=index; _neigh=vector<int>();}
+    Node(int index, int opinion){_index=index; _neigh=vector<Node*>(); _opinion=opinion;}
 
     // getter, provides access to data member with corresponding name, should const be there?
     int index() {return _index;}
-    vector<int> neigh() {return _neigh;}
+    vector<Node*> neigh() {return _neigh;}
+    int opinion() {return _opinion;}
 
     // function to add a neighbour to the vector of neighbours of a node
-    void addNeigh(int index){
-        _neigh.push_back(index);
+    void addNeigh(Node* n){
+        _neigh.push_back(n);
     }
 
     // function to remove a neighbour from the vector of neighbours of a node, NOT TESTED
-    void removeNeigh(int index){
-        _neigh.erase(remove(_neigh.begin(), _neigh.end(), index), _neigh.end());
+    void removeNeigh(Node* n){
+        _neigh.erase(remove(_neigh.begin(), _neigh.end(), n), _neigh.end());
+    }
+
+    // function to change the opinion of the node (get the old opinions of all nodes in graph as argument)
+    void changeOpinion(vector<int> oldOpinions){
+        int opinion0 = 0; // counter that counts the number of neighbours with opinion 0
+        int opinion1 = 0; // counter that counts the number of neighbours with opinion 1
+        for (int i = 0; i < _neigh.size(); i++){
+            if (oldOpinions[_neigh[i]->_index] == 0){
+                opinion0++; 
+            }
+            else{ 
+                opinion1++;
+            }
+        }
+        if (opinion0 > opinion1){
+            _opinion = 0;
+        }
+        else if (opinion1 > opinion0){
+            _opinion = 1;
+        }
     }
 
     // function that gives the neighbours of the node STILL NECESSARY?
@@ -82,16 +105,25 @@ public:
 
         _nodelist.reserve(_numberOfNodes); // needed?
         _edgelist.reserve(pow(_numberOfNodes, 2)); //needed?
-        // add nodes to the graph 
-        for (int i = 0; i < _numberOfNodes; i++){
-            Node n = Node(i);
-            addNode(n);
-        }    
-        // add edge between any pair of nodes with a certain probability
+
         random_device rd; // will be used to obtain a seed for the random number engine
         mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
         uniform_real_distribution<> dis(0.0, 1.0);
-        //vector<int> neighbours;
+
+        // add nodes to the graph with 50/50 distribution of the 2 possible opinions
+        for (int i = 0; i < _numberOfNodes; i++){
+            double r = dis(gen);
+            if (r < 0.5){
+                Node n = Node(i, 0);
+                addNode(n);
+            }
+            else{
+                Node n = Node(i, 1);            
+                addNode(n);
+            }
+        }    
+        // add edge between any pair of nodes with a certain probability
+                //vector<int> neighbours;
         for (int i = 0; i < _nodelist.size(); i++){
             for (int j = i; j < _nodelist.size(); j++){
                 double r = dis(gen);
@@ -119,15 +151,26 @@ public:
 
     // function to add an edge to the graph
     void addEdge(int indexIn, int indexOut){
-        Node* N = new Node(indexIn);
-        Node* M = new Node(indexOut);
+        Node* N = new Node(indexIn, _nodelist[indexIn].opinion());
+        Node* M = new Node(indexOut, _nodelist[indexOut].opinion());
         Edge e = Edge(N, M);
         // check if edge is already there
         if (contains(_edgelist, e) == false){
             _edgelist.push_back(e);
-            _nodelist[indexIn].addNeigh(_nodelist[indexOut].index()); // add outNode of edge to neighbours of inNode of edge
-            _nodelist[indexOut].addNeigh(_nodelist[indexIn].index()); // add inNode of edge to neighbours of outNode of edge
+            _nodelist[indexIn].addNeigh(&_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
+            _nodelist[indexOut].addNeigh(&_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
 
+        }
+    }
+
+    // function to change the opinions of the nodes in graph based on majority model
+    void changeOpinions(){
+        vector<int> oldOpinions;
+        for (int i = 0; i < _nodelist.size(); i++){
+            oldOpinions.push_back(_nodelist[i].opinion());
+        }
+        for (int i = 0; i < _nodelist.size(); i++){
+             _nodelist[i].changeOpinion(oldOpinions);
         }
     }
 
@@ -173,7 +216,7 @@ public:
     void print(){
         cout << "Nodes: ";
         for (int i = 0; i < _nodelist.size(); ++i){
-            cout << _nodelist[i].index() << ' '; 
+            cout << _nodelist[i].index() << '-' << _nodelist[i].opinion() << ' '; 
         }
         cout << endl;
         /*cout << "Neighbours: ";
@@ -229,9 +272,17 @@ int main(){
     Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p);
     g.print();
     // WORKS!
-    for (int i = 0; i < g.nodelist()[0].neigh().size(); i++){
-        cout << g.nodelist()[0].neigh()[i] << ' ';
-    }
+    /*for (int i = 0; i < g.nodelist()[0].neigh().size(); i++){
+        cout << g.nodelist()[0].neigh()[i]->index() << ' ';
+    }*/
+    cout << endl;
+    g.changeOpinions(); // seems to behave correct
+    g.print();
+    
+    
+    /*for (int i = 0; i < g.nodelist()[34].neigh().size(); i++){        
+        cout << g.nodelist()[34].neigh()[i]->index() << ' ';
+    }*/
 };
 
 // maybe also include adjecency matrix
@@ -242,6 +293,7 @@ int main(){
 // Problem: if a make a graph, the function addNeigh of Node class doesn't behave properly, problem with use of pointers? Or problem in constructor of node?
 // Possible solution: remove edge class, only work with nodes and their neighbours, avoid use of pointers?
 
-// current status: edge class is used anymore, but is it necessary/valuable? Adding neighbours seems to work fine! Remove node and remove edge from graph are not ok yet, but not sure if they are necessary
+// current status: edge class is used, but is it necessary/valuable? Adding neighbours seems to work fine! Remove node and remove edge from graph are not ok yet, but not sure if they are necessary
 // TO DO: node should have some extra properties: active, stubborn, opinion
 // TO DO: opinion dynamics over time, add method to graph class to change opinions of nodes based on some condition
+
