@@ -30,6 +30,7 @@ public:
 
 class Node{
     int _index; // declare index variable (= name of node)
+    // for neighbours change vector to list, because you can add and remove elements in constant time, but you cannot access an element at position i in constant time (but this is not needed for the neighbours) 
     vector<Node*> _neigh; // declare neigh variable (= vector of pointers to nodes neighbouring the current node)
     //bool _active; // declare active variable (= determines if node is active or not)
     int _opinion; // declare opinion variable (= opinion of node, choice between 0 and 1)
@@ -54,6 +55,7 @@ public:
     }
 
     // function to change the opinion of the node (get the old opinions of all nodes in graph as argument)
+    // CHANGE: give node a current and a future opinion, change future opinion for node based on current opinions of neighbours, do this for each node and than change current opinions to future opinions
     void changeOpinion(vector<int> oldOpinions){
         int opinion0 = 0; // counter that counts the number of neighbours with opinion 0
         int opinion1 = 0; // counter that counts the number of neighbours with opinion 1
@@ -103,8 +105,8 @@ public:
         _numberOfNodes = numberOfNodes;
         _edgeProbability = edgeProbability;
 
-        _nodelist.reserve(_numberOfNodes); // needed?
-        _edgelist.reserve(pow(_numberOfNodes, 2)); //needed?
+        _nodelist.reserve(_numberOfNodes); 
+        _edgelist.reserve(pow(_numberOfNodes, 2)); 
 
         random_device rd; // will be used to obtain a seed for the random number engine
         mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
@@ -129,9 +131,6 @@ public:
                 double r = dis(gen);
                 if (r < _edgeProbability){
                     addEdge(i, j);
-                    //_nodelist[i].addNeigh(_nodelist[j].index()); // add this new edge to the set of edges attached to inNode
-                    //_nodelist[j].addNeigh(_nodelist[i].index()); // add this new edge to the set of edges attached to outNode
-                   // neighbours.push_back(_nodelist[j].index()); // maybe put in function add neighbour?
                 }
             }
             //_neighlist.push_back(neighbours);
@@ -151,8 +150,8 @@ public:
 
     // function to add an edge to the graph
     void addEdge(int indexIn, int indexOut){
-        Node* N = new Node(indexIn, _nodelist[indexIn].opinion());
-        Node* M = new Node(indexOut, _nodelist[indexOut].opinion());
+        Node* N = &_nodelist[indexIn];
+        Node* M = &_nodelist[indexOut];
         Edge e = Edge(N, M);
         // check if edge is already there
         if (contains(_edgelist, e) == false){
