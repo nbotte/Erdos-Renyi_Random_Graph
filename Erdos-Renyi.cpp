@@ -150,25 +150,26 @@ public:
         uniform_real_distribution<> dis(0.0, 1.0);
 
         // add nodes to the graph with 50/50 distribution of the 2 possible opinions
-        double fractionResistance = 0.; // set the fraction of stubborn/resistant nodes
+        double fractionResistance = 0.5; // set the fraction of stubborn/resistant nodes
         double resistance; // variable that determines the resistance of a node
+        int opinion; // variable that determines the opinion of a node
         for (int i = 0; i < _numberOfNodes; i++){
             double k = dis(gen); // random number to determine if node is stubborn
-            if (k < fractionResistance){
-                resistance = 0.;
+            if (k <= fractionResistance){
+                resistance = 1.;
             }
             else{
                 resistance = 0.;
             }
             double r = dis(gen); // random number to determine the opinion of a node
             if (r < 0.5){
-                Node n = Node(i, 0, resistance);
-                addNode(n);
+                opinion = 0;
             }
             else{
-                Node n = Node(i, 1, resistance);            
-                addNode(n);
+                opinion = 1;
             }
+            Node n = Node(i, opinion, resistance);
+            addNode(n);
         }    
         // add edge between any pair of nodes with a certain probability
         for (int i = 0; i < _nodelist.size(); i++){
@@ -316,8 +317,15 @@ int main(){
     // looks ok, but needs further testing
     // possible test: put resistance equal to 1 for every node --> opinion fraction shouldn't change over time
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min)
-    int N = 1000;
-    double p = 0.01;
+    int N = 100;
+    double p = 0.1;
+    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p);
+    for (int t=0; t<300; t++){
+        cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
+        g.print();
+        cout << endl;
+        g.changeOpinions();
+    }
     ofstream opfile("Fraction_of_opinions.txt");
     opfile << setprecision(15);
     vector<double> fractionsA(300);
@@ -345,7 +353,12 @@ int main(){
 // https://stackoverflow.com/questions/4964482/how-to-create-two-classes-in-c-which-use-each-other-as-data --> explains 
 // how to use 2 classes that reference each other, maybe reconstruct with header files?
 
+// QUESTION: does every class need a destructor? 
+
 
 /* current status: opinion dynamics: takes often long time to run --> optimizations possible? ALSO: 50/50 case with no stubborn actors almost always leads to a stable 
 situation of 54% of one opinion and 46% of the other, however one would expect a 50/50 situation
---> if you take more time steps and average over more simulations, this problem seems to dissappear (still needs to be tested in some more depth)*/
+--> if you take more time steps and average over more simulations, this problem seems to disappear (still needs to be tested in some more depth)*/
+
+// TO DO: play more with fraction of stubborn actors + start implementing active/non-active nodes
+// also to do some tests with 1000 nodes
