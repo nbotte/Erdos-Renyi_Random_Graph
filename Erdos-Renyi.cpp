@@ -43,14 +43,15 @@ bool operator==(Edge e1, Edge e2){
 class Node{
     int _index; // declare index variable (= name of node)
     list<Node*> _neigh; // declare neigh variable (= vector of pointers to nodes neighbouring the current node)
-    //bool _active; // declare active variable (= determines if node is active or not)
     int _opinion; // declare opinion variable (= opinion of node at current time step, choice between 0 and 1)
     int _newOpinion; // declare newOpinion variable (= opinion of node at the next time step, choice between 0 and 1)
     double _resistance; // declare resistance variable (= stubborness of the node, resistance to change his opinion)
-    
+    bool _active; // declare active variable (= determines if node is active or not)
+    bool _wasActive; // declare wasActive variable (= determines if the node was active in the previous timestep)
+
 public:
     // constructor, construct a node by defining its name, opinion, resistance and a vector of neighbours (empty at construction)
-    Node(int index, int opinion, double resistance){_index=index; _neigh=list<Node*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance;}
+    Node(int index, int opinion, double resistance, bool active){_index=index; _neigh=list<Node*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
 
     // getter, provides access to data member with corresponding name
     int const index() {return _index;}
@@ -58,6 +59,7 @@ public:
     int const opinion() {return _opinion;}
     int const newOpinion() {return _newOpinion;}
     double const resistance() {return _resistance;}
+    bool const active() {return _active;}
 
     // function to add a neighbour to the vector of neighbours of a node
     void addNeigh(Node* n){
@@ -80,40 +82,61 @@ public:
 
         double r = dis(gen); // generate a random number that will determine if the resistant node will change his opinion or not
  
-        // count the number of opinions 0 and 1 of the neighbours of the node
-        for (Node* n : _neigh){
-            if (n->_opinion == 0){
-                opinion0++; 
+        // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
+        if (_active){
+            // count the number of opinions 0 and 1 of the neighbours of the node (only take previously active neighbours into account)
+            for (Node* n : _neigh){
+                if (n->_wasActive){
+                    if (n->_opinion == 0){
+                        opinion0++; 
+                    }
+                    else{ 
+                        opinion1++;
+                    }
+                }
             }
-            else{ 
-                opinion1++;
+
+            if (opinion0 > opinion1){
+                if (r >= _resistance){
+                    _newOpinion = 0;
+                }
+                else{
+                    _newOpinion = _opinion;
+                }
             }
-        }
-        // change the opinion of the node according to the majority model and if the random number is bigger than the resistance of the node
-        if (opinion0 > opinion1){
-            if (r >= _resistance){
-                _newOpinion = 0;
+            else if (opinion1 > opinion0){
+                if (r >= _resistance){
+                    _newOpinion = 1;
+                }
+                else{
+                    _newOpinion = _opinion;
+                }
             }
             else{
                 _newOpinion = _opinion;
             }
         }
-        else if (opinion1 > opinion0){
-            if (r >= _resistance){
-                _newOpinion = 1;
-            }
-            else{
-                _newOpinion = _opinion;
-            }
-        }
-        else{
-            _newOpinion = _opinion;
-        }
+        
     }
 
     // function that sets the opinion of a node equal to its new opinion
     void setNewOpinion(){
         _opinion = _newOpinion;
+    }
+
+    // function that deactivates the node
+    void deactivate(){
+        _active = false;
+    }
+
+    // function that sets the activeness of a node
+    void setActive(bool active){
+        _active = active;
+    }
+
+    // function that sets the wasActiveness of a node
+    void setWasActive(){
+        _wasActive = _active;
     }
 };
 
@@ -125,7 +148,7 @@ ostream& operator<<(ostream& os, Edge& e){
 
 // function that overwrites the << operator to print nodes (and their opinion) to screen
 ostream& operator<<(ostream& os, Node& n){
-    os << n.index() << '-' << n.opinion() << ' ';
+    os << n.index() << '-' << n.opinion() << ' ' << n.active() << ' ';
     return os;
 }
 
@@ -134,12 +157,14 @@ class Erdos_Renyi_Network{
     double _edgeProbability; // the probablility of having an edge between any pair of nodes
     vector<Node> _nodelist; // vector of nodes in graph
     vector<Edge> _edgelist; // vector of edges in graph
+    double _bernouilliProbability; // probability of having true in bernouilli process
 
 public:
     // constructor, construct graph by making the nodes and the edges with a given probability
-    Erdos_Renyi_Network(int numberOfNodes, double edgeProbability){
+    Erdos_Renyi_Network(int numberOfNodes, double edgeProbability, double bernouilliProbability){
         _numberOfNodes = numberOfNodes;
         _edgeProbability = edgeProbability;
+        _bernouilliProbability = bernouilliProbability;
 
         // reserve enough memory space for the vectors
         _nodelist.reserve(_numberOfNodes); 
@@ -149,14 +174,17 @@ public:
         mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
         uniform_real_distribution<> dis(0.0, 1.0);
 
+        bernoulli_distribution disBern(_bernouilliProbability);
+
         // add nodes to the graph with 50/50 distribution of the 2 possible opinions
-        double fractionResistance = 0.5; // set the fraction of stubborn/resistant nodes
+        double fractionResistance = 0.; // set the fraction of stubborn/resistant nodes
         double resistance; // variable that determines the resistance of a node
         int opinion; // variable that determines the opinion of a node
+        bool active; // variable that determines if node is active
         for (int i = 0; i < _numberOfNodes; i++){
             double k = dis(gen); // random number to determine if node is stubborn
             if (k <= fractionResistance){
-                resistance = 1.;
+                resistance = 0.;
             }
             else{
                 resistance = 0.;
@@ -168,7 +196,8 @@ public:
             else{
                 opinion = 1;
             }
-            Node n = Node(i, opinion, resistance);
+            active = disBern(gen);
+            Node n = Node(i, opinion, resistance, active);
             addNode(n);
         }    
         // add edge between any pair of nodes with a certain probability
@@ -212,6 +241,25 @@ public:
         }
         for (int i = 0; i < _nodelist.size(); i++){
              _nodelist[i].setNewOpinion();
+        }
+    }
+
+    // function to deactivate all the nodes in the network, but first the current active nodes need to set their wasActive variable to true
+    // this function might be unneccessary!
+    void deactivateNodes(){
+        for (int i = 0; i < _nodelist.size(); i++){
+            _nodelist[i].setWasActive();
+            _nodelist[i].deactivate();
+        }
+    }
+
+    // function that sets a fraction of the nodes as active (according to a bernouilli distribution)
+    void setNodesActive(){
+        random_device rd; // will be used to obtain a seed for the random number engine
+        mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+        bernoulli_distribution disBern(_bernouilliProbability);
+        for (int i = 0; i < _nodelist.size(); i++){
+            _nodelist[i].setActive(disBern(gen));
         }
     }
 
@@ -317,22 +365,33 @@ int main(){
     // looks ok, but needs further testing
     // possible test: put resistance equal to 1 for every node --> opinion fraction shouldn't change over time
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min)
-    int N = 100;
+    int N = 1000;
     double p = 0.1;
-    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p);
+    double p_bern = 1.;
+    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
+   /* g.print();
+    g.changeOpinions();
+    g.print();
+    g.deactivateNodes();
+    g.setNodesActive();
+    g.print();
+    g.changeOpinions();
+    g.print();  */  
+    
+    
     for (int t=0; t<300; t++){
         cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
         g.print();
         cout << endl;
         g.changeOpinions();
     }
-    ofstream opfile("Fraction_of_opinions.txt");
+    /*ofstream opfile("Fraction_of_opinions.txt");
     opfile << setprecision(15);
     vector<double> fractionsA(300);
     vector<double> fractionsB(300); 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 100; n++){
-        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p); 
+        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern); 
         // for each network: let the opinions evolve in time
         for (int t = 0; t < 300; t++){
             double oldFractionA = fractionsA[t];
@@ -346,7 +405,7 @@ int main(){
     for (int i = 0; i < 300; i++){
         opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << '\n';
     }
-    opfile.close();    
+    opfile.close(); */
 };
 
 // maybe also include adjecency matrix
@@ -360,5 +419,5 @@ int main(){
 situation of 54% of one opinion and 46% of the other, however one would expect a 50/50 situation
 --> if you take more time steps and average over more simulations, this problem seems to disappear (still needs to be tested in some more depth)*/
 
-// TO DO: play more with fraction of stubborn actors + start implementing active/non-active nodes
+// TO DO: play more with fraction of stubborn actors + start implementing active/non-active nodes (correctly implemented??)
 // also to do some tests with 1000 nodes
