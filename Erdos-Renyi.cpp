@@ -1,6 +1,8 @@
 // Nina Botte
 
 #include <cmath>
+#include "Node.h"
+#include "Edge.h"
 #include <math.h>
 #include <string>
 #include <iomanip>
@@ -12,145 +14,6 @@
 #include <functional>
 #include <algorithm>
 using namespace std;
-
-class Node;
-
-class Edge{
-    Node* _inNode; // declare inNode variable (pointer to startnode of edge)
-    Node* _outNode; // declare outNode variable (pointer to endnode of edge)
-
-public:
-    // constructor, construct edge by defining its inNode and its outNode
-    Edge(Node* inNode, Node* outNode){_inNode=inNode; _outNode=outNode;}
-
-    // getter, provides access to data member with corresponding name
-    Node* const inNode() {return _inNode;}
-    Node* const outNode() {return _outNode;}
-};
-
-// function that overwrites the == operator to compare 2 edges
-bool operator==(Edge e1, Edge e2){
-    if (e1.inNode() == e2.inNode()){
-        return e1.outNode() == e2.outNode();
-    }
-    else if (e1.inNode() == e2.outNode()){
-        return e1.outNode() == e2.inNode();
-    }
-    else{ return false;}
-}
-
-// add edgelist again?
-class Node{
-    int _index; // declare index variable (= name of node)
-    list<Node*> _neigh; // declare neigh variable (= vector of pointers to nodes neighbouring the current node)
-    int _opinion; // declare opinion variable (= opinion of node at current time step, choice between 0 and 1)
-    int _newOpinion; // declare newOpinion variable (= opinion of node at the next time step, choice between 0 and 1)
-    double _resistance; // declare resistance variable (= stubborness of the node, resistance to change his opinion)
-    bool _active; // declare active variable (= determines if node is active or not)
-    bool _wasActive; // declare wasActive variable (= determines if the node was active in the previous timestep)
-
-public:
-    // constructor, construct a node by defining its name, opinion, resistance and a vector of neighbours (empty at construction)
-    Node(int index, int opinion, double resistance, bool active){_index=index; _neigh=list<Node*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
-
-    // getter, provides access to data member with corresponding name
-    int const index() {return _index;}
-    list<Node*> const neigh() {return _neigh;}
-    int const opinion() {return _opinion;}
-    int const newOpinion() {return _newOpinion;}
-    double const resistance() {return _resistance;}
-    bool const active() {return _active;}
-
-    // function to add a neighbour to the vector of neighbours of a node
-    void addNeigh(Node* n){
-        _neigh.push_back(n);
-    }
-
-    // function to remove a neighbour from the vector of neighbours of a node, NOT TESTED
-    void removeNeigh(Node* n){
-        _neigh.erase(remove(_neigh.begin(), _neigh.end(), n), _neigh.end());
-    }
-
-    // function to change the opinion of the node
-    void changeOpinion(){
-        int opinion0 = 0; // counter that counts the number of neighbours with opinion 0
-        int opinion1 = 0; // counter that counts the number of neighbours with opinion 1
-
-        random_device rd; // will be used to obtain a seed for the random number engine
-        mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
-        uniform_real_distribution<> dis(0.0, 1.0);
-
-        double r = dis(gen); // generate a random number that will determine if the resistant node will change his opinion or not
- 
-        // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
-        if (_active){
-            // count the number of opinions 0 and 1 of the neighbours of the node (only take previously active neighbours into account)
-            for (Node* n : _neigh){
-                if (n->_wasActive){
-                    if (n->_opinion == 0){
-                        opinion0++; 
-                    }
-                    else{ 
-                        opinion1++;
-                    }
-                }
-            }
-
-            if (opinion0 > opinion1){
-                if (r >= _resistance){
-                    _newOpinion = 0;
-                }
-                else{
-                    _newOpinion = _opinion;
-                }
-            }
-            else if (opinion1 > opinion0){
-                if (r >= _resistance){
-                    _newOpinion = 1;
-                }
-                else{
-                    _newOpinion = _opinion;
-                }
-            }
-            else{
-                _newOpinion = _opinion;
-            }
-        }
-        
-    }
-
-    // function that sets the opinion of a node equal to its new opinion
-    void setNewOpinion(){
-        _opinion = _newOpinion;
-    }
-
-    // function that deactivates the node
-    void deactivate(){
-        _active = false;
-    }
-
-    // function that sets the activeness of a node
-    void setActive(bool active){
-        _active = active;
-    }
-
-    // function that sets the wasActiveness of a node
-    void setWasActive(){
-        _wasActive = _active;
-    }
-};
-
-// function that overwrites the << operator to print edges to screen
-ostream& operator<<(ostream& os, Edge& e){
-    os << e.inNode()->index() << '-' << e.outNode()->index() << ' ';
-    return os;
-}
-
-// function that overwrites the << operator to print nodes (and their opinion) to screen
-ostream& operator<<(ostream& os, Node& n){
-    os << n.index() << '-' << n.opinion() << ' ' << n.active() << ' ';
-    return os;
-}
 
 class Erdos_Renyi_Network{
     int _numberOfNodes; // total number of nodes in the graph
@@ -323,7 +186,7 @@ public:
         }
         cout << endl;
         
-        cout << "Edges: ";
+       cout << "Edges: ";
         for (int i = 0; i < _edgelist.size(); i++){
             cout << _edgelist[i]; 
         }
@@ -365,27 +228,21 @@ int main(){
     // looks ok, but needs further testing
     // possible test: put resistance equal to 1 for every node --> opinion fraction shouldn't change over time
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min)
-    int N = 1000;
+    int N = 100;
     double p = 0.1;
     double p_bern = 1.;
     Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
-   /* g.print();
-    g.changeOpinions();
     g.print();
-    g.deactivateNodes();
-    g.setNodesActive();
-    g.print();
-    g.changeOpinions();
-    g.print();  */  
     
     
-    for (int t=0; t<300; t++){
+    
+    /*for (int t=0; t<300; t++){
         cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
         g.print();
         cout << endl;
         g.changeOpinions();
     }
-    /*ofstream opfile("Fraction_of_opinions.txt");
+    ofstream opfile("Fraction_of_opinions.txt");
     opfile << setprecision(15);
     vector<double> fractionsA(300);
     vector<double> fractionsB(300); 
@@ -409,8 +266,6 @@ int main(){
 };
 
 // maybe also include adjecency matrix
-// https://stackoverflow.com/questions/4964482/how-to-create-two-classes-in-c-which-use-each-other-as-data --> explains 
-// how to use 2 classes that reference each other, maybe reconstruct with header files?
 
 // QUESTION: does every class need a destructor? 
 
