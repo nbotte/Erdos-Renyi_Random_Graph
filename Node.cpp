@@ -1,23 +1,17 @@
 // Nina Botte
 
 #include "Node.h"
-#include <cmath>
-#include <math.h>
-#include <string>
 #include <iomanip>
-#include <fstream>
 #include <iostream>
-#include <vector>
 #include <list>
 #include <random>
-#include <functional>
 #include <algorithm>
 using namespace std;
 
 // implementation of constructor, construct a node by defining its name, opinion, resistance and a vector of neighbours (empty at construction)
 Node::Node(int index, int opinion, double resistance, bool active){_index=index; _neigh=list<Node*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
 
-// getters
+// implementation of the getters
 int const Node::index() {return _index;}
 list<Node*> const Node::neigh() {return _neigh;}
 int const Node::opinion() {return _opinion;}

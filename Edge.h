@@ -2,17 +2,8 @@
 
 #define _USE_MATH_DEFINES
 #include "Node.h"
-#include <cmath>
-#include <math.h>
-#include <string>
 #include <iomanip>
-#include <fstream>
 #include <iostream>
-#include <vector>
-#include <list>
-#include <random>
-#include <functional>
-#include <algorithm>
 using namespace std;
 
 #ifndef EDGE_H

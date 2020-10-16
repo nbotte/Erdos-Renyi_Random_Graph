@@ -3,17 +3,8 @@
 #define _USE_MATH_DEFINES
 #include "Edge.h"
 #include "Node.h"
-#include <cmath>
-#include <math.h>
-#include <string>
 #include <iomanip>
-#include <fstream>
 #include <iostream>
-#include <vector>
-#include <list>
-#include <random>
-#include <functional>
-#include <algorithm>
 using namespace std;
 
 // implementation of constructor, construct edge by defining its inNode and its outNode

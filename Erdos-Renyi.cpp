@@ -20,7 +20,7 @@ class Erdos_Renyi_Network{
     double _edgeProbability; // the probablility of having an edge between any pair of nodes
     vector<Node> _nodelist; // vector of nodes in graph
     vector<Edge> _edgelist; // vector of edges in graph
-    double _bernouilliProbability; // probability of having true in bernouilli process
+    double _bernouilliProbability; // probability of having true in bernouilli process (will determine if a node is active or not)
 
 public:
     // constructor, construct graph by making the nodes and the edges with a given probability
@@ -39,7 +39,7 @@ public:
 
         bernoulli_distribution disBern(_bernouilliProbability);
 
-        // add nodes to the graph with 50/50 distribution of the 2 possible opinions
+        // add nodes to the graph with some distribution of the 2 possible opinions
         double fractionResistance = 0.; // set the fraction of stubborn/resistant nodes
         double resistance; // variable that determines the resistance of a node
         int opinion; // variable that determines the opinion of a node
@@ -53,7 +53,7 @@ public:
                 resistance = 0.;
             }
             double r = dis(gen); // random number to determine the opinion of a node
-            if (r < 0.5){
+            if (r < 0.2){
                 opinion = 0;
             }
             else{
@@ -99,9 +99,11 @@ public:
 
     // function to change the opinions of the nodes in graph based on majority model
     void changeOpinions(){
+        // give all the nodes a new opinion
         for (int i = 0; i < _nodelist.size(); i++){
             _nodelist[i].changeOpinion();
         }
+        // set the opinion of the nodes equal to their new opinion
         for (int i = 0; i < _nodelist.size(); i++){
              _nodelist[i].setNewOpinion();
         }
@@ -155,7 +157,7 @@ public:
         }
     }*/
 
-    // function to check if an element is in vector // NEEDS TO BE TESTED!
+    // function to check if an element is in vector 
     bool contains(const vector<Edge> vec, Edge e){
 	    return find(vec.begin(), vec.end(), e) != vec.end();
     }
@@ -226,24 +228,21 @@ int main(){
     }*/
 
     // looks ok, but needs further testing
-    // possible test: put resistance equal to 1 for every node --> opinion fraction shouldn't change over time
-    // N = 1000 and p = 0.1 takes a really long time to run (>1h30min)
-    int N = 100;
+    // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> not no more!
+    int N = 1000;
     double p = 0.1;
-    double p_bern = 1.;
-    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
-    g.print();
-    
-    
-    
-    /*for (int t=0; t<300; t++){
-        cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
+    double p_bern = 0.; 
+   /* Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
+    ofstream op1file("Fraction_of_opinions_1_80_20_one_op_stubb_50.txt");  
+    for (int t=0; t<300; t++){
+        op1file << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << '\n';
         g.print();
         cout << endl;
         g.changeOpinions();
     }
-    ofstream opfile("Fraction_of_opinions.txt");
-    opfile << setprecision(15);
+    op1file.close();*/
+
+    ofstream opfile("Fraction_of_opinions_1_80_20_no_stubb_bern_0_av.txt");
     vector<double> fractionsA(300);
     vector<double> fractionsB(300); 
     // loop over different networks to take averages of the fraction of opinions for each time step
@@ -262,12 +261,12 @@ int main(){
     for (int i = 0; i < 300; i++){
         opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << '\n';
     }
-    opfile.close(); */
+    opfile.close();
 };
 
 // maybe also include adjecency matrix
 
-// QUESTION: does every class need a destructor? 
+// QUESTION: does every class need a destructor? + can we assign edges in time slower than N^2?
 
 
 /* current status: opinion dynamics: takes often long time to run --> optimizations possible? ALSO: 50/50 case with no stubborn actors almost always leads to a stable 
