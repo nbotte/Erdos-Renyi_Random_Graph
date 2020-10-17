@@ -12,12 +12,12 @@ using namespace std;
 Node::Node(int index, int opinion, double resistance, bool active){_index=index; _neigh=list<Node*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
 
 // implementation of the getters
-int const Node::index() {return _index;}
-list<Node*> const Node::neigh() {return _neigh;}
-int const Node::opinion() {return _opinion;}
-int const Node::newOpinion() {return _newOpinion;}
-double const Node::resistance() {return _resistance;}
-bool const Node::active() {return _active;}
+int Node::index() {return _index;}
+list<Node*> Node::neigh() {return _neigh;}
+int Node::opinion() {return _opinion;}
+int Node::newOpinion() {return _newOpinion;}
+double Node::resistance() {return _resistance;}
+bool Node::active() {return _active;}
 
 // function to add a neighbour to the vector of neighbours of a node
 void Node::addNeigh(Node* n){

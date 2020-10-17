@@ -19,15 +19,15 @@ class Node{
     bool _wasActive; // declare wasActive variable (= determines if the node was active in the previous timestep)
 
 public: 
-    Node(int index, int opinion, double resistance, bool active); // define constructor
+    Node(int, int, double, bool); // define constructor
 
     // define getters, provides access to data member with corresponding name
-    int const index();
-    list<Node*> const neigh();
-    int const opinion();
-    int const newOpinion();
-    double const resistance();
-    bool const active();
+    int index();
+    list<Node*> neigh();
+    int opinion();
+    int newOpinion();
+    double resistance();
+    bool active();
 
     // declare member functions of class Node
     void addNeigh(Node* n);

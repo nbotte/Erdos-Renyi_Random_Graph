@@ -11,8 +11,8 @@ using namespace std;
 Edge::Edge(Node* inNode, Node* outNode){_inNode=inNode; _outNode=outNode;}
 
 // implementation of getters, provides access to data member with corresponding name
-Node* const Edge::inNode() {return _inNode;}
-Node* const Edge::outNode() {return _outNode;}
+Node* Edge::inNode() {return _inNode;}
+Node* Edge::outNode() {return _outNode;}
 
 // function that overwrites the << operator to print edges to screen
 ostream& operator<<(ostream& os, Edge& e){
