@@ -80,38 +80,152 @@ int main(){
     }
     opfile.close();*/
 
-    // look at opinion fraction of neighbours of node i (see paper)
-    // started implementing this, but not yet tested etc!
-    int opinion0;
-    vector<double> neighOpinions(300);
+    // NOTE: this takes long time to run!
+    // TO DO: test this further
+    // count for each node the average fraction of neighbours with opinion 0 at t=299 and at t=0
+    int opinion0Begin;
+    int opinion0End;
+    vector<double> numberOfNeigh0At0(N);
+    vector<double> numberOfNeigh0At299(N);
+    double oldFractionBegin;
+    double oldFractionEnd;
     for (int n = 0; n < 100; n++){
         Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
-        for (int t = 0; t < 300; t++){
-            for (Node* n : g.nodelist()[10].neigh()){
+        // count for t = 0
+        for (int i = 0; i < N; i++){
+            for (Node* n : g.nodelist()[i].neigh()){
                 // count number of neighbours with opinion 0
                 if (n->opinion() == 0){
-                    opinion0++;
+                    opinion0Begin++;
                 }
-                }
-            double oldOpinion0 =  neighOpinions[t];   
-            neighOpinions[t] = oldOpinion0 + opinion0;
-            opinion0 = 0;
-            g.changeOpinions();
             }
-        }
-        
+            oldFractionBegin = numberOfNeigh0At0[i];
+            numberOfNeigh0At0[i] = oldFractionBegin + (double(opinion0Begin)/double(g.nodelist()[i].neigh().size()));
+            opinion0Begin = 0;
+        }  
+        for (int t = 0; t < 300; t++){
+            g.changeOpinions();
+        }   
+        // count for t = 299 
+        for (int i = 0; i < N; i++){
+            for (Node* n : g.nodelist()[i].neigh()){
+                // count number of neighbours with opinion 0
+                if (n->opinion() == 0){
+                    opinion0End++;
+                }
+            }
+            oldFractionEnd = numberOfNeigh0At299[i];
+            numberOfNeigh0At299[i] = oldFractionEnd + (double(opinion0End)/double(g.nodelist()[i].neigh().size()));
+            opinion0End = 0;
+        }    
     }
 
+    ofstream His0File("histogramAt0.txt");
+    ofstream His299File("histogramAt299.txt");
+    ofstream HisNormFile("normalizedHist.txt");
 
+    // make a histogram out of the vectors numberOfNeigh
+    int numberOfBins = 11;
+    vector<int> histogramAt0(numberOfBins); // declare an empty histogram with size 10 (for t = 0)
+    vector<int> histogramAt299(numberOfBins); // declare an empty histogram with size 10 (for t = 299)
+    for (int i = 0; i < N; i++){
+        double r0 = numberOfNeigh0At0[i]/100;
+        double r299 = numberOfNeigh0At299[i]/100;
+        if (r0 < 0.05){
+            histogramAt0[0] += 1;
+        }
+        else if (0.05 <= r0 && r0 < 0.15){
+            histogramAt0[1] += 1;
+        }
+        else if (0.15 <= r0 && r0 < 0.25){
+            histogramAt0[2] += 1;
+        }
+        else if (0.25 <= r0 && r0 < 0.35){
+            histogramAt0[3] += 1;
+        }
+        else if (0.35 <= r0 && r0 < 0.45){
+            histogramAt0[4] += 1;
+        }
+        else if (0.45 <= r0 && r0 < 0.55){
+            histogramAt0[5] += 1;
+        }
+        else if (0.55 <= r0 && r0 < 0.65){
+            histogramAt0[6] += 1;
+        }
+        else if (0.65 <= r0 && r0 < 0.75){
+            histogramAt0[7] += 1;
+        }
+        else if (0.75 <= r0 && r0 < 0.85){
+            histogramAt0[8] += 1;
+        }
+        else if (0.85 <= r0 && r0 < 0.95){
+            histogramAt0[9] += 1;
+        }
+        else if (0.95 <= r0){
+            histogramAt0[10] += 1;
+        }
+        if (r299 < 0.05){
+            histogramAt299[0] += 1;
+        }
+        else if (0.05 <= r299 && r299 < 0.15){
+            histogramAt299[1] += 1;
+        }
+        else if (0.15 <= r299 && r299 < 0.25){
+            histogramAt299[2] += 1;
+        }
+        else if (0.25 <= r299 && r299 < 0.35){
+            histogramAt299[3] += 1;
+        }
+        else if (0.35 <= r299 && r299 < 0.45){
+            histogramAt299[4] += 1;
+        }
+        else if (0.45 <= r299 && r299 < 0.55){
+            histogramAt299[5] += 1;
+        }
+        else if (0.55 <= r299 && r299 < 0.65){
+            histogramAt299[6] += 1;
+        }
+        else if (0.65 <= r299 && r299 < 0.75){
+            histogramAt299[7] += 1;
+        }
+        else if (0.75 <= r299 && r299 < 0.85){
+            histogramAt299[8] += 1;
+        }
+        else if (0.85 <= r299 && r299 < 0.95){
+            histogramAt299[9] += 1;
+        }
+        else if (0.95 <= r299){
+            histogramAt299[10] += 1;
+        }
+    }
+    vector<double> normalizedHist(numberOfBins);
+    for (int i = 0; i < 11; i++){
+        if (histogramAt0[i] == 0){
+            if (histogramAt299[i] == 0){
+                normalizedHist[i] = 1.;
+            }
+            else{
+                normalizedHist[i] = 1. + double(histogramAt299[i])/double(N);
+            }
+        }
+        else{
+            if (histogramAt299[i] == 0){
+                normalizedHist[i] = 1. - double(histogramAt0[i])/double(N);
+            }
+            else{
+                normalizedHist[i] = double(histogramAt299[i])/double(histogramAt0[i]);
+                cout << normalizedHist[i] << ' ';
+            }
+        }
+    }
+
+    for (int i = 0; i < 11; i++){
+        His0File << histogramAt0[i] << '\n';
+        His299File << histogramAt299[i] << '\n';
+        HisNormFile << normalizedHist[i] << '\n';
+    }
 };
 
 // maybe also include adjecency matrix
 
 // QUESTION: does every class need a destructor? + can we assign edges in time slower than N^2?
-
-
-/* current status: opinion dynamics: takes often long time to run --> optimizations possible? ALSO: 50/50 case with no stubborn actors almost always leads to a stable 
-situation of 54% of one opinion and 46% of the other, however one would expect a 50/50 situation
---> if you take more time steps and average over more simulations, this problem seems to disappear (still needs to be tested in some more depth)*/
-
-// TO DO: look at opinion fraction of neighbours of node i (see paper) + start implementing clustered random networks
