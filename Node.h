@@ -22,7 +22,7 @@ public:
     Node(int, int, double, bool); // define constructor
 
     // define getters, provides access to data member with corresponding name
-    int index();
+    const int index();
     list<Node*> neigh();
     int opinion();
     int newOpinion();
@@ -32,6 +32,7 @@ public:
     // declare member functions of class Node
     void addNeigh(Node* n);
     void removeNeigh(Node* n);
+    void removeAllNeigh();
     void changeOpinion();
     void setNewOpinion();
     void deactivate();

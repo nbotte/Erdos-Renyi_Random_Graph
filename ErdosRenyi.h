@@ -20,7 +20,7 @@ class Erdos_Renyi_Network{
 
 public:
     // define a constructor
-    Erdos_Renyi_Network(int, double, double);
+    Erdos_Renyi_Network(int, double, double, int);
 
     // define getters, provides access to data member with corresponding name
     vector<Node> nodelist();

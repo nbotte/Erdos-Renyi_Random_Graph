@@ -17,7 +17,7 @@
 using namespace std;
 
 // constructor, construct graph by making the nodes and the edges with a given probability
-Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbability, double bernouilliProbability){
+Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbability, double bernouilliProbability, int indexStart=0){
     _numberOfNodes = numberOfNodes;
     _edgeProbability = edgeProbability;
     _bernouilliProbability = bernouilliProbability;
@@ -37,6 +37,7 @@ Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbabili
     double resistance; // variable that determines the resistance of a node
     int opinion; // variable that determines the opinion of a node
     bool active; // variable that determines if node is active
+    int index; // variable that gives the index (name) of a node
     for (int i = 0; i < _numberOfNodes; i++){
         double k = dis(gen); // random number to determine if node is stubborn
         if (k <= fractionResistance){
@@ -46,14 +47,15 @@ Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbabili
             resistance = 0.;
         }
         double r = dis(gen); // random number to determine the opinion of a node
-        if (r < 0.5){
+        if (r < 0.2){
             opinion = 0;
         }
         else{
             opinion = 1;
         }
         active = disBern(gen);
-        Node n = Node(i, opinion, resistance, active);
+        index = indexStart + i; // indexStart is normally zero, but not if we need to construct clustered graphs out of different Erdos-Renyi graphs
+        Node n = Node(index, opinion, resistance, active);
         addNode(n);
     }    
     // add edge between any pair of nodes with a certain probability
@@ -61,7 +63,9 @@ Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbabili
         for (int j = i+1; j < _nodelist.size(); j++){
             double r = dis(gen); // draw a random number that will determine whether there is an edge or not
             if (r < _edgeProbability){
-                addEdge(i, j);
+                int indexIn = i;
+                int indexOut = j;
+                addEdge(indexIn, indexOut);
             }
         }
     }

@@ -29,7 +29,9 @@ public:
     // opinion dynamic functions not included yet! Or maybe make a different class for the opinion dynamics stuff?
     void addNode(Node n); // function to add nodes to the nodelist
     void addEdge(Edge e); // function to add edges to the edgelist
-    void rewireEdge();
+    void removeEdge(Edge e); // function to remove edges from the edgelist
+    void removeAllEdges(); // function to remove all the edges from the graph
+    void rewireEdges();
     void print();
 
     // not a member function, will be used to check if an edge is already in the edgelist

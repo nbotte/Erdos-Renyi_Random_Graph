@@ -12,7 +12,7 @@ using namespace std;
 Node::Node(int index, int opinion, double resistance, bool active){_index=index; _neigh=list<Node*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
 
 // implementation of the getters
-int Node::index() {return _index;}
+const int Node::index() {return _index;}
 list<Node*> Node::neigh() {return _neigh;}
 int Node::opinion() {return _opinion;}
 int Node::newOpinion() {return _newOpinion;}
@@ -24,9 +24,14 @@ void Node::addNeigh(Node* n){
    _neigh.push_back(n);
 }
 
-// function to remove a neighbour from the vector of neighbours of a node, NOT TESTED
+// function to remove a neighbour from the list of neighbours of a node, NOT TESTED
 void Node::removeNeigh(Node* n){
     _neigh.erase(remove(_neigh.begin(), _neigh.end(), n), _neigh.end());
+}
+
+// function to remove all the neighbours of a node
+void Node::removeAllNeigh(){
+    _neigh.clear();
 }
 
 // function to change the opinion of the node

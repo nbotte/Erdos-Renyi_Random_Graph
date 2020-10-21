@@ -1,6 +1,7 @@
 // Nina Botte
 
 #include <cmath>
+#include "ClusteredRandomER.h"
 #include "ErdosRenyi.h"
 #include "Node.h"
 #include "Edge.h"
@@ -46,9 +47,9 @@ int main(){
 
     // looks ok, but needs further testing
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> not no more!
-    int N = 1000;
+    /*int N = 1000;
     double p = 0.1;
-    double p_bern = 1.; 
+    double p_bern = 1.; */
     //Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
     /*ofstream op1file("Fraction_of_opinions_1_80_20_one_op_stubb_50.txt");  
     for (int t=0; t<300; t++){
@@ -83,14 +84,14 @@ int main(){
     // NOTE: this takes long time to run!
     // TO DO: test this further
     // count for each node the average fraction of neighbours with opinion 0 at t=299 and at t=0
-    int opinion0Begin;
+    /*int opinion0Begin;
     int opinion0End;
     vector<double> numberOfNeigh0At0(N);
     vector<double> numberOfNeigh0At299(N);
     double oldFractionBegin;
     double oldFractionEnd;
     for (int n = 0; n < 100; n++){
-        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
+        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
         // count for t = 0
         for (int i = 0; i < N; i++){
             for (Node* n : g.nodelist()[i].neigh()){
@@ -120,9 +121,9 @@ int main(){
         }    
     }
 
-    ofstream His0File("histogramAt0.txt");
-    ofstream His299File("histogramAt299.txt");
-    ofstream HisNormFile("normalizedHist.txt");
+    ofstream His0File("histogramAt0_20/80.txt");
+    ofstream His299File("histogramAt299_20/80.txt");
+    ofstream HisNormFile("normalizedHist_20/80.txt");
 
     // make a histogram out of the vectors numberOfNeigh
     int numberOfBins = 11;
@@ -223,6 +224,19 @@ int main(){
         His0File << histogramAt0[i] << '\n';
         His299File << histogramAt299[i] << '\n';
         HisNormFile << normalizedHist[i] << '\n';
+    }
+    His0File.close();
+    His299File.close();
+    HisNormFile.close();*/
+
+    Clustered_Random_Network g = Clustered_Random_Network(0.5);
+    g.print();
+    for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i] << ": ";
+        for (Node* n : g.nodelist()[i].neigh()){
+            cout << *n;
+        }
+        cout << endl;
     }
 };
 
