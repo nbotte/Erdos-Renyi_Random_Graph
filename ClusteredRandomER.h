@@ -22,8 +22,8 @@ public:
     Clustered_Random_Network(double rewireProbability);
 
     // define getters, provides access to data member with corresponding name
-    vector<Node> nodelist();
-    vector<Edge> edgelist();
+    vector<Node> nodelist() const;
+    vector<Edge> edgelist() const;
 
     // declare member functions of class Clustered_Random_Network 
     // opinion dynamic functions not included yet! Or maybe make a different class for the opinion dynamics stuff?

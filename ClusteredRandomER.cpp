@@ -39,37 +39,42 @@ Clustered_Random_Network::Clustered_Random_Network(double rewireProbability){
 
     // add the nodes of the different ER graphs to the nodelist of the clustered graph
     for (int i = 0; i < g1.nodelist().size(); i++){
-        _nodelist.push_back(g1.nodelist()[i]);
+        addNode(g1.nodelist()[i]);
     }
     for (int i = 0; i < g2.nodelist().size(); i++){
-        _nodelist.push_back(g2.nodelist()[i]);
+        addNode(g2.nodelist()[i]);
     }
     for (int i = 0; i < g3.nodelist().size(); i++){
-        _nodelist.push_back(g3.nodelist()[i]);
+        addNode(g3.nodelist()[i]);
     }
     for (int i = 0; i < g4.nodelist().size(); i++){
-        _nodelist.push_back(g4.nodelist()[i]);
+        addNode(g4.nodelist()[i]);
     }
     // add the edges of the different ER graphs to the edgelist of the clustered graph
     for (int i = 0; i < g1.edgelist().size(); i++){
-        _edgelist.push_back(g1.edgelist()[i]);
+        _edgelist.emplace_back(g1.edgelist()[i]);
     }
     for (int i = 0; i < g2.edgelist().size(); i++){
-        _edgelist.push_back(g2.edgelist()[i]);
+        _edgelist.emplace_back(g2.edgelist()[i]);
     }
     for (int i = 0; i < g3.edgelist().size(); i++){
-        _edgelist.push_back(g3.edgelist()[i]);
+        _edgelist.emplace_back(g3.edgelist()[i]);    
     }
     for (int i = 0; i < g4.edgelist().size(); i++){
-        _edgelist.push_back(g4.edgelist()[i]);
+        _edgelist.emplace_back(g4.edgelist()[i]);
     }
+    cout << "Edges: ";
+    for (int i = 0; i < _edgelist.size(); i++){
+        cout << _edgelist[i]; 
+    }
+    cout << endl;
     // rewire the edges
     rewireEdges();
 }
 
 // implementation of the getters
-vector<Node> Clustered_Random_Network::nodelist() {return _nodelist;}
-vector<Edge> Clustered_Random_Network::edgelist() {return _edgelist;}
+vector<Node> Clustered_Random_Network::nodelist() const {return _nodelist;}
+vector<Edge> Clustered_Random_Network::edgelist() const {return _edgelist;}
 
 // function that adds a node to the nodelist of the clustered graph NEEDED?
 void Clustered_Random_Network::addNode(Node n){
@@ -83,9 +88,9 @@ void Clustered_Random_Network::addEdge(Edge e){
         _edgelist.push_back(e);
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
-        cout << indexIn << ' ' << indexOut << endl;
-        _nodelist[indexIn].addNeigh(&_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].addNeigh(&_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
+        //cout << indexIn << ' ' << indexOut << endl;
+        _nodelist[indexIn].addNeigh(_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].addNeigh(_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
     }
 }
 
@@ -95,8 +100,8 @@ void Clustered_Random_Network::removeEdge(Edge e){
         _edgelist.erase(remove(_edgelist.begin(), _edgelist.end(), e), _edgelist.end());
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
-        _nodelist[indexIn].removeNeigh(&_nodelist[indexOut]); // remove outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].removeNeigh(&_nodelist[indexIn]); // remove inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].removeNeigh(_nodelist[indexOut]); // remove outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].removeNeigh(_nodelist[indexIn]); // remove inNode of edge to neighbours of outNode of edge
     }
 }
 
@@ -131,9 +136,9 @@ void Clustered_Random_Network::rewireEdges(){
             //Node* n = &out.back();
             //cout << n->index() << endl;
             if (&out.back() != _edgelist[i].inNode()){
-                Edge e = Edge(_edgelist[i].inNode(), &out.back());
-                cout << e << endl;
-                helpEdgelist.push_back(e); // add new edge to the help vector
+                //Edge e = Edge(_edgelist[i].inNode(), &out.back());
+                //cout << e << endl;
+                helpEdgelist.push_back(Edge(_edgelist[i].inNode(), &out.back())); // add new edge to the help vector
             }
             //cout << e.outNode()->index() << endl;
             //cout << helpEdgelist.back();
@@ -148,6 +153,7 @@ void Clustered_Random_Network::rewireEdges(){
     
     // all new made edges seem fine, except the first (always has zero as outNode...)
     for (int i = 0; i < helpEdgelist.size(); i++){
+        cout << helpEdgelist[i];
         addEdge(helpEdgelist[i]); // add the new edges in help vector to the edgelist of the clustered graph
     }
 }

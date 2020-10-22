@@ -17,7 +17,7 @@
 using namespace std;
 
 // constructor, construct graph by making the nodes and the edges with a given probability
-Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbability, double bernouilliProbability, int indexStart=0){
+Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbability, double bernouilliProbability, int indexStart){
     _numberOfNodes = numberOfNodes;
     _edgeProbability = edgeProbability;
     _bernouilliProbability = bernouilliProbability;
@@ -88,8 +88,8 @@ void Erdos_Renyi_Network::addEdge(int indexIn, int indexOut){
     // check if edge is already there
     if (contains(_edgelist, e) == false){
         _edgelist.push_back(e);
-        _nodelist[indexIn].addNeigh(&_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].addNeigh(&_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].addNeigh(_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].addNeigh(_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
 
     }
 }

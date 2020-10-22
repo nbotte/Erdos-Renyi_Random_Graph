@@ -11,7 +11,7 @@ using namespace std;
 
 class Node{  
     int _index; // declare index variable (= name of node)
-    list<Node*> _neigh; // declare neigh variable (= vector of pointers to nodes neighbouring the current node)
+    list<Node> _neigh; // declare neigh variable (= vector of pointers to nodes neighbouring the current node)
     int _opinion; // declare opinion variable (= opinion of node at current time step, choice between 0 and 1)
     int _newOpinion; // declare newOpinion variable (= opinion of node at the next time step, choice between 0 and 1)
     double _resistance; // declare resistance variable (= stubborness of the node, resistance to change his opinion)
@@ -19,19 +19,24 @@ class Node{
     bool _wasActive; // declare wasActive variable (= determines if the node was active in the previous timestep)
 
 public: 
+    Node(); // define default constructor
     Node(int, int, double, bool); // define constructor
 
+    Node(const Node &n); // define copy constructor (not sure if this is needed here)
+
+    ~Node(); // define destructor
+
     // define getters, provides access to data member with corresponding name
-    const int index();
-    list<Node*> neigh();
-    int opinion();
-    int newOpinion();
-    double resistance();
-    bool active();
+    int index() const;
+    list<Node> neigh() const;
+    int opinion() const;
+    int newOpinion() const;
+    double resistance() const;
+    bool active() const;
 
     // declare member functions of class Node
-    void addNeigh(Node* n);
-    void removeNeigh(Node* n);
+    void addNeigh(const Node& n);
+    void removeNeigh(const Node& n);
     void removeAllNeigh();
     void changeOpinion();
     void setNewOpinion();
@@ -39,8 +44,11 @@ public:
     void setActive(bool active);
     void setWasActive();
 
+    // operator overload == (make it a friend of Node)
+    friend bool operator==(Node n1, Node n2);
+
     // operator overload << (make it a friend of Node)
-    friend ostream& operator<<(ostream& os, Node& n);
+    friend ostream& operator<<(ostream& os, const Node& n);
 };
 
 

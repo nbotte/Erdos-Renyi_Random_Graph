@@ -233,13 +233,16 @@ int main(){
     g.print();
     for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
-        for (Node* n : g.nodelist()[i].neigh()){
-            cout << *n;
+        for (Node n : g.nodelist()[i].neigh()){
+            cout << n;
         }
         cout << endl;
     }
+   
 };
 
 // maybe also include adjecency matrix
 
 // QUESTION: does every class need a destructor? + can we assign edges in time slower than N^2?
+
+// changed neighbours to list of nodes instead of pointers, but still gives errors!! --> solved? Needs proper testing!

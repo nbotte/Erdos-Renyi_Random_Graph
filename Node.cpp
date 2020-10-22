@@ -8,24 +8,42 @@
 #include <algorithm>
 using namespace std;
 
+// default constructor
+Node::Node(){};
+
 // implementation of constructor, construct a node by defining its name, opinion, resistance and a vector of neighbours (empty at construction)
-Node::Node(int index, int opinion, double resistance, bool active){_index=index; _neigh=list<Node*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
+Node::Node(int index, int opinion, double resistance, bool active){_index=index; _neigh=list<Node>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
+
+// implementation of copy constructor
+Node::Node(const Node &n){
+    _index = n._index;
+    _opinion = n._opinion;
+    _newOpinion = n._newOpinion;
+    _resistance = n._resistance;
+    _active = n._active;
+    _wasActive = n._wasActive;
+    _neigh = n._neigh;
+}
+
+// implementation of the destructor
+Node::~Node(){
+}
 
 // implementation of the getters
-const int Node::index() {return _index;}
-list<Node*> Node::neigh() {return _neigh;}
-int Node::opinion() {return _opinion;}
-int Node::newOpinion() {return _newOpinion;}
-double Node::resistance() {return _resistance;}
-bool Node::active() {return _active;}
+int Node::index() const {return _index;}
+list<Node> Node::neigh() const {return _neigh;}
+int Node::opinion() const {return _opinion;}
+int Node::newOpinion() const {return _newOpinion;}
+double Node::resistance() const {return _resistance;}
+bool Node::active() const {return _active;}
 
 // function to add a neighbour to the vector of neighbours of a node
-void Node::addNeigh(Node* n){
+void Node::addNeigh(const Node& n){
    _neigh.push_back(n);
 }
 
 // function to remove a neighbour from the list of neighbours of a node, NOT TESTED
-void Node::removeNeigh(Node* n){
+void Node::removeNeigh(const Node& n){
     _neigh.erase(remove(_neigh.begin(), _neigh.end(), n), _neigh.end());
 }
 
@@ -48,9 +66,9 @@ void Node::changeOpinion(){
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
         // count the number of opinions 0 and 1 of the neighbours of the node (only take previously active neighbours into account)
-        for (Node* n : _neigh){
-            if (n->_wasActive){
-                if (n->_opinion == 0){
+        for (Node n : _neigh){
+            if (n._wasActive){
+                if (n._opinion == 0){
                     opinion0++; 
                 }
                 else{ 
@@ -102,9 +120,18 @@ void Node::setWasActive(){
     _wasActive = _active;
 }
 
+// function that overwrites the == operator to compare 2 nodes
+// ATTENTION: maybe also check opinion and active or not!!
+bool operator==(Node n1, Node n2){
+    if (n1._index == n2._index){
+        return true;
+    }
+    else{ return false;}
+}
+
 // overload << operator to print Node (+ opinion and activeness) to screen
-ostream& operator<<(ostream& os, Node& n){
-    os << n.index() << '-' << n.opinion() << '-' << n.active() << ' ';
+ostream& operator<<(ostream& os, const Node& n){
+    os << n._index << '-' << n._opinion << '-' << n._active << ' ';
     return os;
 }
 
