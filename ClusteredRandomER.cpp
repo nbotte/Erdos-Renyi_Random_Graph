@@ -28,10 +28,10 @@ Clustered_Random_Network::Clustered_Random_Network(double rewireProbability){
     Erdos_Renyi_Network g3 = Erdos_Renyi_Network(25, 0.1 ,1., 50);
     Erdos_Renyi_Network g4 = Erdos_Renyi_Network(25, 0.01 ,1., 75);
 
-   /* g1.print();
+    g1.print();
     g2.print();
     g3.print();
-    g4.print();*/
+    g4.print();
     
     // reserve enough space for the vectors
     _nodelist.reserve(g1.nodelist().size() + g2.nodelist().size() + g3.nodelist().size() + g4.nodelist().size());
@@ -69,7 +69,7 @@ Clustered_Random_Network::Clustered_Random_Network(double rewireProbability){
     }
     cout << endl;
     // rewire the edges
-    rewireEdges();
+    //rewireEdges();
 }
 
 // implementation of the getters
@@ -89,8 +89,8 @@ void Clustered_Random_Network::addEdge(Edge e){
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
         //cout << indexIn << ' ' << indexOut << endl;
-        _nodelist[indexIn].addNeigh(_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].addNeigh(_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].addNeigh(&_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].addNeigh(&_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
     }
 }
 
@@ -100,8 +100,8 @@ void Clustered_Random_Network::removeEdge(Edge e){
         _edgelist.erase(remove(_edgelist.begin(), _edgelist.end(), e), _edgelist.end());
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
-        _nodelist[indexIn].removeNeigh(_nodelist[indexOut]); // remove outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].removeNeigh(_nodelist[indexIn]); // remove inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].removeNeigh(&_nodelist[indexOut]); // remove outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].removeNeigh(&_nodelist[indexIn]); // remove inNode of edge to neighbours of outNode of edge
     }
 }
 

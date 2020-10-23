@@ -47,7 +47,7 @@ Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbabili
             resistance = 0.;
         }
         double r = dis(gen); // random number to determine the opinion of a node
-        if (r < 0.2){
+        if (r < 0.5){
             opinion = 0;
         }
         else{
@@ -88,8 +88,8 @@ void Erdos_Renyi_Network::addEdge(int indexIn, int indexOut){
     // check if edge is already there
     if (contains(_edgelist, e) == false){
         _edgelist.push_back(e);
-        _nodelist[indexIn].addNeigh(_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].addNeigh(_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].addNeigh(&_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].addNeigh(&_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
 
     }
 }

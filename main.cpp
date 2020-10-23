@@ -47,25 +47,28 @@ int main(){
 
     // looks ok, but needs further testing
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> not no more!
-    /*int N = 1000;
+   /* int N = 100;
     double p = 0.1;
-    double p_bern = 1.; */
-    //Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
-    /*ofstream op1file("Fraction_of_opinions_1_80_20_one_op_stubb_50.txt");  
+    double p_bern = 1.; 
+    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
+   
+    //ofstream op1file("Fraction_of_opinions_1_80_20_one_op_stubb_50.txt");  
     for (int t=0; t<300; t++){
         cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
         //g.print();
         //cout << endl;
         g.changeOpinions();
     }
-    op1file.close();
+    //g.changeOpinions();
+    //g.print();
+    //op1file.close();
 
-    ofstream opfile("Fraction_of_opinions_1_70_30_no_stubb_bern_1_av.txt");
+  //  ofstream opfile("Fraction_of_opinions_1_70_30_no_stubb_bern_1_av.txt");
     vector<double> fractionsA(300);
     vector<double> fractionsB(300); 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 100; n++){
-        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern); 
+        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0); 
         // for each network: let the opinions evolve in time
         for (int t = 0; t < 300; t++){
             double oldFractionA = fractionsA[t];
@@ -77,9 +80,9 @@ int main(){
     }
     // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
     for (int i = 0; i < 300; i++){
-        opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << '\n';
-    }
-    opfile.close();*/
+        cout << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
+    }*/
+   // opfile.close();
 
     // NOTE: this takes long time to run!
     // TO DO: test this further
@@ -233,8 +236,8 @@ int main(){
     g.print();
     for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
-        for (Node n : g.nodelist()[i].neigh()){
-            cout << n;
+        for (Node* n : g.nodelist()[i].neigh()){
+            cout << *n;
         }
         cout << endl;
     }
@@ -245,4 +248,4 @@ int main(){
 
 // QUESTION: does every class need a destructor? + can we assign edges in time slower than N^2?
 
-// changed neighbours to list of nodes instead of pointers, but still gives errors!! --> solved? Needs proper testing!
+// changed neighbours to list of pointers again, but still haven't figured out how to deep copy the neighbour list

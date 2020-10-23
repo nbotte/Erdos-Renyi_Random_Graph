@@ -3,7 +3,7 @@
 #include "Node.h"
 #include <iomanip>
 #include <iostream>
-#include <list>
+#include <vector>
 #include <random>
 #include <algorithm>
 using namespace std;
@@ -12,9 +12,9 @@ using namespace std;
 Node::Node(){};
 
 // implementation of constructor, construct a node by defining its name, opinion, resistance and a vector of neighbours (empty at construction)
-Node::Node(int index, int opinion, double resistance, bool active){_index=index; _neigh=list<Node>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
+Node::Node(int index, int opinion, double resistance, bool active){_index=index; _neigh=vector<Node*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
 
-// implementation of copy constructor
+// implementation of copy constructor --> NEEDED?
 Node::Node(const Node &n){
     _index = n._index;
     _opinion = n._opinion;
@@ -26,24 +26,38 @@ Node::Node(const Node &n){
 }
 
 // implementation of the destructor
-Node::~Node(){
+Node::~Node(){}
+
+// implementation of operator assignement
+Node& Node::operator=(const Node& n){
+    if (&n != this){
+        Node temp(n);
+        swap(this->_index, temp._index);
+        swap(this->_active, temp._active);
+        swap(this->_newOpinion, temp._newOpinion);
+        swap(this->_opinion, temp._opinion);
+        swap(this->_resistance, temp._resistance);
+        swap(this->_wasActive, temp._wasActive);
+        swap(this->_neigh, temp._neigh);
+    }
+    return *this;
 }
 
 // implementation of the getters
 int Node::index() const {return _index;}
-list<Node> Node::neigh() const {return _neigh;}
+vector<Node*> Node::neigh() const {return _neigh;}
 int Node::opinion() const {return _opinion;}
 int Node::newOpinion() const {return _newOpinion;}
 double Node::resistance() const {return _resistance;}
 bool Node::active() const {return _active;}
 
 // function to add a neighbour to the vector of neighbours of a node
-void Node::addNeigh(const Node& n){
+void Node::addNeigh(Node* n){
    _neigh.push_back(n);
 }
 
 // function to remove a neighbour from the list of neighbours of a node, NOT TESTED
-void Node::removeNeigh(const Node& n){
+void Node::removeNeigh(Node* n){
     _neigh.erase(remove(_neigh.begin(), _neigh.end(), n), _neigh.end());
 }
 
@@ -66,9 +80,9 @@ void Node::changeOpinion(){
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
         // count the number of opinions 0 and 1 of the neighbours of the node (only take previously active neighbours into account)
-        for (Node n : _neigh){
-            if (n._wasActive){
-                if (n._opinion == 0){
+        for (Node* n : _neigh){
+            if (n->_wasActive){
+                if (n->_opinion == 0){
                     opinion0++; 
                 }
                 else{ 
