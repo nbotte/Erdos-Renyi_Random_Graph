@@ -1,13 +1,14 @@
 // Nina Botte
 
 #define _USE_MATH_DEFINES
-#include "Node.h"
 #include <iomanip>
 #include <iostream>
 using namespace std;
 
 #ifndef EDGE_H
 #define EDGE_H
+
+class Node;
 
 class Edge{  
     Node* _inNode; // declare inNode variable (pointer to startnode of edge)

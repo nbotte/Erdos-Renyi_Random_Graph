@@ -52,22 +52,17 @@ Clustered_Random_Network::Clustered_Random_Network(double rewireProbability){
     }
     // add the edges of the different ER graphs to the edgelist of the clustered graph
     for (int i = 0; i < g1.edgelist().size(); i++){
-        _edgelist.emplace_back(g1.edgelist()[i]);
+        _edgelist.push_back(g1.edgelist()[i]);
     }
     for (int i = 0; i < g2.edgelist().size(); i++){
-        _edgelist.emplace_back(g2.edgelist()[i]);
+        _edgelist.push_back(g2.edgelist()[i]);
     }
     for (int i = 0; i < g3.edgelist().size(); i++){
-        _edgelist.emplace_back(g3.edgelist()[i]);    
+        _edgelist.push_back(g3.edgelist()[i]);    
     }
     for (int i = 0; i < g4.edgelist().size(); i++){
-        _edgelist.emplace_back(g4.edgelist()[i]);
+        _edgelist.push_back(g4.edgelist()[i]);
     }
-    cout << "Edges: ";
-    for (int i = 0; i < _edgelist.size(); i++){
-        cout << _edgelist[i]; 
-    }
-    cout << endl;
     // rewire the edges
     //rewireEdges();
 }
@@ -89,8 +84,8 @@ void Clustered_Random_Network::addEdge(Edge e){
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
         //cout << indexIn << ' ' << indexOut << endl;
-        _nodelist[indexIn].addNeigh(&_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].addNeigh(&_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].addAdjEdge(&e); // add outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].addAdjEdge(&e); // add inNode of edge to neighbours of outNode of edge
     }
 }
 
@@ -100,8 +95,8 @@ void Clustered_Random_Network::removeEdge(Edge e){
         _edgelist.erase(remove(_edgelist.begin(), _edgelist.end(), e), _edgelist.end());
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
-        _nodelist[indexIn].removeNeigh(&_nodelist[indexOut]); // remove outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].removeNeigh(&_nodelist[indexIn]); // remove inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].removeAdjEdge(&e); // remove outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].removeAdjEdge(&e); // remove inNode of edge to neighbours of outNode of edge
     }
 }
 
@@ -111,8 +106,8 @@ void Clustered_Random_Network::removeAllEdges(){
     for (int i = 0; i < _edgelist.size(); i++){
         int indexIn = _edgelist[i].inNode()->index();
         int indexOut = _edgelist[i].outNode()->index();
-        _nodelist[indexIn].removeAllNeigh(); // remove neighbours of inNode of edge
-        _nodelist[indexOut].removeAllNeigh(); // remove neighbours of outNode of edge
+        _nodelist[indexIn].removeAllAdjEdges(); // remove neighbours of inNode of edge
+        _nodelist[indexOut].removeAllAdjEdges(); // remove neighbours of outNode of edge
     }
     _edgelist.clear(); // remove the edges
 }

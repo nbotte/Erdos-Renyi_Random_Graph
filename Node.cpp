@@ -1,9 +1,10 @@
 // Nina Botte
 
 #include "Node.h"
+#include "Edge.h"
 #include <iomanip>
 #include <iostream>
-#include <vector>
+#include <list>
 #include <random>
 #include <algorithm>
 using namespace std;
@@ -12,58 +13,29 @@ using namespace std;
 Node::Node(){};
 
 // implementation of constructor, construct a node by defining its name, opinion, resistance and a vector of neighbours (empty at construction)
-Node::Node(int index, int opinion, double resistance, bool active){_index=index; _neigh=vector<Node*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
-
-// implementation of copy constructor --> NEEDED?
-Node::Node(const Node &n){
-    _index = n._index;
-    _opinion = n._opinion;
-    _newOpinion = n._newOpinion;
-    _resistance = n._resistance;
-    _active = n._active;
-    _wasActive = n._wasActive;
-    _neigh = n._neigh;
-}
-
-// implementation of the destructor
-Node::~Node(){}
-
-// implementation of operator assignement
-Node& Node::operator=(const Node& n){
-    if (&n != this){
-        Node temp(n);
-        swap(this->_index, temp._index);
-        swap(this->_active, temp._active);
-        swap(this->_newOpinion, temp._newOpinion);
-        swap(this->_opinion, temp._opinion);
-        swap(this->_resistance, temp._resistance);
-        swap(this->_wasActive, temp._wasActive);
-        swap(this->_neigh, temp._neigh);
-    }
-    return *this;
-}
+Node::Node(int index, int opinion, double resistance, bool active){_index=index; _adjEdgelist=list<Edge*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
 
 // implementation of the getters
 int Node::index() const {return _index;}
-vector<Node*> Node::neigh() const {return _neigh;}
+list<Edge*> Node::adjEdgelist() const {return _adjEdgelist;}
 int Node::opinion() const {return _opinion;}
 int Node::newOpinion() const {return _newOpinion;}
 double Node::resistance() const {return _resistance;}
 bool Node::active() const {return _active;}
 
 // function to add a neighbour to the vector of neighbours of a node
-void Node::addNeigh(Node* n){
-   _neigh.push_back(n);
+void Node::addAdjEdge(Edge* e){
+   _adjEdgelist.push_back(e);
 }
 
 // function to remove a neighbour from the list of neighbours of a node, NOT TESTED
-void Node::removeNeigh(Node* n){
-    _neigh.erase(remove(_neigh.begin(), _neigh.end(), n), _neigh.end());
+void Node::removeAdjEdge(Edge* e){
+    _adjEdgelist.erase(remove(_adjEdgelist.begin(), _adjEdgelist.end(), e), _adjEdgelist.end());
 }
 
 // function to remove all the neighbours of a node
-void Node::removeAllNeigh(){
-    _neigh.clear();
+void Node::removeAllAdjEdges(){
+    _adjEdgelist.clear();
 }
 
 // function to change the opinion of the node
@@ -80,13 +52,25 @@ void Node::changeOpinion(){
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
         // count the number of opinions 0 and 1 of the neighbours of the node (only take previously active neighbours into account)
-        for (Node* n : _neigh){
-            if (n->_wasActive){
-                if (n->_opinion == 0){
-                    opinion0++; 
+        for (Edge* e : _adjEdgelist){
+            if (e->outNode()->index() == _index){
+                if (e->inNode()->_wasActive){
+                    if (e->inNode()->_opinion == 0){
+                        opinion0++; 
+                    }
+                    else{ 
+                        opinion1++;
+                    }
                 }
-                else{ 
-                    opinion1++;
+            }
+            else{
+                if (e->outNode()->_wasActive){
+                    if (e->outNode()->_opinion == 0){
+                        opinion0++; 
+                    }
+                    else{ 
+                        opinion1++;
+                    }
                 }
             }
         }
@@ -110,8 +94,7 @@ void Node::changeOpinion(){
         else{
             _newOpinion = _opinion;
         }
-    }
-        
+    }   
 }
 
 // function that sets the opinion of a node equal to its new opinion
@@ -150,3 +133,4 @@ ostream& operator<<(ostream& os, const Node& n){
 }
 
 
+// Need to write copy constructor!!
