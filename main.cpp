@@ -49,22 +49,28 @@ int main(){
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> not no more!
 
     // needs more testing, does opinion dynamics works properly??
-    int N = 100;
+  /*  int N = 100;
     double p = 0.01;
     double p_bern = 1.; 
-    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
+    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
     g.print();
-    g.changeOpinions();
+    for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i] << ": ";
+        for (Node* n : g.nodelist()[i].neigh()){
+            cout << *n;
+        }
+        cout << endl;
+    }*/
    
     //ofstream op1file("Fraction_of_opinions_1_80_20_one_op_stubb_50.txt");  
-    for (int t=0; t<300; t++){
+   /* for (int t=0; t<300; t++){
         cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
         //g.print();
         //cout << endl;
         g.changeOpinions();
     }
     //g.changeOpinions();
-    g.print();
+    g.print();*/
     //op1file.close();
 
   //  ofstream opfile("Fraction_of_opinions_1_70_30_no_stubb_bern_1_av.txt");
@@ -237,12 +243,12 @@ int main(){
     HisNormFile.close();*/
 
     // still needs copy constructor for nodes
-    Clustered_Random_Network g = Clustered_Random_Network(0.5);
+    Clustered_Random_Network g = Clustered_Random_Network(0.1);
     g.print();
     for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
-        for (Edge* e : g.nodelist()[i].adjEdgelist()){
-            cout << *e;
+        for (Node* n : g.nodelist()[i].neigh()){
+            cout << *n;
         }
         cout << endl;
     }

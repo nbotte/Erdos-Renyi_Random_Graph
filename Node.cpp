@@ -9,33 +9,43 @@
 #include <algorithm>
 using namespace std;
 
+// attention: try not to copy nodes, becauses no proper copy constructor is written (and I do not see how to do this with neighbours that point to nodes itself)
+
 // default constructor
 Node::Node(){};
 
 // implementation of constructor, construct a node by defining its name, opinion, resistance and a vector of neighbours (empty at construction)
-Node::Node(int index, int opinion, double resistance, bool active){_index=index; _adjEdgelist=list<Edge*>(); _opinion=opinion; _newOpinion=opinion; _resistance=resistance; _active=active; _wasActive=true;}
+Node::Node(int index, int opinion, double resistance, bool active){
+    _index = index; 
+    _neigh = list<Node*>(); 
+    _opinion = opinion; 
+    _newOpinion = opinion; 
+    _resistance = resistance; 
+    _active = active; 
+    _wasActive = true;
+}
 
 // implementation of the getters
 int Node::index() const {return _index;}
-list<Edge*> Node::adjEdgelist() const {return _adjEdgelist;}
+list<Node*> Node::neigh() const {return _neigh;}
 int Node::opinion() const {return _opinion;}
 int Node::newOpinion() const {return _newOpinion;}
 double Node::resistance() const {return _resistance;}
 bool Node::active() const {return _active;}
 
-// function to add a neighbour to the vector of neighbours of a node
-void Node::addAdjEdge(Edge* e){
-   _adjEdgelist.push_back(e);
+// function to add a neighbour to the list of pointers to the neighbours of a node
+void Node::addNeigh(Node* n){
+   _neigh.push_back(n);
 }
 
-// function to remove a neighbour from the list of neighbours of a node, NOT TESTED
-void Node::removeAdjEdge(Edge* e){
-    _adjEdgelist.erase(remove(_adjEdgelist.begin(), _adjEdgelist.end(), e), _adjEdgelist.end());
+// function to remove a neighbour from the list of pointers to the neighbours of a node, NOT TESTED
+void Node::removeNeigh(Node* n){
+    _neigh.erase(remove(_neigh.begin(), _neigh.end(), n), _neigh.end());
 }
 
 // function to remove all the neighbours of a node
-void Node::removeAllAdjEdges(){
-    _adjEdgelist.clear();
+void Node::removeAllNeigh(){
+    _neigh.clear();
 }
 
 // function to change the opinion of the node
@@ -52,25 +62,13 @@ void Node::changeOpinion(){
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
         // count the number of opinions 0 and 1 of the neighbours of the node (only take previously active neighbours into account)
-        for (Edge* e : _adjEdgelist){
-            if (e->outNode()->index() == _index){
-                if (e->inNode()->_wasActive){
-                    if (e->inNode()->_opinion == 0){
-                        opinion0++; 
-                    }
-                    else{ 
-                        opinion1++;
-                    }
+        for (Node* n : _neigh){
+            if (n->_wasActive){
+                if (n->_opinion == 0){
+                    opinion0++; 
                 }
-            }
-            else{
-                if (e->outNode()->_wasActive){
-                    if (e->outNode()->_opinion == 0){
-                        opinion0++; 
-                    }
-                    else{ 
-                        opinion1++;
-                    }
+                else{ 
+                    opinion1++;
                 }
             }
         }
@@ -132,5 +130,3 @@ ostream& operator<<(ostream& os, const Node& n){
     return os;
 }
 
-
-// Need to write copy constructor!!

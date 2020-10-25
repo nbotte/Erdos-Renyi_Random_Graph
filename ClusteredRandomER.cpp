@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include "ClusteredRandomER.h"
-#include "ErdosRenyi.h"
 #include "Node.h"
 #include "Edge.h"
 #include <math.h>
@@ -18,53 +17,28 @@
 #include <algorithm>
 using namespace std;
 
-// TO DO: implement header file + do some basic tests
+// for now this class seems to work, but can it be implemented nicer/more efficient? what about use of inheritance?
+
+// No opinion dynamics implemented yet --> to do
+
 Clustered_Random_Network::Clustered_Random_Network(double rewireProbability){
     _rewireProbability = rewireProbability;
+    /* always make sure that you have enough space in your node- and edgelist, otherwise things will need to be copied, but node class has no proper copy constructor, 
+    thus will give problems for the neighbours */
+    _nodelist.reserve(150);
+    _edgelist.reserve(200);
 
-    // start with this simple case
-    Erdos_Renyi_Network g1 = Erdos_Renyi_Network(25, 0.01, 1., 0);
-    Erdos_Renyi_Network g2 = Erdos_Renyi_Network(25, 0.1 ,1., 25);
-    Erdos_Renyi_Network g3 = Erdos_Renyi_Network(25, 0.1 ,1., 50);
-    Erdos_Renyi_Network g4 = Erdos_Renyi_Network(25, 0.01 ,1., 75);
+    cout << _nodelist.size();
+    makeErdosRenyi(25, 0.1, _nodelist.size());
+    cout << _nodelist.size();
+    makeErdosRenyi(25, 0.1, _nodelist.size());
+    cout << _nodelist.size();
+    makeErdosRenyi(25, 0.1, _nodelist.size());
+    cout << _nodelist.size();
+    makeErdosRenyi(25, 0.1, _nodelist.size());
 
-    g1.print();
-    g2.print();
-    g3.print();
-    g4.print();
-    
-    // reserve enough space for the vectors
-    _nodelist.reserve(g1.nodelist().size() + g2.nodelist().size() + g3.nodelist().size() + g4.nodelist().size());
-    _edgelist.reserve(g1.edgelist().size() + g2.edgelist().size() + g3.edgelist().size() + g4.edgelist().size());
-
-    // add the nodes of the different ER graphs to the nodelist of the clustered graph
-    for (int i = 0; i < g1.nodelist().size(); i++){
-        addNode(g1.nodelist()[i]);
-    }
-    for (int i = 0; i < g2.nodelist().size(); i++){
-        addNode(g2.nodelist()[i]);
-    }
-    for (int i = 0; i < g3.nodelist().size(); i++){
-        addNode(g3.nodelist()[i]);
-    }
-    for (int i = 0; i < g4.nodelist().size(); i++){
-        addNode(g4.nodelist()[i]);
-    }
-    // add the edges of the different ER graphs to the edgelist of the clustered graph
-    for (int i = 0; i < g1.edgelist().size(); i++){
-        _edgelist.push_back(g1.edgelist()[i]);
-    }
-    for (int i = 0; i < g2.edgelist().size(); i++){
-        _edgelist.push_back(g2.edgelist()[i]);
-    }
-    for (int i = 0; i < g3.edgelist().size(); i++){
-        _edgelist.push_back(g3.edgelist()[i]);    
-    }
-    for (int i = 0; i < g4.edgelist().size(); i++){
-        _edgelist.push_back(g4.edgelist()[i]);
-    }
-    // rewire the edges
-    //rewireEdges();
+    // rewire edges
+    rewireEdges();
 }
 
 // implementation of the getters
@@ -84,8 +58,8 @@ void Clustered_Random_Network::addEdge(Edge e){
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
         //cout << indexIn << ' ' << indexOut << endl;
-        _nodelist[indexIn].addAdjEdge(&e); // add outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].addAdjEdge(&e); // add inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].addNeigh(&_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].addNeigh(&_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
     }
 }
 
@@ -95,8 +69,58 @@ void Clustered_Random_Network::removeEdge(Edge e){
         _edgelist.erase(remove(_edgelist.begin(), _edgelist.end(), e), _edgelist.end());
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
-        _nodelist[indexIn].removeAdjEdge(&e); // remove outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].removeAdjEdge(&e); // remove inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].removeNeigh(&_nodelist[indexOut]); // remove outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].removeNeigh(&_nodelist[indexIn]); // remove inNode of edge to neighbours of outNode of edge
+    }
+}
+
+// function that makes an Erdos-Renyi graph --> will be one of the clustered components of the clustered graph
+void Clustered_Random_Network::makeErdosRenyi(int numberOfNodes, double edgeProb, int indexStart){
+    random_device rd; // will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+    uniform_real_distribution<> dis(0.0, 1.0);
+
+    bernoulli_distribution disBern(1.); // make sure that all nodes are active for now
+
+    // add nodes to the graph with some distribution of the 2 possible opinions
+    double fractionResistance = 0.; // set the fraction of stubborn/resistant nodes
+    double resistance; // variable that determines the resistance of a node
+    int opinion; // variable that determines the opinion of a node
+    bool active; // variable that determines if node is active
+    int index; // variable that determines the index (=name) of a node --> constructed in such a way that the nodes already have the correct name for the complete clustered graph
+    for (int i = 0; i < numberOfNodes; i++){
+        double k = dis(gen); // random number to determine if node is stubborn
+        if (k <= fractionResistance){
+            resistance = 0.;
+        }
+        else{
+            resistance = 0.;
+        }
+        double r = dis(gen); // random number to determine the opinion of a node
+        if (r < 0.5){
+            opinion = 0;
+        }
+        else{
+            opinion = 1;
+        }
+        active = disBern(gen);
+        index = indexStart + i;
+        Node n = Node(index, opinion, resistance, active);
+        addNode(n);
+    }    
+    // add edge between any pair of nodes with a certain probability
+    for (int i = 0; i < numberOfNodes; i++){
+        for (int j = i+1; j < numberOfNodes; j++){
+            double r = dis(gen); // draw a random number that will determine whether there is an edge or not
+            if (r < edgeProb){
+                int indexIn = indexStart + i;
+                int indexOut = indexStart + j;
+                Node* N = &_nodelist[indexIn];
+                Node* M = &_nodelist[indexOut];
+                Edge e = Edge(N, M);
+                addEdge(e);
+            }
+        }
     }
 }
 
@@ -106,8 +130,8 @@ void Clustered_Random_Network::removeAllEdges(){
     for (int i = 0; i < _edgelist.size(); i++){
         int indexIn = _edgelist[i].inNode()->index();
         int indexOut = _edgelist[i].outNode()->index();
-        _nodelist[indexIn].removeAllAdjEdges(); // remove neighbours of inNode of edge
-        _nodelist[indexOut].removeAllAdjEdges(); // remove neighbours of outNode of edge
+        _nodelist[indexIn].removeAllNeigh(); // remove neighbours of inNode of edge
+        _nodelist[indexOut].removeAllNeigh(); // remove neighbours of outNode of edge
     }
     _edgelist.clear(); // remove the edges
 }
@@ -131,7 +155,7 @@ void Clustered_Random_Network::rewireEdges(){
             //Node* n = &out.back();
             //cout << n->index() << endl;
             if (&out.back() != _edgelist[i].inNode()){
-                //Edge e = Edge(_edgelist[i].inNode(), &out.back());
+                //Edge e = Edge(_edgelist[i]->inNode(), &out.back());
                 //cout << e << endl;
                 helpEdgelist.push_back(Edge(_edgelist[i].inNode(), &out.back())); // add new edge to the help vector
             }
@@ -172,10 +196,3 @@ void Clustered_Random_Network::print(){
     }
     cout << endl;
 }
-
-/* WEIRD SITUATION: If I print the edges of the clustered graph, I always get a pointer to the inNode if the inNode is the first node in one of the ER graphs, however when I print this edge
-in the constructor I get the node... */
-
-/* Needs further testing, also check if neighbours change accordingly, maybe implement things nicer + think about weird situation -> how to solve (also happens to other nodes after rewireing) */
-
-// TO DO: solve issue with indexes! Leads to segmentation faults...

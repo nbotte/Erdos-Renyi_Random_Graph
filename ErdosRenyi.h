@@ -20,7 +20,7 @@ class Erdos_Renyi_Network{
 
 public:
     // define a constructor
-    Erdos_Renyi_Network(int, double, double, int);
+    Erdos_Renyi_Network(int, double, double);
 
     // define getters, provides access to data member with corresponding name
     vector<Node> nodelist();
@@ -35,7 +35,7 @@ public:
     vector<double> countOpinionFraction();
     void print();
 
-    // not a member function
+    // not a member function --> should it be written outside class definition?
     bool contains(const vector<Edge> vec, Edge e);
 
 };

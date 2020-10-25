@@ -9,11 +9,9 @@ using namespace std;
 #ifndef NODE_H
 #define NODE_H
 
-class Edge;
-
 class Node{  
     int _index; // declare index variable (= name of node)
-    list<Edge*> _adjEdgelist; // declare neigh variable (= vector of pointers to nodes neighbouring the current node)
+    list<Node*> _neigh; // declare neigh variable (= vector of pointers to nodes neighbouring the current node)
     int _opinion; // declare opinion variable (= opinion of node at current time step, choice between 0 and 1)
     int _newOpinion; // declare newOpinion variable (= opinion of node at the next time step, choice between 0 and 1)
     double _resistance; // declare resistance variable (= stubborness of the node, resistance to change his opinion)
@@ -26,16 +24,16 @@ public:
 
     // define getters, provides access to data member with corresponding name
     int index() const;
-    list<Edge*> adjEdgelist() const;
+    list<Node*> neigh() const;
     int opinion() const;
     int newOpinion() const;
     double resistance() const;
     bool active() const;
 
     // declare member functions of class Node
-    void addAdjEdge(Edge* e);
-    void removeAdjEdge(Edge* e);
-    void removeAllAdjEdges();
+    void addNeigh(Node* n);
+    void removeNeigh(Node* n);
+    void removeAllNeigh();
     void changeOpinion();
     void setNewOpinion();
     void deactivate();

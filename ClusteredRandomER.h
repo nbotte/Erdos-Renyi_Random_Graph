@@ -4,7 +4,6 @@
 #include <cmath>
 #include "Node.h"
 #include "Edge.h"
-#include "ErdosRenyi.h"
 #include <math.h>
 #include <vector>
 using namespace std;
@@ -30,6 +29,7 @@ public:
     void addNode(Node n); // function to add nodes to the nodelist
     void addEdge(Edge e); // function to add edges to the edgelist
     void removeEdge(Edge e); // function to remove edges from the edgelist
+    void makeErdosRenyi(int numberOfNodes, double edgeProb, int indexStart); // function that makes an Erdos-Renyi graph
     void removeAllEdges(); // function to remove all the edges from the graph
     void rewireEdges();
     void print();

@@ -15,6 +15,9 @@ class Edge{
     Node* _outNode; // declare outNode variable (pointer to endnode of edge)
 
 public:
+    // default constructor
+    Edge();
+    
     // define constructor
     Edge(Node*, Node*);
 

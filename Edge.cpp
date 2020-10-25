@@ -7,12 +7,16 @@
 #include <iostream>
 using namespace std;
 
+// default constructor
+Edge::Edge(){};
+
 // implementation of constructor, construct edge by defining its inNode and its outNode
 Edge::Edge(Node* inNode, Node* outNode){
     // allocate the memory to hold a node
     _inNode = new Node;
     _outNode = new Node;
 
+    // Attention: this implies that nodes are properly copied --> not the case, only a problem for the neighbours
     *_inNode = *inNode; 
     *_outNode = *outNode;
 }
