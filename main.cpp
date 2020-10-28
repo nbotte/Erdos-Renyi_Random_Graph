@@ -51,10 +51,10 @@ int main(){
     // needs more testing, does opinion dynamics works properly??
   /*  int N = 100;
     double p = 0.01;
-    double p_bern = 1.; 
+    double p_bern = 1.;
     Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
-    g.print();
-    for (int i = 0; i < g.nodelist().size(); i++){
+    g.print();*/
+    /*for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
         for (Node* n : g.nodelist()[i].neigh()){
             cout << *n;
@@ -62,23 +62,23 @@ int main(){
         cout << endl;
     }*/
    
-    //ofstream op1file("Fraction_of_opinions_1_80_20_one_op_stubb_50.txt");  
-   /* for (int t=0; t<300; t++){
+    /*ofstream op1file("Fraction_of_opinions_1_80_20_one_op_stubb_50.txt");  
+    for (int t=0; t<300; t++){
         cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
         //g.print();
         //cout << endl;
         g.changeOpinions();
-    }
-    //g.changeOpinions();
-    g.print();*/
+    }*/
+  //  g.changeOpinions();
+   // g.print();
     //op1file.close();
 
-  //  ofstream opfile("Fraction_of_opinions_1_70_30_no_stubb_bern_1_av.txt");
-    /*vector<double> fractionsA(300);
+  /*  ofstream opfile("Fraction_of_opinions_1_50_50_no_stubb_bern_025_av.txt");
+    vector<double> fractionsA(300);
     vector<double> fractionsB(300); 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 100; n++){
-        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0); 
+        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern); 
         // for each network: let the opinions evolve in time
         for (int t = 0; t < 300; t++){
             double oldFractionA = fractionsA[t];
@@ -86,13 +86,15 @@ int main(){
             fractionsA[t] = oldFractionA + g.countOpinionFraction()[0];
             fractionsB[t] = oldFractionB + g.countOpinionFraction()[1];
             g.changeOpinions();
+            g.deactivateNodes();
+            g.setNodesActive();
         }
     }
     // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
     for (int i = 0; i < 300; i++){
-        cout << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
-    }*/
-   // opfile.close();
+        opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << '\n';
+    }
+    opfile.close();*/
 
     // NOTE: this takes long time to run!
     // TO DO: test this further
@@ -243,7 +245,7 @@ int main(){
     HisNormFile.close();*/
 
     // still needs copy constructor for nodes
-    Clustered_Random_Network g = Clustered_Random_Network(0.1);
+    Clustered_Random_Network g = Clustered_Random_Network(0.01);
     g.print();
     for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";

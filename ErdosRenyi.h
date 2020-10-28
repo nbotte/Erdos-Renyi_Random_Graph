@@ -2,6 +2,7 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include "Graph.h"
 #include "Node.h"
 #include "Edge.h"
 #include <math.h>
@@ -11,32 +12,21 @@ using namespace std;
 #ifndef ERDOSRENYI_H
 #define ERDOSRENYI_H
 
-class Erdos_Renyi_Network{
-    int _numberOfNodes; // total number of nodes in the graph
-    double _edgeProbability; // the probablility of having an edge between any pair of nodes
-    vector<Node> _nodelist; // vector of nodes in graph
-    vector<Edge> _edgelist; // vector of edges in graph
-    double _bernouilliProbability; // probability of having true in bernouilli process (will determine if a node is active or not)
-
+class Erdos_Renyi_Network : public Graph{
 public:
-    // define a constructor
-    Erdos_Renyi_Network(int, double, double);
 
-    // define getters, provides access to data member with corresponding name
-    vector<Node> nodelist();
-    vector<Edge> edgelist();
+    double _edgeProbability; // the probablility of having an edge between any pair of nodes
+    double _bernouilliProbability; // probability of having true in bernouilli process (will determine if a node is active or not)
+    int _indexStart; 
+
+    // define default constructor
+    Erdos_Renyi_Network();
+
+    // define a constructor
+    Erdos_Renyi_Network(int, double, double, int);
 
     // declare member functions of class Erdos-Renyi
-    void addNode(Node n);
-    void addEdge(int indexIn, int indexOut);
-    void changeOpinions();
-    void deactivateNodes();
-    void setNodesActive();
-    vector<double> countOpinionFraction();
-    void print();
-
-    // not a member function --> should it be written outside class definition?
-    bool contains(const vector<Edge> vec, Edge e);
+    void makeGraph(); // function that makes an Erdos-Renyi graph
 
 };
 
