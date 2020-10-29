@@ -10,6 +10,7 @@
 using namespace std;
 
 // attention: try not to copy nodes, becauses no proper copy constructor is written (and I do not see how to do this with neighbours that point to nodes itself)
+// how to implement copy constructor?
 
 // default constructor
 Node::Node(){};

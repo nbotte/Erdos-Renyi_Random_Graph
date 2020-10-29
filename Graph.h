@@ -16,7 +16,7 @@ using namespace std;
 class Graph{
 public: 
     // define a virtual destructor
-   // virtual ~Graph();
+    virtual ~Graph();
 
     vector<Node> _nodelist; // vector of nodes in graph
     vector<Edge> _edgelist; // vector of edges in graph

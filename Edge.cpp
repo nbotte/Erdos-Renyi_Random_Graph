@@ -7,6 +7,8 @@
 #include <iostream>
 using namespace std;
 
+// use copy constructor when working with clustered graphs!
+
 // default constructor
 Edge::Edge(){};
 

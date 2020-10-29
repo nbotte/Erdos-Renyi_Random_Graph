@@ -17,7 +17,7 @@
 using namespace std;
 
 // virtual destructor
-//Graph::~Graph(){};
+Graph::~Graph(){};
 
 // implementation of the getters, provides access to data member with corresponding name
 vector<Node> Graph::nodelist() {return _nodelist;}
@@ -43,7 +43,7 @@ void Graph::addEdge(Edge e){
     }
 }
 
-// function that removes an edge from the edgelist of the graph + removes the corresponding neighbours of the involved nodes
+// function that removes an edge from the edgelist of the graph + removes the corresponding neighbours of the involved nodes --> NOT USED, NEEDED?
 void Graph::removeEdge(Edge e){
     if (contains(_edgelist, e)){
         _edgelist.erase(remove(_edgelist.begin(), _edgelist.end(), e), _edgelist.end());
@@ -54,7 +54,7 @@ void Graph::removeEdge(Edge e){
     }
 }
 
-// function that removes all the edges from the clustered graph
+// function that removes all the edges from the clustered graph --> NOT USED, NEEDED?
 void Graph::removeAllEdges(){
     // remove all the corresponding neighbours
     for (int i = 0; i < _edgelist.size(); i++){
@@ -65,13 +65,11 @@ void Graph::removeAllEdges(){
     }
     // Attention: normally clear() would not affect the capacity of the vector, but not always garanteed, so in case of trouble, consider this! (reserve space back after clear)
     _edgelist.clear(); // remove the edges
+    _edgelist.reserve(1000);
 }
 
-// function that rewires the edges of the graph with a certain probability
+// function that rewires the edges of the graph with a certain probability --> put this in clustered graph section?
 void Graph::rewireEdges(){
-    vector<Edge> helpEdgelist;
-    helpEdgelist.reserve(_edgelist.size());
-
     random_device rd; // will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
     uniform_real_distribution<> dis(0.0, 1.0);
@@ -81,20 +79,12 @@ void Graph::rewireEdges(){
     for (int i = 0; i < _edgelist.size(); i++){
         double r = dis(gen); // random number that will decide if edge is rewired or not
         if (r < _rewireProbability){
-            // make sure to compile with c++17 (than sample will not give a problem)
+            // make sure to compile with c++17 (than sample will not give a problem) --> sample draws random node out of nodelist and adds it to the vector out
             sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
             if (&out.back() != _edgelist[i].inNode()){
-                helpEdgelist.push_back(Edge(_edgelist[i].inNode(), &out.back())); // add new edge to the help vector
+                _edgelist[i] = Edge(_edgelist[i].inNode(), &out.back()); // add new edge to the edgelist
             }
         }
-        else{
-            helpEdgelist.push_back(_edgelist[i]);
-        }
-    }
-    removeAllEdges();
-    
-    for (int i = 0; i < helpEdgelist.size(); i++){
-        addEdge(helpEdgelist[i]); // add the new edges in help vector to the edgelist of the clustered graph
     }
 }
 

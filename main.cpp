@@ -14,6 +14,8 @@
 #include <list>
 using namespace std;
 
+// look at static functions to make graph.utils that has makeER function 
+
 int main(){
     // This example seem to work as expected
    /* Node n = Node(1);
@@ -49,11 +51,11 @@ int main(){
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> not no more!
 
     // needs more testing, does opinion dynamics works properly??
-  /*  int N = 100;
-    double p = 0.01;
+    int N = 1000;
+    double p = 0.1;
     double p_bern = 1.;
-    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern);
-    g.print();*/
+   // Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
+    //g.print();
     /*for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
         for (Node* n : g.nodelist()[i].neigh()){
@@ -73,12 +75,12 @@ int main(){
    // g.print();
     //op1file.close();
 
-  /*  ofstream opfile("Fraction_of_opinions_1_50_50_no_stubb_bern_025_av.txt");
+  // ofstream opfile("Fraction_of_opinions_1_50_50_no_stubb_bern_025_av.txt");
     vector<double> fractionsA(300);
     vector<double> fractionsB(300); 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 100; n++){
-        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern); 
+        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0); 
         // for each network: let the opinions evolve in time
         for (int t = 0; t < 300; t++){
             double oldFractionA = fractionsA[t];
@@ -92,9 +94,9 @@ int main(){
     }
     // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
     for (int i = 0; i < 300; i++){
-        opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << '\n';
+        cout << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
     }
-    opfile.close();*/
+  //  opfile.close();
 
     // NOTE: this takes long time to run!
     // TO DO: test this further
@@ -245,15 +247,15 @@ int main(){
     HisNormFile.close();*/
 
     // still needs copy constructor for nodes
-    Clustered_Random_Network g = Clustered_Random_Network(0.01);
-    g.print();
-    for (int i = 0; i < g.nodelist().size(); i++){
+   /* Clustered_Random_Network g = Clustered_Random_Network(0.01);
+    g.print();*/
+  /*  for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
         for (Node* n : g.nodelist()[i].neigh()){
             cout << *n;
         }
         cout << endl;
-    }
+    }*/
 };
 
 // maybe also include adjecency matrix

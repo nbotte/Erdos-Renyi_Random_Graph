@@ -22,17 +22,17 @@ public:
     Edge(Node*, Node*);
 
     // define copy constructor
-  /*  Edge(const Edge &e);
+   // Edge(const Edge &e);
 
     // define a destructor
-    ~Edge();
-*/
+ //   ~Edge();
+
     // define getters, provides access to data member with corresponding name
     Node* inNode() const;
     Node* outNode() const;
 
     // operator assignement
-   /* Edge& operator= (const Edge &e);*/
+  //  Edge& operator= (const Edge &e);
 
     // operator overload << (make it a friend of Edge)
     friend ostream& operator<<(ostream& os, const Edge& e);

@@ -19,7 +19,7 @@
 #include <algorithm>
 using namespace std;
 
-// NOT GOOD YET! Maybe just inherit from graph class instead of from ER graph class?
+// seems to be good!
 
 // for now this class seems to work, but can it be implemented nicer/more efficient? what about use of inheritance?
 // TO DO: implement opinion dynamics + make random graphs with number of nodes drawn from log-log distribution
@@ -34,11 +34,10 @@ Clustered_Random_Network::Clustered_Random_Network(double rewireProbability){
 }
 
 void Clustered_Random_Network::makeGraph(){
-    makeErdosRenyi(25, 0.1, _nodelist.size());
-    print();
-    makeErdosRenyi(25, 0.1, _nodelist.size());
-    makeErdosRenyi(25, 0.1, _nodelist.size());
-    makeErdosRenyi(25, 0.1, _nodelist.size());
+    makeErdosRenyi(250, 0.1, _nodelist.size());
+    makeErdosRenyi(250, 0.1, _nodelist.size());
+    makeErdosRenyi(250, 0.1, _nodelist.size());
+    makeErdosRenyi(250, 0.1, _nodelist.size());
 
     // rewire edges
     rewireEdges();
@@ -47,8 +46,10 @@ void Clustered_Random_Network::makeGraph(){
 // function that makes a clustered graph
 // maybe add resistance, opinion, active, etc. as arguments so that you can make clusters with different properties
 void Clustered_Random_Network::makeErdosRenyi(int numberOfNodes, double edgeProb, int indexStart){
-    Erdos_Renyi_Network g = Erdos_Renyi_Network(numberOfNodes, edgeProb, 1., indexStart);
-    g.makeGraph();
+    _numberOfNodes = numberOfNodes;
+    _edgeProbability = edgeProb;
+    _indexStart = indexStart;
+    this->Erdos_Renyi_Network::makeGraph();
 
   /*  random_device rd; // will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()

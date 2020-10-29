@@ -68,8 +68,8 @@ void Erdos_Renyi_Network::makeGraph(){
         addNode(n);
     }    
     // add edge between any pair of nodes with a certain probability
-    for (int i = 0; i < _nodelist.size(); i++){
-        for (int j = i+1; j < _nodelist.size(); j++){
+    for (int i = 0; i < _nodelist.size() - _indexStart; i++){
+        for (int j = i+1; j < _nodelist.size() - _indexStart; j++){
             double r = dis(gen); // draw a random number that will determine whether there is an edge or not
             if (r < _edgeProbability){
                 int indexIn = _indexStart + i;
