@@ -28,17 +28,18 @@ Clustered_Random_Network::Clustered_Random_Network(double rewireProbability){
     _rewireProbability = rewireProbability;
     /* always make sure that you have enough space in your node- and edgelist, otherwise things will need to be copied, but node class has no proper copy constructor, 
     thus will give problems for the neighbours --> can this be done a bit less arbitrary? */
-    _nodelist.reserve(150);
-    _edgelist.reserve(1000);
+ //   _nodelist.reserve(1500);
+   // _edgelist.reserve(10000);
     makeGraph();
 }
 
 void Clustered_Random_Network::makeGraph(){
-    makeErdosRenyi(250, 0.1, _nodelist.size());
-    makeErdosRenyi(250, 0.1, _nodelist.size());
-    makeErdosRenyi(250, 0.1, _nodelist.size());
-    makeErdosRenyi(250, 0.1, _nodelist.size());
+    makeErdosRenyi(75, 0.1, _nodelist.size());
+    makeErdosRenyi(75, 0.1, _nodelist.size());
+    makeErdosRenyi(75, 0.1, _nodelist.size());
+    makeErdosRenyi(75, 0.1, _nodelist.size());
 
+    print();
     // rewire edges
     rewireEdges();
 }

@@ -13,7 +13,7 @@ using namespace std;
 Edge::Edge(){};
 
 // implementation of constructor, construct edge by defining its inNode and its outNode
-Edge::Edge(Node* inNode, Node* outNode){
+Edge::Edge(shared_ptr<Node> inNode, shared_ptr<Node> outNode){
     _inNode = inNode;
     _outNode = outNode;
 }
@@ -49,8 +49,8 @@ Edge::~Edge(){
 }*/
 
 // implementation of getters, provides access to data member with corresponding name
-Node* Edge::inNode() const {return _inNode;}
-Node* Edge::outNode() const {return _outNode;}
+shared_ptr<Node> Edge::inNode() const {return _inNode;}
+shared_ptr<Node> Edge::outNode() const {return _outNode;}
 
 // implementation of operator assignement
 /*Edge & Edge::operator=(const Edge &e){

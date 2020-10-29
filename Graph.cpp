@@ -1,6 +1,7 @@
 // Nina Botte
 
 #include <cmath>
+#include <memory>
 #include "Graph.h"
 #include "Node.h"
 #include "Edge.h"
@@ -35,11 +36,11 @@ void Graph::addNode(Node n){
 void Graph::addEdge(Edge e){
     // check if edge is already there
     if (contains(_edgelist, e) == false){
-        _edgelist.push_back(e);
+        //_edgelist.push_back(e);
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
-        _nodelist[indexIn].addNeigh(&_nodelist[indexOut]); // add outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].addNeigh(&_nodelist[indexIn]); // add inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].addNeigh(make_shared<Node>(_nodelist[indexOut])); // add outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].addNeigh(make_shared<Node>(_nodelist[indexIn])); // add inNode of edge to neighbours of outNode of edge
     }
 }
 
@@ -49,8 +50,8 @@ void Graph::removeEdge(Edge e){
         _edgelist.erase(remove(_edgelist.begin(), _edgelist.end(), e), _edgelist.end());
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
-        _nodelist[indexIn].removeNeigh(&_nodelist[indexOut]); // remove outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].removeNeigh(&_nodelist[indexIn]); // remove inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].removeNeigh(make_shared<Node>(_nodelist[indexOut])); // remove outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].removeNeigh(make_shared<Node>(_nodelist[indexIn])); // remove inNode of edge to neighbours of outNode of edge
     }
 }
 
@@ -70,6 +71,9 @@ void Graph::removeAllEdges(){
 
 // function that rewires the edges of the graph with a certain probability --> put this in clustered graph section?
 void Graph::rewireEdges(){
+    vector<Edge> helpEdgelist;
+    helpEdgelist.reserve(_edgelist.size());
+
     random_device rd; // will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
     uniform_real_distribution<> dis(0.0, 1.0);
@@ -79,12 +83,20 @@ void Graph::rewireEdges(){
     for (int i = 0; i < _edgelist.size(); i++){
         double r = dis(gen); // random number that will decide if edge is rewired or not
         if (r < _rewireProbability){
-            // make sure to compile with c++17 (than sample will not give a problem) --> sample draws random node out of nodelist and adds it to the vector out
+            // make sure to compile with c++17 (than sample will not give a problem)
             sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
-            if (&out.back() != _edgelist[i].inNode()){
-                _edgelist[i] = Edge(_edgelist[i].inNode(), &out.back()); // add new edge to the edgelist
+            if (make_shared<Node>(out.back()) != _edgelist[i].inNode()){
+                helpEdgelist.push_back(Edge(_edgelist[i].inNode(), make_shared<Node>(out.back()))); // add new edge to the help vector
             }
         }
+        else{
+            helpEdgelist.push_back(_edgelist[i]);
+        }
+    }
+    removeAllEdges();
+
+    for (int i = 0; i < helpEdgelist.size(); i++){
+        addEdge(helpEdgelist[i]); // add the new edges in help vector to the edgelist of the clustered graph
     }
 }
 

@@ -1,6 +1,7 @@
 // Nina Botte
 
 #include <cmath>
+#include <memory>
 #include "Graph.h"
 #include "ErdosRenyi.h"
 #include "Node.h"
@@ -74,8 +75,8 @@ void Erdos_Renyi_Network::makeGraph(){
             if (r < _edgeProbability){
                 int indexIn = _indexStart + i;
                 int indexOut = _indexStart + j;
-                Node* N = &_nodelist[indexIn];
-                Node* M = &_nodelist[indexOut];
+                auto N = make_shared<Node>(_nodelist[indexIn]);
+                auto M = make_shared<Node>(_nodelist[indexOut]);
                 Edge e = Edge(N, M);
                 addEdge(e);
             }
