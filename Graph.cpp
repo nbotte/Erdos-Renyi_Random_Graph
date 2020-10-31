@@ -22,7 +22,7 @@ Graph::~Graph(){};
 
 // implementation of the getters, provides access to data member with corresponding name
 vector<Node> Graph::nodelist() {return _nodelist;}
-vector<Edge> Graph::edgelist() {return _edgelist;}
+vector<Edge> Graph::edgelist() {return _edgelist;} // --> Not needed anymore?
 
 // virtual function makeGraph
 void Graph::makeGraph(){};
@@ -36,7 +36,7 @@ void Graph::addNode(Node n){
 void Graph::addEdge(Edge e){
     // check if edge is already there
     if (contains(_edgelist, e) == false){
-        //_edgelist.push_back(e);
+        //_edgelist.push_back(e); --> takes long time
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
         _nodelist[indexIn].addNeigh(make_shared<Node>(_nodelist[indexOut])); // add outNode of edge to neighbours of inNode of edge
@@ -70,9 +70,10 @@ void Graph::removeAllEdges(){
 }
 
 // function that rewires the edges of the graph with a certain probability --> put this in clustered graph section?
+// if you would throw away edgelist, than loop over nodes + loop over each neighbour and for each neighbour change it with some probability (draw random node from nodelist) --> faster run time
 void Graph::rewireEdges(){
-    vector<Edge> helpEdgelist;
-    helpEdgelist.reserve(_edgelist.size());
+   // vector<Edge> helpEdgelist;
+   // helpEdgelist.reserve(_edgelist.size());
 
     random_device rd; // will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
@@ -80,7 +81,37 @@ void Graph::rewireEdges(){
 
     size_t nelem = 1;
     vector<Node> out;
-    for (int i = 0; i < _edgelist.size(); i++){
+
+    for (int i = 0; i < _nodelist.size(); i++){
+        if (_nodelist[i].neigh().size() > 0){
+            for (shared_ptr<Node> n : _nodelist[i].neigh()){
+                if (n->index() > _nodelist[i].index()){
+                    double r = dis(gen); // random number that will decide if edge is rewired or not
+                    if (r < _rewireProbability){
+                        // make sure to compile with c++17 (than sample will not give a problem)
+                        sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
+                        _nodelist[i].addHelpNeigh(make_shared<Node>(out.back()));
+                    }
+                    else{
+                        _nodelist[i].addHelpNeigh(n);
+                    }
+                }
+            }
+        }    
+        _nodelist[i].removeAllNeigh();        
+    }    
+    for (int i = 0; i < _nodelist.size(); i++){
+        for (shared_ptr<Node> n : _nodelist[i].helpNeigh()){
+            _nodelist[i].addNeigh(n);
+            _nodelist[n->index()].addNeigh(make_shared<Node>(_nodelist[i]));
+        }
+        _nodelist[i].removeAllHelpNeigh();
+    }
+
+
+
+
+    /*for (int i = 0; i < _edgelist.size(); i++){
         double r = dis(gen); // random number that will decide if edge is rewired or not
         if (r < _rewireProbability){
             // make sure to compile with c++17 (than sample will not give a problem)
@@ -97,7 +128,7 @@ void Graph::rewireEdges(){
 
     for (int i = 0; i < helpEdgelist.size(); i++){
         addEdge(helpEdgelist[i]); // add the new edges in help vector to the edgelist of the clustered graph
-    }
+    }*/
 }
 
 // function to change the opinions of the nodes in graph based on majority model
@@ -158,7 +189,7 @@ void Graph::print(){
     }
     cout << endl;
         
-    cout << "Edges: ";
+    cout << "Edges: "; // No edges anymore?
     for (int i = 0; i < _edgelist.size(); i++){
         cout << _edgelist[i]; 
     }

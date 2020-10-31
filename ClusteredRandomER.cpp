@@ -34,12 +34,11 @@ Clustered_Random_Network::Clustered_Random_Network(double rewireProbability){
 }
 
 void Clustered_Random_Network::makeGraph(){
-    makeErdosRenyi(75, 0.1, _nodelist.size());
-    makeErdosRenyi(75, 0.1, _nodelist.size());
-    makeErdosRenyi(75, 0.1, _nodelist.size());
-    makeErdosRenyi(75, 0.1, _nodelist.size());
+    makeErdosRenyi(250, 0.1, _nodelist.size());
+    makeErdosRenyi(250, 0.1, _nodelist.size());
+    makeErdosRenyi(250, 0.1, _nodelist.size());
+    makeErdosRenyi(250, 0.1, _nodelist.size());
 
-    print();
     // rewire edges
     rewireEdges();
 }

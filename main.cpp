@@ -51,9 +51,9 @@ int main(){
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> unfortunately true...! --> but is better if you don't add edges to the edge list
 
     // needs more testing, does opinion dynamics works properly??
-    int N = 1000;
+   /* int N = 1000;
     double p = 0.1;
-    double p_bern = 1.;
+    double p_bern = 1.;*/
     /*Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
     g.print();*/
     /*for (int i = 0; i < g.nodelist().size(); i++){
@@ -76,7 +76,7 @@ int main(){
     //op1file.close();
 
   // ofstream opfile("Fraction_of_opinions_1_50_50_no_stubb_bern_025_av.txt");
-    vector<double> fractionsA(300);
+ /*   vector<double> fractionsA(300);
     vector<double> fractionsB(300); 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 100; n++){
@@ -93,7 +93,7 @@ int main(){
     // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
     for (int i = 0; i < 300; i++){
         cout << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
-    }
+    }*/
   //  opfile.close();
 
     // NOTE: this takes long time to run!
@@ -244,20 +244,19 @@ int main(){
     His299File.close();
     HisNormFile.close();*/
 
-    // still needs copy constructor for nodes
- /*   Clustered_Random_Network g = Clustered_Random_Network(1.);
-    g.print();
+    Clustered_Random_Network g = Clustered_Random_Network(1.);
+    
     for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
         for (shared_ptr<Node> n : g.nodelist()[i].neigh()){
             cout << *n;
         }
         cout << endl;
-    }*/
+    }
 };
 
 // maybe also include adjecency matrix
 
 // QUESTION: does every class need a destructor? + can we assign edges in time slower than N^2?
 
-// TO DO: look if you can omit the edge list, because adding the edges takes a long time when working with shared_ptr
+// TO DO: look if you can omit the edge list, because adding the edges takes a long time when working with shared_ptr + change rewire edges accordingly

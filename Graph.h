@@ -19,7 +19,7 @@ public:
     virtual ~Graph();
 
     vector<Node> _nodelist; // vector of nodes in graph
-    vector<Edge> _edgelist; // vector of edges in graph
+    vector<Edge> _edgelist; // vector of edges in graph --> Not needed anymore?
     int _numberOfNodes; // total number of nodes in the graph
     double _rewireProbability; // probability of rewireing edges 
 

@@ -20,6 +20,7 @@ Node::Node(){};
 Node::Node(int index, int opinion, double resistance, bool active){
     _index = index; 
     _neigh = list<shared_ptr<Node>>(); 
+    _helpNeigh = list<shared_ptr<Node>>();
     _opinion = opinion; 
     _newOpinion = opinion; 
     _resistance = resistance; 
@@ -30,6 +31,7 @@ Node::Node(int index, int opinion, double resistance, bool active){
 // implementation of the getters
 int Node::index() const {return _index;}
 list<shared_ptr<Node>> Node::neigh() const {return _neigh;}
+list<shared_ptr<Node>> Node::helpNeigh() const {return _helpNeigh;}
 int Node::opinion() const {return _opinion;}
 int Node::newOpinion() const {return _newOpinion;}
 double Node::resistance() const {return _resistance;}
@@ -40,14 +42,24 @@ void Node::addNeigh(shared_ptr<Node> n){
    _neigh.push_back(n);
 }
 
+// function to add a help-neighbour when rewiring the clustered graph
+void Node::addHelpNeigh(shared_ptr<Node> n){
+    _helpNeigh.push_back(n);
+}
+
 // function to remove a neighbour from the list of pointers to the neighbours of a node, NOT TESTED
 void Node::removeNeigh(shared_ptr<Node> n){
-    _neigh.erase(remove(_neigh.begin(), _neigh.end(), n), _neigh.end());
+    _neigh.remove(n);
 }
 
 // function to remove all the neighbours of a node
 void Node::removeAllNeigh(){
     _neigh.clear();
+}
+
+// function to remove all the help-neighbours
+void Node::removeAllHelpNeigh(){
+    _helpNeigh.clear();
 }
 
 // function to change the opinion of the node
