@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <memory>
 #include <iostream>
+#include "boost/circular_buffer.hpp"
 #include <list>
 #include <random>
 #include <algorithm>
@@ -22,10 +23,11 @@ Node::Node(int index, int opinion, double resistance, bool active){
     _neigh = list<shared_ptr<Node>>(); 
     _helpNeigh = list<shared_ptr<Node>>();
     _opinion = opinion; 
-    _newOpinion = opinion; 
+   // _newOpinion = opinion; 
+    _opinionlist.set_capacity(20); // only keep the 20 newest opinions of the neighbours
     _resistance = resistance; 
     _active = active; 
-    _wasActive = true;
+   // _wasActive = true;
 }
 
 // implementation of the getters
@@ -33,7 +35,8 @@ int Node::index() const {return _index;}
 list<shared_ptr<Node>> Node::neigh() const {return _neigh;}
 list<shared_ptr<Node>> Node::helpNeigh() const {return _helpNeigh;}
 int Node::opinion() const {return _opinion;}
-int Node::newOpinion() const {return _newOpinion;}
+//int Node::newOpinion() const {return _newOpinion;}
+boost::circular_buffer<int> Node::opinionlist() const {return _opinionlist;}
 double Node::resistance() const {return _resistance;}
 bool Node::active() const {return _active;}
 
@@ -75,8 +78,19 @@ void Node::changeOpinion(){
  
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
+        // count the number of opinion 0 and 1 in the opinionlist of the node
+        for (int i = 0; i < _opinionlist.size(); i++){
+            if (_opinionlist[i] == 0){
+                opinion0++;
+            }
+            else if (_opinionlist[i] == 1){
+                opinion1++;
+            }
+        }
+
+
         // count the number of opinions 0 and 1 of the neighbours of the node (only take previously active neighbours into account)
-        for (shared_ptr<Node> n : _neigh){
+       /* for (shared_ptr<Node> n : _neigh){
             if (n->_wasActive){
                 if (n->_opinion == 0){
                     opinion0++; 
@@ -84,35 +98,46 @@ void Node::changeOpinion(){
                 else{ 
                     opinion1++;
                 }
-            }
-        }
+            }*/
+    }
 
-        if (opinion0 > opinion1){
-            if (r >= _resistance){
-                _newOpinion = 0;
-            }
-            else{
-                _newOpinion = _opinion;
-            }
-        }
-        else if (opinion1 > opinion0){
-            if (r >= _resistance){
-                _newOpinion = 1;
-            }
-            else{
-                _newOpinion = _opinion;
-            }
+    if (opinion0 > opinion1){
+        if (r >= _resistance){
+            _opinion = 0;
         }
         else{
-            _newOpinion = _opinion;
+            _opinion = _opinion;
         }
-    }   
+    }
+    else if (opinion1 > opinion0){
+        if (r >= _resistance){
+            _opinion = 1;
+        }
+        else{
+            _opinion = _opinion;
+        }
+    }
+    else{
+        _opinion = _opinion;
+    }
 }
 
 // function that sets the opinion of a node equal to its new opinion
-void Node::setNewOpinion(){
+/*void Node::setNewOpinion(){
     _opinion = _newOpinion;
+}*/
+
+// function that adds an opinion to the opinionlist
+void Node::addOpinion(int opinion){
+    _opinionlist.push_back(opinion);
 }
+
+// function that sends the opinion of the node to the opinionlist of its neighbours
+/*void Node::sendOpinion(){
+    for (shared_ptr<Node> n: _neigh){
+        n->addOpinion(_opinion);
+    }
+}*/
 
 // function that deactivates the node
 void Node::deactivate(){
@@ -125,9 +150,9 @@ void Node::setActive(bool active){
 }
 
 // function that sets the wasActiveness of a node
-void Node::setWasActive(){
+/*void Node::setWasActive(){
     _wasActive = _active;
-}
+}*/
 
 // function that overwrites the == operator to compare 2 nodes
 // ATTENTION: maybe also check opinion and active or not!!

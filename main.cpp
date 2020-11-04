@@ -50,21 +50,59 @@ int main(){
     // looks ok, but needs further testing
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> unfortunately true...! --> but is better if you don't add edges to the edge list
 
-    // needs more testing, does opinion dynamics works properly??
-   /* int N = 1000;
+    // needs more testing, does opinion dynamics works properly --> see paper 8, smart to make nodes active (+ update opinionlist) in constructor? 
+    int N = 100;
     double p = 0.1;
-    double p_bern = 1.;*/
-    /*Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
-    g.print();*/
-    /*for (int i = 0; i < g.nodelist().size(); i++){
+    double p_bern = 0.5;
+    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
+
+    for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
-        for (Node* n : g.nodelist()[i].neigh()){
+        for (int j = 0; j < g.nodelist()[i].opinionlist().size(); j++){
+            cout << g.nodelist()[i].opinionlist()[j] << ' ';
+        }
+        cout << ": ";
+        for (shared_ptr<Node> n : g.nodelist()[i].neigh()){
             cout << *n;
         }
         cout << endl;
-    }*/
+    }
+     
+    g.changeOpinions();
+
+    for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i] << ": ";
+        for (int j = 0; j < g.nodelist()[i].opinionlist().size(); j++){
+            cout << g.nodelist()[i].opinionlist()[j] << ' ';
+        }
+        cout << ": ";
+        for (shared_ptr<Node> n : g.nodelist()[i].neigh()){
+            cout << *n;
+        }
+        cout << endl;
+    }
+
+
+    /*vector<int> degreeDistr(500);
+
+    for (int k = 0; k < 100; k++){
+        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
+        cout << "Graph: " << k << endl;
+        for (int i = 0; i < g.nodelist().size(); i++){
+            degreeDistr[g.nodelist()[i].neigh().size()] += 1;
+        }
+    }
+
+
+    ofstream degreeFile("Degree_distribution_Erdos-Renyi_av.txt");
+    for (int i = 0; i < degreeDistr.size(); i++){
+        degreeFile << i << ' ' << degreeDistr[i]/100 << '\n';
+    }
+
+    degreeFile.close();*/
+
    
-    /*ofstream op1file("Fraction_of_opinions_1_80_20_one_op_stubb_50.txt");  
+    /*ofstream op1file("Fraction_of_opinions_1_80_20_no_stubb_av.txt");  
     for (int t=0; t<300; t++){
         cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
         //g.print();
@@ -75,8 +113,8 @@ int main(){
    // g.print();
     //op1file.close();
 
-  // ofstream opfile("Fraction_of_opinions_1_50_50_no_stubb_bern_025_av.txt");
- /*   vector<double> fractionsA(300);
+    /*ofstream opfile("Fraction_of_opinions_001_20_80_no_stubb_av.txt");
+    vector<double> fractionsA(300);
     vector<double> fractionsB(300); 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 100; n++){
@@ -92,9 +130,9 @@ int main(){
     }
     // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
     for (int i = 0; i < 300; i++){
-        cout << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
-    }*/
-  //  opfile.close();
+        opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
+    }
+    opfile.close();*/
 
     // NOTE: this takes long time to run!
     // TO DO: test this further
@@ -244,7 +282,7 @@ int main(){
     His299File.close();
     HisNormFile.close();*/
 
-    Clustered_Random_Network g = Clustered_Random_Network(1.);
+   /* Clustered_Random_Network g = Clustered_Random_Network(1.);
     
     for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
@@ -252,7 +290,7 @@ int main(){
             cout << *n;
         }
         cout << endl;
-    }
+    }*/
 };
 
 // maybe also include adjecency matrix

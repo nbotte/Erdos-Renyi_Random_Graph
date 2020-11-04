@@ -40,7 +40,15 @@ void Graph::addEdge(Edge e){
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
         _nodelist[indexIn].addNeigh(make_shared<Node>(_nodelist[indexOut])); // add outNode of edge to neighbours of inNode of edge
+        // check if the outNode is active (only active nodes send opinions)
+        if (_nodelist[indexOut].active()){
+            _nodelist[indexIn].addOpinion(_nodelist[indexOut].opinion()); // add the opinion of outNode to the opinionlist of the inNode
+        }
         _nodelist[indexOut].addNeigh(make_shared<Node>(_nodelist[indexIn])); // add inNode of edge to neighbours of outNode of edge
+        // check if the inNode is active (only active nodes send opinions)
+        if (_nodelist[indexIn].active()){
+            _nodelist[indexOut].addOpinion(_nodelist[indexIn].opinion()); // add the opinion of inNode to the opinionlist of the outNode
+        }
     }
 }
 
@@ -137,9 +145,13 @@ void Graph::changeOpinions(){
     for (int i = 0; i < _nodelist.size(); i++){
         _nodelist[i].changeOpinion();
     }
-    // set the opinion of the nodes equal to their new opinion
+    // send the updated opinion of the active nodes to their neighbours
     for (int i = 0; i < _nodelist.size(); i++){
-        _nodelist[i].setNewOpinion();
+        if (_nodelist[i].active()){
+            for (shared_ptr<Node> n : _nodelist[i].neigh()){
+                _nodelist[n->index()].addOpinion(_nodelist[i].opinion());
+            } 
+        }
     }
 }
 
@@ -147,7 +159,7 @@ void Graph::changeOpinions(){
 // this function might be unneccessary!
 void Graph::deactivateNodes(){
     for (int i = 0; i < _nodelist.size(); i++){
-        _nodelist[i].setWasActive();
+        //_nodelist[i].setWasActive();
         _nodelist[i].deactivate();
     }
 }
