@@ -4,7 +4,6 @@
 #include <iomanip>
 #include <iostream>
 #include "boost/circular_buffer.hpp"
-#include <memory>
 #include <list>
 using namespace std;
 
@@ -13,8 +12,8 @@ using namespace std;
 
 class Node{  
     int _index; // declare index variable (= name of node)
-    list<shared_ptr<Node>> _neigh; // declare neigh variable (= vector of pointers to nodes neighbouring the current node)
-    list<shared_ptr<Node>> _helpNeigh; // variable helpNeigh (will be used to rewire edges for clustered graphs)
+    list<int> _neigh; // declare neigh variable (= list of indices (names) of nodes that are neighbours of the current node)
+    list<int> _helpNeigh; // variable helpNeigh (will be used to rewire edges for clustered graphs)
     int _opinion; // declare opinion variable (= opinion of node at current time step, choice between 0 and 1)
     //int _newOpinion; // declare newOpinion variable (= opinion of node at the next time step, choice between 0 and 1)
     boost::circular_buffer<int> _opinionlist; // this list contains up to the 20 newest previous opinions of the neighbours of the node
@@ -28,8 +27,8 @@ public:
 
     // define getters, provides access to data member with corresponding name
     int index() const;
-    list<shared_ptr<Node>> neigh() const;
-    list<shared_ptr<Node>> helpNeigh() const;
+    list<int> neigh() const;
+    list<int> helpNeigh() const;
     int opinion() const;
   //  int newOpinion() const;
     boost::circular_buffer<int> opinionlist() const;
@@ -37,9 +36,9 @@ public:
     bool active() const;
 
     // declare member functions of class Node
-    void addNeigh(shared_ptr<Node> n);
-    void addHelpNeigh(shared_ptr<Node> n);
-    void removeNeigh(shared_ptr<Node> n);
+    void addNeigh(int index);
+    void addHelpNeigh(int index);
+    void removeNeigh(int index);
     void removeAllNeigh();
     void removeAllHelpNeigh();
     void changeOpinion();

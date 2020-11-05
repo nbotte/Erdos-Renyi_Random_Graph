@@ -3,7 +3,6 @@
 #include "Node.h"
 #include "Edge.h"
 #include <iomanip>
-#include <memory>
 #include <iostream>
 #include "boost/circular_buffer.hpp"
 #include <list>
@@ -17,11 +16,11 @@ using namespace std;
 // default constructor
 Node::Node(){};
 
-// implementation of constructor, construct a node by defining its name, opinion, resistance and a vector of neighbours (empty at construction)
+// implementation of constructor, construct a node by defining its name, opinion, resistance and a list of neighbours (empty at construction)
 Node::Node(int index, int opinion, double resistance, bool active){
     _index = index; 
-    _neigh = list<shared_ptr<Node>>(); 
-    _helpNeigh = list<shared_ptr<Node>>();
+    _neigh = list<int>(); 
+    _helpNeigh = list<int>();
     _opinion = opinion; 
    // _newOpinion = opinion; 
     _opinionlist.set_capacity(20); // only keep the 20 newest opinions of the neighbours
@@ -32,27 +31,27 @@ Node::Node(int index, int opinion, double resistance, bool active){
 
 // implementation of the getters
 int Node::index() const {return _index;}
-list<shared_ptr<Node>> Node::neigh() const {return _neigh;}
-list<shared_ptr<Node>> Node::helpNeigh() const {return _helpNeigh;}
+list<int> Node::neigh() const {return _neigh;}
+list<int> Node::helpNeigh() const {return _helpNeigh;}
 int Node::opinion() const {return _opinion;}
 //int Node::newOpinion() const {return _newOpinion;}
 boost::circular_buffer<int> Node::opinionlist() const {return _opinionlist;}
 double Node::resistance() const {return _resistance;}
 bool Node::active() const {return _active;}
 
-// function to add a neighbour to the list of pointers to the neighbours of a node
-void Node::addNeigh(shared_ptr<Node> n){
-   _neigh.push_back(n);
+// function to add an index of a neighbour to the list of indices of neighbours of a node
+void Node::addNeigh(int index){
+   _neigh.emplace_back(index);
 }
 
 // function to add a help-neighbour when rewiring the clustered graph
-void Node::addHelpNeigh(shared_ptr<Node> n){
-    _helpNeigh.push_back(n);
+void Node::addHelpNeigh(int index){
+    _helpNeigh.emplace_back(index);
 }
 
-// function to remove a neighbour from the list of pointers to the neighbours of a node, NOT TESTED
-void Node::removeNeigh(shared_ptr<Node> n){
-    _neigh.remove(n);
+// function to remove an index of a neighbour to the list of indices of neighbours of a node, NOT TESTED
+void Node::removeNeigh(int index){
+    _neigh.remove(index);
 }
 
 // function to remove all the neighbours of a node
@@ -66,6 +65,7 @@ void Node::removeAllHelpNeigh(){
 }
 
 // function to change the opinion of the node
+// Need to change this according to opinion dynamics of paper 8? --> did this, but no resistance implemented yet!
 void Node::changeOpinion(){
     int opinion0 = 0; // counter that counts the number of neighbours with opinion 0
     int opinion1 = 0; // counter that counts the number of neighbours with opinion 1
@@ -74,7 +74,8 @@ void Node::changeOpinion(){
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
     uniform_real_distribution<> dis(0.0, 1.0);
 
-    double r = dis(gen); // generate a random number that will determine if the resistant node will change his opinion or not
+    double o = dis(gen); // generate a random number that will determine the new opinion of the node (see paper 8)
+    double r = dis(gen); // generate a random number that will if the resistant node changes its opinion or not
  
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
@@ -87,21 +88,12 @@ void Node::changeOpinion(){
                 opinion1++;
             }
         }
-
-
-        // count the number of opinions 0 and 1 of the neighbours of the node (only take previously active neighbours into account)
-       /* for (shared_ptr<Node> n : _neigh){
-            if (n->_wasActive){
-                if (n->_opinion == 0){
-                    opinion0++; 
-                }
-                else{ 
-                    opinion1++;
-                }
-            }*/
     }
 
-    if (opinion0 > opinion1){
+    double fraction0 = double(opinion0)/_opinionlist.size();
+    double fraction1 = double(opinion1)/_opinionlist.size();
+    
+    if (o < fraction0){
         if (r >= _resistance){
             _opinion = 0;
         }
@@ -109,16 +101,13 @@ void Node::changeOpinion(){
             _opinion = _opinion;
         }
     }
-    else if (opinion1 > opinion0){
+    else{
         if (r >= _resistance){
             _opinion = 1;
         }
         else{
             _opinion = _opinion;
         }
-    }
-    else{
-        _opinion = _opinion;
     }
 }
 

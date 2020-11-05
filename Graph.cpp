@@ -36,15 +36,15 @@ void Graph::addNode(Node n){
 void Graph::addEdge(Edge e){
     // check if edge is already there
     if (contains(_edgelist, e) == false){
-        //_edgelist.push_back(e); --> takes long time
+        //_edgelist.push_back(e); //--> takes long time?
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
-        _nodelist[indexIn].addNeigh(make_shared<Node>(_nodelist[indexOut])); // add outNode of edge to neighbours of inNode of edge
+        _nodelist[indexIn].addNeigh(indexOut); // add outNode of edge to neighbours of inNode of edge
         // check if the outNode is active (only active nodes send opinions)
         if (_nodelist[indexOut].active()){
             _nodelist[indexIn].addOpinion(_nodelist[indexOut].opinion()); // add the opinion of outNode to the opinionlist of the inNode
         }
-        _nodelist[indexOut].addNeigh(make_shared<Node>(_nodelist[indexIn])); // add inNode of edge to neighbours of outNode of edge
+        _nodelist[indexOut].addNeigh(indexIn); // add inNode of edge to neighbours of outNode of edge
         // check if the inNode is active (only active nodes send opinions)
         if (_nodelist[indexIn].active()){
             _nodelist[indexOut].addOpinion(_nodelist[indexIn].opinion()); // add the opinion of inNode to the opinionlist of the outNode
@@ -58,8 +58,8 @@ void Graph::removeEdge(Edge e){
         _edgelist.erase(remove(_edgelist.begin(), _edgelist.end(), e), _edgelist.end());
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
-        _nodelist[indexIn].removeNeigh(make_shared<Node>(_nodelist[indexOut])); // remove outNode of edge to neighbours of inNode of edge
-        _nodelist[indexOut].removeNeigh(make_shared<Node>(_nodelist[indexIn])); // remove inNode of edge to neighbours of outNode of edge
+        _nodelist[indexIn].removeNeigh(indexOut); // remove outNode of edge to neighbours of inNode of edge
+        _nodelist[indexOut].removeNeigh(indexIn); // remove inNode of edge to neighbours of outNode of edge
     }
 }
 
@@ -74,7 +74,6 @@ void Graph::removeAllEdges(){
     }
     // Attention: normally clear() would not affect the capacity of the vector, but not always garanteed, so in case of trouble, consider this! (reserve space back after clear)
     _edgelist.clear(); // remove the edges
-    _edgelist.reserve(1000);
 }
 
 // function that rewires the edges of the graph with a certain probability --> put this in clustered graph section?
@@ -92,16 +91,16 @@ void Graph::rewireEdges(){
 
     for (int i = 0; i < _nodelist.size(); i++){
         if (_nodelist[i].neigh().size() > 0){
-            for (shared_ptr<Node> n : _nodelist[i].neigh()){
-                if (n->index() > _nodelist[i].index()){
+            for (int index : _nodelist[i].neigh()){
+                if (index > _nodelist[i].index()){
                     double r = dis(gen); // random number that will decide if edge is rewired or not
                     if (r < _rewireProbability){
                         // make sure to compile with c++17 (than sample will not give a problem)
                         sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
-                        _nodelist[i].addHelpNeigh(make_shared<Node>(out.back()));
+                        _nodelist[i].addHelpNeigh(out.back().index());
                     }
                     else{
-                        _nodelist[i].addHelpNeigh(n);
+                        _nodelist[i].addHelpNeigh(index);
                     }
                 }
             }
@@ -109,9 +108,9 @@ void Graph::rewireEdges(){
         _nodelist[i].removeAllNeigh();        
     }    
     for (int i = 0; i < _nodelist.size(); i++){
-        for (shared_ptr<Node> n : _nodelist[i].helpNeigh()){
-            _nodelist[i].addNeigh(n);
-            _nodelist[n->index()].addNeigh(make_shared<Node>(_nodelist[i]));
+        for (int index : _nodelist[i].helpNeigh()){
+            _nodelist[i].addNeigh(index);
+            _nodelist[index].addNeigh(_nodelist[i].index());
         }
         _nodelist[i].removeAllHelpNeigh();
     }
@@ -148,8 +147,8 @@ void Graph::changeOpinions(){
     // send the updated opinion of the active nodes to their neighbours
     for (int i = 0; i < _nodelist.size(); i++){
         if (_nodelist[i].active()){
-            for (shared_ptr<Node> n : _nodelist[i].neigh()){
-                _nodelist[n->index()].addOpinion(_nodelist[i].opinion());
+            for (int index : _nodelist[i].neigh()){
+                _nodelist[index].addOpinion(_nodelist[i].opinion());
             } 
         }
     }

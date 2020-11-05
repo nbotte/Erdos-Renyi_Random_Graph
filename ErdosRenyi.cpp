@@ -57,7 +57,7 @@ void Erdos_Renyi_Network::makeGraph(){
             resistance = 0.;
         }
         double r = dis(gen); // random number to determine the opinion of a node
-        if (r < 0.5){
+        if (r < 0.2){
             opinion = 0;
         }
         else{

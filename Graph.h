@@ -27,7 +27,7 @@ public:
     vector<Node> nodelist();
     vector<Edge> edgelist();
 
-    // define a virtual function makeGraph
+    // define a virtual function makeGraph --> each subclass of Graph will have a different implementation of this function
     virtual void makeGraph() = 0;
 
     // declare member function of graph
@@ -38,9 +38,9 @@ public:
     void rewireEdges(); // function that rewires the edges of a graph
 
     // opinion dynamics functions of a graph
-    void changeOpinions();
-    void deactivateNodes();
-    void setNodesActive();
+    void changeOpinions(); // changes the opinions of the nodes in the graph
+    void deactivateNodes(); // makes all the nodes inactive
+    void setNodesActive(); // sets nodes active according to a bernouillidistribution
     vector<double> countOpinionFraction();
 
     // print function for a graph
