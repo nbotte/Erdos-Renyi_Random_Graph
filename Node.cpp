@@ -22,6 +22,7 @@ Node::Node(int index, int opinion, double resistance, bool active){
     _neigh = list<int>(); 
     _helpNeigh = list<int>();
     _opinion = opinion; 
+   // _oldOpinion;
    // _newOpinion = opinion; 
     _opinionlist.set_capacity(20); // only keep the 20 newest opinions of the neighbours
     _resistance = resistance; 
@@ -34,6 +35,7 @@ int Node::index() const {return _index;}
 list<int> Node::neigh() const {return _neigh;}
 list<int> Node::helpNeigh() const {return _helpNeigh;}
 int Node::opinion() const {return _opinion;}
+int Node::oldOpinion() const {return _oldOpinion;}
 //int Node::newOpinion() const {return _newOpinion;}
 boost::circular_buffer<int> Node::opinionlist() const {return _opinionlist;}
 double Node::resistance() const {return _resistance;}
@@ -80,35 +82,46 @@ void Node::changeOpinion(){
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
         // count the number of opinion 0 and 1 in the opinionlist of the node
-        for (int i = 0; i < _opinionlist.size(); i++){
-            if (_opinionlist[i] == 0){
-                opinion0++;
+        if (_opinionlist.size() != 0){
+            for (int i = 0; i < _opinionlist.size(); i++){
+                if (_opinionlist[i] == 0){
+                    opinion0++;
+                }
+                else if (_opinionlist[i] == 1){
+                    opinion1++;
+                }
             }
-            else if (_opinionlist[i] == 1){
-                opinion1++;
-            }
-        }
-    }
+        
+            double fraction0 = double(opinion0)/_opinionlist.size();
+            double fraction1 = double(opinion1)/_opinionlist.size();
 
-    double fraction0 = double(opinion0)/_opinionlist.size();
-    double fraction1 = double(opinion1)/_opinionlist.size();
+            if (o < fraction0){
+                _opinion = 0;
+            /*if (r >= _resistance){
+                _opinion = 0;
+            }
+            else{
+                _opinion = _opinion;
+            }*/
+            }
+            else if (o >= fraction0){
+                _opinion = 1;
+            /*if (r >= _resistance){
+                _opinion = 1;
+            }
+            else{
+                _opinion = _opinion;
+            }*/
+            }
+            else{
+                _opinion = _opinion;
+            }
+        }
+        else{
+            _opinion = _opinion;
+        }
+    }
     
-    if (o < fraction0){
-        if (r >= _resistance){
-            _opinion = 0;
-        }
-        else{
-            _opinion = _opinion;
-        }
-    }
-    else{
-        if (r >= _resistance){
-            _opinion = 1;
-        }
-        else{
-            _opinion = _opinion;
-        }
-    }
 }
 
 // function that sets the opinion of a node equal to its new opinion
@@ -119,6 +132,10 @@ void Node::changeOpinion(){
 // function that adds an opinion to the opinionlist
 void Node::addOpinion(int opinion){
     _opinionlist.push_back(opinion);
+}
+
+void Node::setOldOpinion(int opinion){
+    _oldOpinion = opinion;
 }
 
 // function that sends the opinion of the node to the opinionlist of its neighbours

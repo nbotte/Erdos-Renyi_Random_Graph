@@ -1,14 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-fractions_av = np.loadtxt('Fraction_of_opinions_001_20_80_no_stubb_av.txt')
+fractions_av = np.loadtxt('Fraction_of_opinions_1_80_20_no_stubb_av_paper8_active_05_long.txt')
 #fractions_75_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_75_bern_050_av.txt')
 #fractions_50_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_50_bern_050_av.txt')
 #fractions_25_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_25_bern_050_av.txt')
 #fractions_1_av = np.loadtxt('Fraction_of_opinions_1_70_30_all_stubb_100_bern_5_av.txt')
 
-t = np.zeros(300)
-y = np.zeros(300)
+t = np.zeros(5000)
+y = np.zeros(5000)
 
 for i in range(len(t)):
     t[i] = i
@@ -24,6 +24,6 @@ plt.ylabel("Opinion fraction")
 #plt.xlim(0, 50)
 plt.ylim(0, 1)
 plt.legend(loc='best')
-plt.title('Opinion fraction vs time (av. over 100 networks), 20/80, p = 0.001')
-plt.savefig('Fraction_of_opinions_001_80_20_no_stubb_av.png')
+plt.title('Opinion fraction vs time (av. over 100 networks), 20/80, p = 0.1 \nlong runtime')
+plt.savefig('Fraction_of_opinions_1_80_20_no_stubb_paper8_long_av.png')
 plt.show()

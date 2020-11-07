@@ -15,6 +15,7 @@ class Node{
     list<int> _neigh; // declare neigh variable (= list of indices (names) of nodes that are neighbours of the current node)
     list<int> _helpNeigh; // variable helpNeigh (will be used to rewire edges for clustered graphs)
     int _opinion; // declare opinion variable (= opinion of node at current time step, choice between 0 and 1)
+    int _oldOpinion;
     //int _newOpinion; // declare newOpinion variable (= opinion of node at the next time step, choice between 0 and 1)
     boost::circular_buffer<int> _opinionlist; // this list contains up to the 20 newest previous opinions of the neighbours of the node
     double _resistance; // declare resistance variable (= stubborness of the node, resistance to change his opinion)
@@ -30,6 +31,7 @@ public:
     list<int> neigh() const;
     list<int> helpNeigh() const;
     int opinion() const;
+    int oldOpinion() const;
   //  int newOpinion() const;
     boost::circular_buffer<int> opinionlist() const;
     double resistance() const;
@@ -44,6 +46,7 @@ public:
     void changeOpinion();
    // void setNewOpinion();
     void addOpinion(int opinion);
+    void setOldOpinion(int opinion);
     //void sendOpinion();
     void deactivate();
     void setActive(bool active);

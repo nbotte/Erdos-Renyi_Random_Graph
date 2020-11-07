@@ -40,7 +40,7 @@ public:
     // opinion dynamics functions of a graph
     void changeOpinions(); // changes the opinions of the nodes in the graph
     void deactivateNodes(); // makes all the nodes inactive
-    void setNodesActive(); // sets nodes active according to a bernouillidistribution
+    void setNodesActive(double bernProb); // sets nodes active according to a bernouillidistribution
     vector<double> countOpinionFraction();
 
     // print function for a graph

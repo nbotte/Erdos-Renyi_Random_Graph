@@ -40,15 +40,7 @@ void Graph::addEdge(Edge e){
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
         _nodelist[indexIn].addNeigh(indexOut); // add outNode of edge to neighbours of inNode of edge
-        // check if the outNode is active (only active nodes send opinions)
-        if (_nodelist[indexOut].active()){
-            _nodelist[indexIn].addOpinion(_nodelist[indexOut].opinion()); // add the opinion of outNode to the opinionlist of the inNode
-        }
         _nodelist[indexOut].addNeigh(indexIn); // add inNode of edge to neighbours of outNode of edge
-        // check if the inNode is active (only active nodes send opinions)
-        if (_nodelist[indexIn].active()){
-            _nodelist[indexOut].addOpinion(_nodelist[indexIn].opinion()); // add the opinion of inNode to the opinionlist of the outNode
-        }
     }
 }
 
@@ -139,16 +131,21 @@ void Graph::rewireEdges(){
 }
 
 // function to change the opinions of the nodes in graph based on majority model
-void Graph::changeOpinions(){
-    // give all the nodes a new opinion
+void Graph::changeOpinions(){ 
+    // first: each active node sends it current opinion to its neighbours
+    for (int i = 0; i < _nodelist.size(); i++){
+        if (_nodelist[i].active()){
+            _nodelist[i].setOldOpinion(_nodelist[i].opinion());
+        }
+    }
+    // second: each active node gets a new opinion according to the opinions in its opinionlist
     for (int i = 0; i < _nodelist.size(); i++){
         _nodelist[i].changeOpinion();
-    }
-    // send the updated opinion of the active nodes to their neighbours
+    } 
     for (int i = 0; i < _nodelist.size(); i++){
         if (_nodelist[i].active()){
             for (int index : _nodelist[i].neigh()){
-                _nodelist[index].addOpinion(_nodelist[i].opinion());
+                _nodelist[index].addOpinion(_nodelist[i].oldOpinion());
             } 
         }
     }
@@ -164,8 +161,8 @@ void Graph::deactivateNodes(){
 }
 
 // function that sets a fraction of the nodes as active (according to a bernouilli distribution)
-void Graph::setNodesActive(){
-    double bernouilliProbability = 1.;
+void Graph::setNodesActive(double bernProb){
+    double bernouilliProbability = bernProb;
     random_device rd; // will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
     bernoulli_distribution disBern(bernouilliProbability);
