@@ -43,6 +43,8 @@ public:
     void setNodesActive(double bernProb); // sets nodes active according to a bernouillidistribution
     vector<double> countOpinionFraction();
 
+    void changeRandomOpinion();
+
     // print function for a graph
     void print();
 

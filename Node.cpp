@@ -23,11 +23,12 @@ Node::Node(int index, int opinion, double resistance, bool active){
     _helpNeigh = list<int>();
     _opinion = opinion; 
    // _oldOpinion;
-   // _newOpinion = opinion; 
+    _newOpinion; 
     _opinionlist.set_capacity(20); // only keep the 20 newest opinions of the neighbours
     _resistance = resistance; 
     _active = active; 
    // _wasActive = true;
+   _neighOpinion = list<int>();
 }
 
 // implementation of the getters
@@ -36,10 +37,12 @@ list<int> Node::neigh() const {return _neigh;}
 list<int> Node::helpNeigh() const {return _helpNeigh;}
 int Node::opinion() const {return _opinion;}
 int Node::oldOpinion() const {return _oldOpinion;}
-//int Node::newOpinion() const {return _newOpinion;}
+int Node::newOpinion() const {return _newOpinion;}
 boost::circular_buffer<int> Node::opinionlist() const {return _opinionlist;}
 double Node::resistance() const {return _resistance;}
 bool Node::active() const {return _active;}
+
+list<int> Node::neighOpinion() const {return _neighOpinion;}
 
 // function to add an index of a neighbour to the list of indices of neighbours of a node
 void Node::addNeigh(int index){
@@ -82,52 +85,52 @@ void Node::changeOpinion(){
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
         // count the number of opinion 0 and 1 in the opinionlist of the node
-        if (_opinionlist.size() != 0){
-            for (int i = 0; i < _opinionlist.size(); i++){
-                if (_opinionlist[i] == 0){
+        //if (_opinionlist.size() != 0){
+            for (int n : _neighOpinion){
+              //  cout << n << ' ';
+                if (n == 0){
                     opinion0++;
                 }
-                else if (_opinionlist[i] == 1){
+                else if (n == 1){
                     opinion1++;
                 }
             }
         
-            double fraction0 = double(opinion0)/_opinionlist.size();
-            double fraction1 = double(opinion1)/_opinionlist.size();
+          //  cout << endl;
+           // cout << opinion0 << '-' << opinion1 << endl;
+           /* if (opinion0 > opinion1){
+                _newOpinion = 0;
+            }
+            else if (opinion1 > opinion0){
+                _newOpinion = 1;
+            }
+            else{
+                _newOpinion = _opinion;
+            }*/
+            double fraction0 = double(opinion0)/_neighOpinion.size();
+            double fraction1 = double(opinion1)/_neighOpinion.size();
+            
+           // cout << o << '-' << fraction0 << '-' << fraction1 << endl;
 
             if (o < fraction0){
-                _opinion = 0;
-            /*if (r >= _resistance){
-                _opinion = 0;
+                _newOpinion = 0;
+            }
+            else if (o < fraction0 + fraction1){
+                _newOpinion = 1;
             }
             else{
-                _opinion = _opinion;
-            }*/
+                _newOpinion = _opinion;
             }
-            else if (o >= fraction0){
-                _opinion = 1;
-            /*if (r >= _resistance){
-                _opinion = 1;
-            }
-            else{
-                _opinion = _opinion;
-            }*/
-            }
-            else{
-                _opinion = _opinion;
-            }
-        }
-        else{
-            _opinion = _opinion;
-        }
+        
+        
     }
-    
 }
 
+
 // function that sets the opinion of a node equal to its new opinion
-/*void Node::setNewOpinion(){
+void Node::setNewOpinion(){
     _opinion = _newOpinion;
-}*/
+}
 
 // function that adds an opinion to the opinionlist
 void Node::addOpinion(int opinion){
@@ -159,6 +162,13 @@ void Node::setActive(bool active){
 /*void Node::setWasActive(){
     _wasActive = _active;
 }*/
+
+void Node::addNeighOpinion(int opinion){
+    _neighOpinion.push_back(opinion);
+}
+void Node::removeAllNeighOpinion(){
+    _neighOpinion.clear();
+}
 
 // function that overwrites the == operator to compare 2 nodes
 // ATTENTION: maybe also check opinion and active or not!!

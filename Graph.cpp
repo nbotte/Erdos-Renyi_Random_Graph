@@ -134,8 +134,8 @@ void Graph::rewireEdges(){
 void Graph::changeOpinions(){ 
     // first: each active node sends it current opinion to its neighbours
     for (int i = 0; i < _nodelist.size(); i++){
-        if (_nodelist[i].active()){
-            _nodelist[i].setOldOpinion(_nodelist[i].opinion());
+        for (int index : _nodelist[i].neigh()){
+            _nodelist[i].addNeighOpinion(_nodelist[index].opinion());
         }
     }
     // second: each active node gets a new opinion according to the opinions in its opinionlist
@@ -143,12 +143,32 @@ void Graph::changeOpinions(){
         _nodelist[i].changeOpinion();
     } 
     for (int i = 0; i < _nodelist.size(); i++){
-        if (_nodelist[i].active()){
+        _nodelist[i].setNewOpinion();
+        _nodelist[i].removeAllNeighOpinion();
+        /*if (_nodelist[i].active()){
             for (int index : _nodelist[i].neigh()){
                 _nodelist[index].addOpinion(_nodelist[i].oldOpinion());
             } 
-        }
+        }*/
     }
+/*for (int i = 0; i < _nodelist.size(); i++){
+        if (_nodelist[i].active()){
+            _nodelist[i].setOldOpinion(_nodelist[i].opinion());
+        }
+    }*/
+}
+
+void Graph::changeRandomOpinion(){
+    size_t nelem = 1;
+    vector<Node> out;
+
+    sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
+    for (int index : _nodelist[out.back().index()].neigh()){
+        _nodelist[out.back().index()].addNeighOpinion(_nodelist[index].opinion());
+    }
+    _nodelist[out.back().index()].changeOpinion();
+    _nodelist[out.back().index()].setNewOpinion();
+    _nodelist[out.back().index()].removeAllNeighOpinion();
 }
 
 // function to deactivate all the nodes in the network, but first the current active nodes need to set their wasActive variable to true
