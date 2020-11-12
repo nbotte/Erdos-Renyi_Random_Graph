@@ -21,7 +21,6 @@ public:
     vector<Node> _nodelist; // vector of nodes in graph
     vector<Edge> _edgelist; // vector of edges in graph --> Not needed anymore?
     int _numberOfNodes; // total number of nodes in the graph
-    double _rewireProbability; // probability of rewireing edges 
 
     // define getters, provides access to data member with corresponding name
     vector<Node> nodelist();
@@ -35,7 +34,6 @@ public:
     void addEdge(Edge e); // function to add edges to the edgelist
     void removeEdge(Edge e); // function to remove edges from the edgelist
     void removeAllEdges(); // function that removes all the edges from the graph
-    void rewireEdges(); // function that rewires the edges of a graph
 
     // opinion dynamics functions of a graph
     void changeOpinions(); // changes the opinions of the nodes in the graph

@@ -21,10 +21,10 @@ int main(){
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> unfortunately true...! --> but is better if you don't add edges to the edge list
 
     // needs more testing, does opinion dynamics works properly --> see paper 8, smart to make nodes active (+ update opinionlist) in constructor? 
-    int N = 1000;
+   /* int N = 1000;
     double p = 0.01;
     double p_bern = 1.;
-    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
+    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);*/
    // g.print();
 
    /* for (int i = 0; i < g.nodelist().size(); i++){
@@ -54,7 +54,7 @@ int main(){
     }*/
 
 
-    vector<int> degreeDistr(500);
+   /* vector<int> degreeDistr(500);
     for (int i = 0; i < g.nodelist().size(); i++){
         degreeDistr[g.nodelist()[i].neigh().size()] += 1;
     }
@@ -79,7 +79,7 @@ int main(){
         degreeFileAv << i << ' ' << degreeDistrAv[i]/100 << '\n';
     }
 
-    degreeFileAv.close();
+    degreeFileAv.close();*/
 
    /* ofstream op1file("Fraction_of_opinions_1_50_50_no_stubb_paper8_active_1_one_node.txt"); 
     Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);  
@@ -118,15 +118,15 @@ int main(){
     opfile.close();*/
 
 
-   /* Clustered_Random_Network g = Clustered_Random_Network(1.);
+    Clustered_Random_Network g = Clustered_Random_Network(0.5, "rewire");
     
     for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
-        for (shared_ptr<Node> n : g.nodelist()[i].neigh()){
-            cout << *n;
+        for (int index : g.nodelist()[i].neigh()){
+            cout << g.nodelist()[index];
         }
         cout << endl;
-    }*/
+    }
 };
 
 // maybe also include adjecency matrix
@@ -137,3 +137,5 @@ int main(){
 
 // TO DO: ckeck opinion dynamics really carefull, correctly implemented? Do some more testing --> also maybe send mail!
 // Don't get a stable configuration (no equilibrium)?? --> what if you start with perfect initial conditions? --> if you run for 5000 timesteps, you keep hovering around the initial distribution (good?)
+
+// TO DO: implement addEdges in clustered_random_graph
