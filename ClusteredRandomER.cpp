@@ -32,10 +32,10 @@ Clustered_Random_Network::Clustered_Random_Network(double rewireAddProbability, 
 }
 
 void Clustered_Random_Network::makeGraph(){
-    vector<int> cluster1 = makeErdosRenyi(25, 0.01, _nodelist.size());
-    vector<int> cluster2 = makeErdosRenyi(25, 0.01, _nodelist.size());
-    vector<int> cluster3 = makeErdosRenyi(25, 0.01, _nodelist.size());
-    vector<int> cluster4 = makeErdosRenyi(25, 0.01, _nodelist.size());
+    vector<int> cluster1 = makeErdosRenyi(250, 0.1, _nodelist.size());
+    vector<int> cluster2 = makeErdosRenyi(250, 0.1, _nodelist.size());
+    vector<int> cluster3 = makeErdosRenyi(250, 0.1, _nodelist.size());
+    vector<int> cluster4 = makeErdosRenyi(250, 0.1, _nodelist.size());
 
     vector<vector<int>> clusters;
     clusters.push_back(cluster1);
@@ -43,21 +43,13 @@ void Clustered_Random_Network::makeGraph(){
     clusters.push_back(cluster3);
     clusters.push_back(cluster4);
 
-    for (int i = 0; i < _nodelist.size(); i++){
-        cout << _nodelist[i] << ": ";
-        for (int index : _nodelist[i].neigh()){
-            cout << _nodelist[index];
-        }
-        cout << endl;
-    }
-
     if (_type == "rewire"){
         // rewire edges
         rewireEdges(clusters);
     }
     else if (_type == "add"){
         // add edges between clusters
-        //addEdges(clusters);
+        addEdges(clusters);
     }
     else{
         cout << "Error: type not equal to one of the two possibilities 'rewire' or 'add'" << endl;
@@ -82,26 +74,20 @@ vector<int> Clustered_Random_Network::makeErdosRenyi(int numberOfNodes, double e
 // function that rewires the edges of the graph with a certain probability --> put this in clustered graph section?
 // if you would throw away edgelist, than loop over nodes + loop over each neighbour and for each neighbour change it with some probability (draw random node from nodelist) --> faster run time
 void Clustered_Random_Network::rewireEdges(vector<vector<int>> clusters){
-   // vector<Edge> helpEdgelist;
-   // helpEdgelist.reserve(_edgelist.size());
-
     random_device rd; // will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
     uniform_real_distribution<> dis(0.0, 1.0);
 
     size_t nelem = 1;
-    vector<vector<int>> clus;
-    vector<int> out;
+    vector<vector<int>> clus; // will contain the random cluster to which you will rewire
+    vector<int> out; // will contain the node in that random cluster to which you rewire
 
     // loop over clusters
     for (int c = 0; c < clusters.size(); c++){
         // move current cluster to beginning
-        cout << clusters[c][0] << endl;
-        swap(clusters[0], clusters[c]);
-        cout << clusters[c][0] << endl;
+        std::swap(clusters[0], clusters[c]);
         // for each cluster, loop over its nodes
         for (int i = 0; i < clusters[0].size(); i++){
-            cout << clusters[0][i] << ' ';
             for (int index : _nodelist[clusters[0][i]].neigh()){
                 if (index > _nodelist[clusters[0][i]].index()){
                     double r = dis(gen); // random number that will decide if edge is rewired or not
@@ -117,34 +103,13 @@ void Clustered_Random_Network::rewireEdges(vector<vector<int>> clusters){
                     else{
                     _nodelist[clusters[0][i]].addHelpNeigh(index);
                     }
-                }    
-                
-                
+                }     
             }
         }
         // move current cluster back to its original position
-        swap(clusters[0], clusters[c]);
-        cout << clusters[c][0] << endl;
+        std::swap(clusters[0], clusters[c]);
     }
 
-   /* for (int i = 0; i < _nodelist.size(); i++){
-        if (_nodelist[i].neigh().size() > 0){
-            for (int index : _nodelist[i].neigh()){
-                if (index > _nodelist[i].index()){
-                    double r = dis(gen); // random number that will decide if edge is rewired or not
-                    if (r < _rewireAddProbability){
-                        // make sure to compile with c++17 (than sample will not give a problem)
-                        sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
-                        _nodelist[i].addHelpNeigh(out.back().index());
-                    }
-                    else{
-                        _nodelist[i].addHelpNeigh(index);
-                    }
-                }
-            }
-        }    
-        _nodelist[i].removeAllNeigh();        
-    }   */ 
     for (int i = 0; i < _nodelist.size(); i++){
         _nodelist[i].removeAllNeigh();
     }
@@ -154,5 +119,35 @@ void Clustered_Random_Network::rewireEdges(vector<vector<int>> clusters){
             _nodelist[index].addNeigh(_nodelist[i].index());
         }
         _nodelist[i].removeAllHelpNeigh();
+    }
+}
+
+void Clustered_Random_Network::addEdges(vector<vector<int>> clusters){
+    random_device rd; // will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+    uniform_real_distribution<> dis(0.0, 1.0);
+
+    // loop over clusters
+    for (int c = 0; c < clusters.size(); c++){
+        // move current cluster to beginning
+        std::swap(clusters[0], clusters[c]);
+        // for each cluster, loop over its nodes
+        for (int i = 0; i < clusters[0].size(); i++){
+            // for each node loop over the other clusters, but make sure that you go only once over each possible edge instead of twice (count from c+1 instead of 1)
+            for (int k = c+1; k < clusters.size(); k++){
+                // loop over the nodes in that cluster
+                for (int n = 0; n < clusters[k].size(); n++){
+                    double r = dis(gen); // random number that will decide if edge is added between the nodes or not
+                    if (r < _rewireAddProbability){
+                        // add that node to the neighborlist of the current node and vice versa
+                        _nodelist[clusters[0][i]].addNeigh(clusters[k][n]);
+                        _nodelist[clusters[k][n]].addNeigh(clusters[0][i]);
+                    }
+                }
+            }
+            
+        }    
+        // move current cluster back to its original position
+        std::swap(clusters[0], clusters[c]);
     }
 }

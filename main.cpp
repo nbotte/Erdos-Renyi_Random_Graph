@@ -118,15 +118,17 @@ int main(){
     opfile.close();*/
 
 
-    Clustered_Random_Network g = Clustered_Random_Network(0.5, "rewire");
-    
+    Clustered_Random_Network g = Clustered_Random_Network(0.01, "add");
+    int numberOfEdges = 0;
     for (int i = 0; i < g.nodelist().size(); i++){
-        cout << g.nodelist()[i] << ": ";
-        for (int index : g.nodelist()[i].neigh()){
+        //cout << g.nodelist()[i] << ": ";
+        numberOfEdges = numberOfEdges + g.nodelist()[i].neigh().size();
+        /*for (int index : g.nodelist()[i].neigh()){
             cout << g.nodelist()[index];
         }
-        cout << endl;
+        cout << endl;*/
     }
+    cout << numberOfEdges/2 << endl;
 };
 
 // maybe also include adjecency matrix
@@ -138,4 +140,4 @@ int main(){
 // TO DO: ckeck opinion dynamics really carefull, correctly implemented? Do some more testing --> also maybe send mail!
 // Don't get a stable configuration (no equilibrium)?? --> what if you start with perfect initial conditions? --> if you run for 5000 timesteps, you keep hovering around the initial distribution (good?)
 
-// TO DO: implement addEdges in clustered_random_graph
+// TO DO: maybe implement calculation for clustering coefficient? https://en.wikipedia.org/wiki/Clustering_coefficient, file:///home/nina/Downloads/Thesis.pdf, https://stackoverflow.com/questions/58044012/how-to-calculate-clustering-coefficient-of-each-node-in-the-graph-in-python-usin
