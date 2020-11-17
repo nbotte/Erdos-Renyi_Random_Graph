@@ -63,7 +63,7 @@ void Erdos_Renyi_Network::makeGraph(){
         addNode(n);
     }
 
-  /*  for (int i = 0; i < _numberOfNodes; i++){
+   /* for (int i = 0; i < _numberOfNodes; i++){
         double k = dis(gen); // random number to determine if node is stubborn
         if (k <= fractionResistance){
             resistance = 0.;

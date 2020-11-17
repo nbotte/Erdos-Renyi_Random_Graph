@@ -59,6 +59,8 @@ public:
     void addNeighOpinion(int opinion);
     void removeAllNeighOpinion();
 
+    bool containsNeigh(int n); 
+
     // operator overload == (make it a friend of Node)
     friend bool operator==(Node n1, Node n2);
 

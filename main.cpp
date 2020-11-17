@@ -21,13 +21,13 @@ int main(){
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> unfortunately true...! --> but is better if you don't add edges to the edge list
 
     // needs more testing, does opinion dynamics works properly --> see paper 8, smart to make nodes active (+ update opinionlist) in constructor? 
-   /* int N = 1000;
-    double p = 0.01;
-    double p_bern = 1.;
-    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);*/
+  /*  int N = 1000;
+    double p = 1.;
+    double p_bern = 1.;*/
+  /*  Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
    // g.print();
 
-   /* for (int i = 0; i < g.nodelist().size(); i++){
+    for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
         for (int j = 0; j < g.nodelist()[i].opinionlist().size(); j++){
             cout << g.nodelist()[i].opinionlist()[j] << ' ';
@@ -37,8 +37,8 @@ int main(){
             cout << g.nodelist()[index];
         }
         cout << endl;
-    }
-    g.setNodesActive(p_bern);
+    }*/
+  /*  g.setNodesActive(p_bern);
     g.changeOpinions();
 
     for (int i = 0; i < g.nodelist().size(); i++){
@@ -81,7 +81,7 @@ int main(){
 
     degreeFileAv.close();*/
 
-   /* ofstream op1file("Fraction_of_opinions_1_50_50_no_stubb_paper8_active_1_one_node.txt"); 
+   /* ofstream op1file("Fraction_of_opinions_1_50_50_no_stubb_paper8_active_1_one_node_fully_connected.txt"); 
     Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);  
     g.setNodesActive(p_bern);
     for (int t=0; t<10000; t++){
@@ -92,18 +92,18 @@ int main(){
     }
   //  g.changeOpinions();
    // g.print();
-    op1file.close();
+    op1file.close();*/
 
-    ofstream opfile("Fraction_of_opinions_1_50_50_no_stubb_paper8_active_1_one_node_av.txt");
-    vector<double> fractionsA(10000);
-    vector<double> fractionsB(10000); 
+   /* ofstream opfile("Fraction_of_opinions_1_50_50_no_stubb_paper8_active_1_one_node_fully_connected_av.txt");
+    vector<double> fractionsA(500);
+    vector<double> fractionsB(500); 
     // loop over different networks to take averages of the fraction of opinions for each time step
-    for (int n = 0; n < 100; n++){
+    for (int n = 0; n < 20; n++){
         Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0); 
         g.setNodesActive(p_bern);
         cout << "Graph: " << n << endl;
         // for each network: let the opinions evolve in time
-        for (int t = 0; t < 10000; t++){
+        for (int t = 0; t < 500; t++){
             g.changeRandomOpinion();
             double oldFractionA = fractionsA[t];
             double oldFractionB = fractionsB[t];
@@ -112,8 +112,8 @@ int main(){
         }
     }
     // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
-    for (int i = 0; i < 10000; i++){
-        opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
+    for (int i = 0; i < 500; i++){
+        opfile << fractionsA[i]/20. << ' ' << fractionsB[i]/20. << endl;
     }
     opfile.close();*/
 
@@ -121,14 +121,17 @@ int main(){
     Clustered_Random_Network g = Clustered_Random_Network(0.01, "add");
     int numberOfEdges = 0;
     for (int i = 0; i < g.nodelist().size(); i++){
-        //cout << g.nodelist()[i] << ": ";
-        numberOfEdges = numberOfEdges + g.nodelist()[i].neigh().size();
+      //  cout << g.nodelist()[i] << ": ";
+     //   numberOfEdges = numberOfEdges + g.nodelist()[i].neigh().size();
+        cout << g.localClustering(g._nodelist[i]) << ' ';
         /*for (int index : g.nodelist()[i].neigh()){
             cout << g.nodelist()[index];
-        }
-        cout << endl;*/
+        }*/
+       // cout << endl;
     }
-    cout << numberOfEdges/2 << endl;
+    cout << endl;
+    //cout << numberOfEdges/2 << endl;
+    cout << g.averageClustering() << endl;
 };
 
 // maybe also include adjecency matrix
@@ -140,4 +143,3 @@ int main(){
 // TO DO: ckeck opinion dynamics really carefull, correctly implemented? Do some more testing --> also maybe send mail!
 // Don't get a stable configuration (no equilibrium)?? --> what if you start with perfect initial conditions? --> if you run for 5000 timesteps, you keep hovering around the initial distribution (good?)
 
-// TO DO: maybe implement calculation for clustering coefficient? https://en.wikipedia.org/wiki/Clustering_coefficient, file:///home/nina/Downloads/Thesis.pdf, https://stackoverflow.com/questions/58044012/how-to-calculate-clustering-coefficient-of-each-node-in-the-graph-in-python-usin

@@ -162,7 +162,8 @@ void Graph::print(){
     cout << endl;
 }
 
-// function to check if an element is in vector 
+// function to check if an edge is in vector 
 bool Graph::contains(const vector<Edge> vec, Edge e){
     return find(vec.begin(), vec.end(), e) != vec.end();
 }
+

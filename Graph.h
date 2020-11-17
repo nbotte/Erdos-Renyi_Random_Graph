@@ -48,7 +48,6 @@ public:
 
     // not a member function, will be used to check if an edge is already in the edgelist --> should be written outside class definition?
     bool contains(const vector<Edge> vec, Edge e);
-
 };
 
 

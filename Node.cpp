@@ -170,6 +170,11 @@ void Node::removeAllNeighOpinion(){
     _neighOpinion.clear();
 }
 
+// function to check if an integer is in a list (used to check if a node has a certain neighbour)
+bool Node::containsNeigh(int n){
+    return find(_neigh.begin(), _neigh.end(), n) != _neigh.end();
+}
+
 // function that overwrites the == operator to compare 2 nodes
 // ATTENTION: maybe also check opinion and active or not!!
 bool operator==(Node n1, Node n2){

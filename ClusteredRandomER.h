@@ -25,8 +25,12 @@ public:
     // declare member functions of class Clustered_Random_Network 
     vector<int> makeErdosRenyi(int numberOfNodes, double edgeProb, int indexStart); // function that makes an ER-graph + returns a vector with the indices of the nodes in that cluster
     void makeGraph(); // function that makes a clustered graph
-    void rewireEdges(vector<vector<int>>); // function that rewires the edges of a graph, takes a vector of vectors of indices of the nodes of the different clusters as argument
-    void addEdges(vector<vector<int>>);
+    void rewireEdges(vector<vector<int>>); // function that rewires the edges of a graph between different clusters, takes a vector of vectors of indices of the nodes of the different clusters as argument
+    void addEdges(vector<vector<int>>); // function that adds edges between clusters
+
+    bool checkEdge(Node u, Node v); // function that checks whether there is an edge between 2 vertices u and v that are both neigbors of the same node (used to calculate the local clustering coefficient), returns True if there is an edge
+    double localClustering(Node u); // funvtion that calculates the local clustering coefficient of a node in the graph
+    double averageClustering(); // function that calculates the average clustering coefficient of the graph
 };
 
 #endif
