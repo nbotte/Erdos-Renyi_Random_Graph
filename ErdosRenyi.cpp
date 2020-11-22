@@ -48,8 +48,8 @@ void Erdos_Renyi_Network::makeGraph(){
     double resistance; // variable that determines the resistance of a node
     int opinion; // variable that determines the opinion of a node
     bool active; // variable that determines if node is active
-    
-    for (int i = 0; i < _numberOfNodes; i++){
+
+    /*for (int i = 0; i < _numberOfNodes; i++){
         if (i % 2){
             opinion = 0;
         }
@@ -61,9 +61,9 @@ void Erdos_Renyi_Network::makeGraph(){
         int index = _indexStart + i;
         Node n = Node(index, opinion, resistance, active);
         addNode(n);
-    }
+    }*/
 
-   /* for (int i = 0; i < _numberOfNodes; i++){
+    for (int i = 0; i < _numberOfNodes; i++){
         double k = dis(gen); // random number to determine if node is stubborn
         if (k <= fractionResistance){
             resistance = 0.;
@@ -82,7 +82,7 @@ void Erdos_Renyi_Network::makeGraph(){
         int index = _indexStart + i;
         Node n = Node(index, opinion, resistance, active);
         addNode(n);
-    } */
+    } 
     // add edge between any pair of nodes with a certain probability
     for (int i = 0; i < _nodelist.size() - _indexStart; i++){
         for (int j = i+1; j < _nodelist.size() - _indexStart; j++){
