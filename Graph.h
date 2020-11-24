@@ -18,9 +18,10 @@ public:
     // define a virtual destructor
     virtual ~Graph();
 
+
+    int _numberOfNodes; // total number of nodes in the graph
     vector<Node> _nodelist; // vector of nodes in graph
     vector<Edge> _edgelist; // vector of edges in graph --> Not needed anymore?
-    int _numberOfNodes; // total number of nodes in the graph
 
     // define getters, provides access to data member with corresponding name
     vector<Node> nodelist();

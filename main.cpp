@@ -22,12 +22,12 @@ int main(){
 
     // needs more testing, does opinion dynamics works properly --> see paper 8, smart to make nodes active (+ update opinionlist) in constructor? 
     int N = 1000;
-    double p = 1.;
+    double p = 0.02;
     double p_bern = 1.;
-  /*  Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
-   // g.print();
+    //Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
+    //g.print();
 
-    for (int i = 0; i < g.nodelist().size(); i++){
+   /* for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
         for (int j = 0; j < g.nodelist()[i].opinionlist().size(); j++){
             cout << g.nodelist()[i].opinionlist()[j] << ' ';
@@ -81,20 +81,20 @@ int main(){
 
     degreeFileAv.close();*/
 
-   // ofstream op1file("Fraction_of_opinions_1_50_50_no_stubb_paper8_active_1_one_node_fully_connected.txt"); 
-  /*  Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);  
+    ofstream op1file("Fraction_of_opinions_02_50_50_no_stubb_paper8_active_1_one_node_good_init.txt"); 
+    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);  
     g.setNodesActive(p_bern);
     for (int t=0; t<10000; t++){
-        cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
+        op1file << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
         g.changeRandomOpinion();
         //g.print();
         //cout << endl;
-    }*/
+    }
   //  g.changeOpinions();
    // g.print();
-   // op1file.close();
+    op1file.close();
 
-    ofstream opfile("Fraction_of_opinions_1_50_50_no_stubb_paper8_active_1_one_node_fully_connected_av100_long.txt");
+    ofstream opfile("Fraction_of_opinions_02_50_50_no_stubb_paper8_active_1_one_node_av_long_good_init.txt");
     vector<double> fractionsA(10000);
     vector<double> fractionsB(10000); 
     // loop over different networks to take averages of the fraction of opinions for each time step
@@ -118,8 +118,9 @@ int main(){
     opfile.close();
 
 
-   /* Clustered_Random_Network g = Clustered_Random_Network(0.01, "add");
-    int numberOfEdges = 0;
+    //Clustered_Random_Network g = Clustered_Random_Network(100, 0.01, "add");
+    //g.print();
+   /* int numberOfEdges = 0;
     for (int i = 0; i < g.nodelist().size(); i++){
       //  cout << g.nodelist()[i] << ": ";
      //   numberOfEdges = numberOfEdges + g.nodelist()[i].neigh().size();

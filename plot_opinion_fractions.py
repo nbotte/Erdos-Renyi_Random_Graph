@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-fractions_av = np.loadtxt('Fraction_of_opinions_1_50_50_no_stubb_paper8_active_1_one_node_fully_connected_av100_long.txt')
+fractions_av = np.loadtxt('Fraction_of_opinions_02_50_50_no_stubb_paper8_active_1_one_node_av_long_good_init.txt')
 #fractions_75_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_75_bern_050_av.txt')
 #fractions_50_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_50_bern_050_av.txt')
 #fractions_25_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_25_bern_050_av.txt')
@@ -25,6 +25,6 @@ plt.ylabel("Opinion fraction")
 #plt.xlim(0, 50)
 plt.ylim(0.45, 0.55)
 plt.legend(loc='best')
-plt.title('Opinion fraction vs time (probabilistic model, one node), 50/50, p = 1.\nFully connected network, averaged over 100 networks')
-plt.savefig('Fraction_of_opinions_1_50_50_no_stubb_paper8_active_1_one_node_fully_av100_long_random_init.png')
+plt.title('Opinion fraction vs time (probabilistic model, one node), 50/50, p = 0.02\nErdos-Renyi network, averaged over 100 networks')
+plt.savefig('Fraction_of_opinions_02_50_50_no_stubb_paper8_active_1_one_node_av_long_good_init_2.png')
 plt.show()

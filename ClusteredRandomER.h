@@ -15,12 +15,13 @@ using namespace std;
 #define CLUSTEREDRANDOMER_H
 
 class Clustered_Random_Network : public Erdos_Renyi_Network{
+    int _totalNumberOfNodes; // total number of nodes in the clustered graph
     double _rewireAddProbability; // probability of rewireing or adding edges between clusters (whether you rewire or add depends on 'type' parameter in constructor)
     string _type; // tells whether you rewire or you add edges to make the clustered graph 
 
 public:
     // define a constructor
-    Clustered_Random_Network(double rewireAddProbability, string type);
+    Clustered_Random_Network(int numberOfNodes, double rewireAddProbability, string type);
 
     // declare member functions of class Clustered_Random_Network 
     vector<int> makeErdosRenyi(int numberOfNodes, double edgeProb, int indexStart); // function that makes an ER-graph + returns a vector with the indices of the nodes in that cluster

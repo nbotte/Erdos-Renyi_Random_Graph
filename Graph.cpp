@@ -29,7 +29,8 @@ void Graph::makeGraph(){};
 
 // function to add a node to the graph
 void Graph::addNode(Node n){
-    _nodelist.push_back(n);
+    int index = n.index();
+    _nodelist[index] = n;
 }
 
 // function that adds an edge to the edgelist of the graph + adds the corresponding neighbours to neighbourlist of the involved nodes

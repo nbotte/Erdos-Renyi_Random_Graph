@@ -25,17 +25,21 @@ using namespace std;
 // for now this class seems to work, but can it be implemented nicer/more efficient? what about use of inheritance?
 // TO DO: implement opinion dynamics + make random graphs with number of nodes drawn from log-log distribution
 
-Clustered_Random_Network::Clustered_Random_Network(double rewireAddProbability, string type){
+Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, double rewireAddProbability, string type){
+    _totalNumberOfNodes = totalNumberOfNodes; // total number of nodes in the clustered graph
     _rewireAddProbability = rewireAddProbability;
     _type = type; // choice between 'rewire' and 'add'
+
+    _nodelist.resize(_totalNumberOfNodes);
     makeGraph();
 }
 
 void Clustered_Random_Network::makeGraph(){
-    vector<int> cluster1 = makeErdosRenyi(250, 1., _nodelist.size());
-    vector<int> cluster2 = makeErdosRenyi(250, 1., _nodelist.size());
-    vector<int> cluster3 = makeErdosRenyi(250, 1., _nodelist.size());
-    vector<int> cluster4 = makeErdosRenyi(250, 1., _nodelist.size());
+    // is there a nicer way to give indexStart a value?
+    vector<int> cluster1 = makeErdosRenyi(25, 1., 0);
+    vector<int> cluster2 = makeErdosRenyi(25, 1., 25);
+    vector<int> cluster3 = makeErdosRenyi(25, 1., 50);
+    vector<int> cluster4 = makeErdosRenyi(25, 1., 75);
 
     vector<vector<int>> clusters;
     clusters.push_back(cluster1);

@@ -29,8 +29,8 @@ Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbabili
     _indexStart = indexStart;
 
     // reserve enough memory space for the vectors
-    _nodelist.reserve(_numberOfNodes); 
-    _edgelist.reserve(pow(_numberOfNodes, 2)); 
+    _nodelist.resize(_numberOfNodes); 
+    _edgelist.reserve(pow(_numberOfNodes, 2)); // not needed?
 
     // make random graph by calling the function makeGraph
     makeGraph();    
@@ -49,6 +49,12 @@ void Erdos_Renyi_Network::makeGraph(){
     int opinion; // variable that determines the opinion of a node
     bool active; // variable that determines if node is active
 
+    vector<int> v;
+    // fill a vector with the numbers 0 to numberOfNodes
+    for (int i = 0; i < _numberOfNodes; i++){
+        v.push_back(i);
+    }
+
     /*for (int i = 0; i < _numberOfNodes; i++){
         if (i % 2){
             opinion = 0;
@@ -63,7 +69,24 @@ void Erdos_Renyi_Network::makeGraph(){
         addNode(n);
     }*/
 
-    for (int i = 0; i < _numberOfNodes; i++){
+    // first 500 indices obtained from the permutated vector v will have an opinion zero, others get opinion 1
+    // resistance of node is not implemented yet
+    int N = 0;
+    while (v.size()){
+        active = 0.; // default: no nodes are active
+        resistance = 0.; // good for now, no stubborn nodes
+        int index = getRandomElement(v) + _indexStart;
+        if (N < _numberOfNodes/2){
+            opinion = 0;
+        }
+        else{
+            opinion = 1;
+        }
+        Node n = Node(index, opinion, resistance, active);
+        addNode(n);
+        N++;
+    }
+   /* for (int i = 0; i < _numberOfNodes/2; i++){
         double k = dis(gen); // random number to determine if node is stubborn
         if (k <= fractionResistance){
             resistance = 0.;
@@ -71,18 +94,11 @@ void Erdos_Renyi_Network::makeGraph(){
         else{
             resistance = 0.;
         }
-        double r = dis(gen); // random number to determine the opinion of a node
-        if (r < 0.5){
-            opinion = 0;
-        }
-        else{
-            opinion = 1;
-        }
         active = 0.;
         int index = _indexStart + i;
         Node n = Node(index, opinion, resistance, active);
         addNode(n);
-    } 
+    } */
     // add edge between any pair of nodes with a certain probability
     for (int i = 0; i < _nodelist.size() - _indexStart; i++){
         for (int j = i+1; j < _nodelist.size() - _indexStart; j++){
@@ -97,6 +113,20 @@ void Erdos_Renyi_Network::makeGraph(){
             }
         }
     }
+}
+
+int getRandomElement(vector<int>& v){
+    random_device rd; // will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+    uniform_int_distribution<> dis(0, 999); // uniform diwtribution between 0 and numberOfNodes (here: 1000)
+
+    int n = v.size();
+    int index = dis(gen) % n; // random number between 0 and 999 --> but make sure that it is always in the range of v (size of v changes!)
+    int elem = v[index]; // get random element from vector
+
+    swap(v[index], v[n-1]);
+    v.pop_back();
+    return elem;    
 }
 
 
