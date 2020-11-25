@@ -76,7 +76,7 @@ void Erdos_Renyi_Network::makeGraph(){
         active = 0.; // default: no nodes are active
         resistance = 0.; // good for now, no stubborn nodes
         int index = getRandomElement(v) + _indexStart;
-        if (N < _numberOfNodes/2){
+        if (N < _numberOfNodes/5){
             opinion = 0;
         }
         else{

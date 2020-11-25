@@ -73,6 +73,31 @@ void Graph::removeAllEdges(){
 void Graph::changeOpinions(){ 
     // first: each active node sends it current opinion to its neighbours
     for (int i = 0; i < _nodelist.size(); i++){
+        if (_nodelist[i].active()){
+            // active, so sends its current opinion to the opinionlist of its neighbours (all of them)
+            // But, the opinion send at the current timestep should not play a role in updating the opinion of active neighbours in this timestep
+            // --> so set the current opinion equal to old opinion, then update the opinions and then send the old opinion 
+            _nodelist[i].setOldOpinion(_nodelist[i].opinion());
+        }
+    }
+
+    // second: each active node gets a new opinion according to the opinions in its opinionlist
+    for (int i = 0; i < _nodelist.size(); i++){
+        _nodelist[i].changeOpinion(); // changeOpinion checks if the node is active, so only active nodes get updated
+    }
+
+    // now send the oldOpinion of the active nodes to all their neighbours
+    for (int i = 0; i < _nodelist.size(); i++){
+        if (_nodelist[i].active()){
+            for (int index : _nodelist[i].neigh()){
+                _nodelist[index].addOpinion(_nodelist[i].oldOpinion());
+            }
+        }
+    }
+
+
+
+    /*for (int i = 0; i < _nodelist.size(); i++){
         for (int index : _nodelist[i].neigh()){
             _nodelist[i].addNeighOpinion(_nodelist[index].opinion());
         }
@@ -80,16 +105,16 @@ void Graph::changeOpinions(){
     // second: each active node gets a new opinion according to the opinions in its opinionlist
     for (int i = 0; i < _nodelist.size(); i++){
         _nodelist[i].changeOpinion();
-    } 
-    for (int i = 0; i < _nodelist.size(); i++){
+    } */
+    /*for (int i = 0; i < _nodelist.size(); i++){
         _nodelist[i].setNewOpinion();
         _nodelist[i].removeAllNeighOpinion();
-        /*if (_nodelist[i].active()){
+        if (_nodelist[i].active()){
             for (int index : _nodelist[i].neigh()){
                 _nodelist[index].addOpinion(_nodelist[i].oldOpinion());
             } 
-        }*/
-    }
+        }
+    }*/
 /*for (int i = 0; i < _nodelist.size(); i++){
         if (_nodelist[i].active()){
             _nodelist[i].setOldOpinion(_nodelist[i].opinion());
@@ -103,9 +128,12 @@ void Graph::changeRandomOpinion(){
 
     sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
     for (int index : _nodelist[out.back().index()].neigh()){
-        _nodelist[out.back().index()].addNeighOpinion(_nodelist[index].opinion());
+        // if the neighbour is active: add its opinion to the neighOpinion list of the current Node
+        if (_nodelist[index].active()){
+            _nodelist[out.back().index()].addNeighOpinion(_nodelist[index].opinion());
+        }
     }
-    _nodelist[out.back().index()].changeOpinion();
+    _nodelist[out.back().index()].changeOpinion(); // changeOpinion checks if the node is active, so only active nodes can update their opinion
     _nodelist[out.back().index()].setNewOpinion();
     _nodelist[out.back().index()].removeAllNeighOpinion();
 }

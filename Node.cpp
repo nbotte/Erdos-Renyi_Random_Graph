@@ -85,9 +85,9 @@ void Node::changeOpinion(){
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
         // count the number of opinion 0 and 1 in the opinionlist of the node
-        //if (_opinionlist.size() != 0){
-            for (int n : _neighOpinion){
-              //  cout << n << ' ';
+        if (_opinionlist.size() != 0){
+            for (int n : _opinionlist){
+               // cout << n << ' ';
                 if (n == 0){
                     opinion0++;
                 }
@@ -96,7 +96,7 @@ void Node::changeOpinion(){
                 }
             }
         
-          //  cout << endl;
+           // cout << endl;
            // cout << opinion0 << '-' << opinion1 << endl;
            /* if (opinion0 > opinion1){
                 _newOpinion = 0;
@@ -107,21 +107,22 @@ void Node::changeOpinion(){
             else{
                 _newOpinion = _opinion;
             }*/
-            double fraction0 = double(opinion0)/_neighOpinion.size();
-            double fraction1 = double(opinion1)/_neighOpinion.size();
+          //  cout << _opinionlist.size() << '-' << opinion0 << '-' << opinion1 << endl;
+            double fraction0 = double(opinion0)/_opinionlist.size();
+            double fraction1 = double(opinion1)/_opinionlist.size();
             
            // cout << o << '-' << fraction0 << '-' << fraction1 << endl;
 
             if (o < fraction0){
-                _newOpinion = 0;
+                _opinion = 0;
             }
             else if (o < fraction0 + fraction1){
-                _newOpinion = 1;
+                _opinion = 1;
             }
             else{
-                _newOpinion = _opinion;
+                _opinion = _opinion;
             }
-        
+        }      
         
     }
 }
