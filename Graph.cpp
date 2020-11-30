@@ -127,14 +127,17 @@ void Graph::changeRandomOpinion(){
     vector<Node> out;
 
     sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
+    //cout << _nodelist[out.back().index()] << ": ";
     for (int index : _nodelist[out.back().index()].neigh()){
         // if the neighbour is active: add its opinion to the neighOpinion list of the current Node
         if (_nodelist[index].active()){
             _nodelist[out.back().index()].addNeighOpinion(_nodelist[index].opinion());
+           // cout << _nodelist[index] << ' ';
         }
     }
+   // cout << endl;
     _nodelist[out.back().index()].changeOpinion(); // changeOpinion checks if the node is active, so only active nodes can update their opinion
-    _nodelist[out.back().index()].setNewOpinion();
+  //  _nodelist[out.back().index()].setNewOpinion();
     _nodelist[out.back().index()].removeAllNeighOpinion();
 }
 

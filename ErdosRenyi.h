@@ -31,7 +31,7 @@ public:
 };
 
 // function than returns a random element from a vector
-int getRandomElement(vector<int>& v);
+int getRandomElement(vector<int>& v, int length);
 
 
 #endif

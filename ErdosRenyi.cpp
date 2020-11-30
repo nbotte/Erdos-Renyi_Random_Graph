@@ -75,8 +75,9 @@ void Erdos_Renyi_Network::makeGraph(){
     while (v.size()){
         active = 0.; // default: no nodes are active
         resistance = 0.; // good for now, no stubborn nodes
-        int index = getRandomElement(v) + _indexStart;
-        if (N < _numberOfNodes/5){
+        int index = getRandomElement(v, _numberOfNodes - 1) + _indexStart;
+        // Note: _numberOfNodes should be even, otherwise you will get a bias!
+        if (N < _numberOfNodes/2){
             opinion = 0;
         }
         else{
@@ -100,8 +101,8 @@ void Erdos_Renyi_Network::makeGraph(){
         addNode(n);
     } */
     // add edge between any pair of nodes with a certain probability
-    for (int i = 0; i < _nodelist.size() - _indexStart; i++){
-        for (int j = i+1; j < _nodelist.size() - _indexStart; j++){
+    for (int i = 0; i < _numberOfNodes; i++){
+        for (int j = i+1; j < _numberOfNodes; j++){
             double r = dis(gen); // draw a random number that will determine whether there is an edge or not
             if (r < _edgeProbability){
                 int indexIn = _indexStart + i;
@@ -115,15 +116,13 @@ void Erdos_Renyi_Network::makeGraph(){
     }
 }
 
-int getRandomElement(vector<int>& v){
+int getRandomElement(vector<int>& v, int length){
     random_device rd; // will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
-    uniform_int_distribution<> dis(0, 999); // uniform diwtribution between 0 and numberOfNodes (here: 1000)
-
+    uniform_int_distribution<> dis(0, length); // uniform diwtribution between 0 and numberOfNodes (here: 1000)
     int n = v.size();
     int index = dis(gen) % n; // random number between 0 and 999 --> but make sure that it is always in the range of v (size of v changes!)
     int elem = v[index]; // get random element from vector
-
     swap(v[index], v[n-1]);
     v.pop_back();
     return elem;    

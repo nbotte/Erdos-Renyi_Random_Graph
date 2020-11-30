@@ -36,16 +36,28 @@ Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, doubl
 
 void Clustered_Random_Network::makeGraph(){
     // is there a nicer way to give indexStart a value?
-    vector<int> cluster1 = makeErdosRenyi(25, 1., 0);
-    vector<int> cluster2 = makeErdosRenyi(25, 1., 25);
-    vector<int> cluster3 = makeErdosRenyi(25, 1., 50);
-    vector<int> cluster4 = makeErdosRenyi(25, 1., 75);
+    vector<int> cluster1 = makeErdosRenyi(100, 0.1, 0);
+    vector<int> cluster2 = makeErdosRenyi(100, 0.1, 100);
+    vector<int> cluster3 = makeErdosRenyi(100, 0.1, 200);
+    vector<int> cluster4 = makeErdosRenyi(100, 0.1, 300);
+    vector<int> cluster5 = makeErdosRenyi(100, 0.1, 400);
+    vector<int> cluster6 = makeErdosRenyi(100, 0.1, 500);
+    vector<int> cluster7 = makeErdosRenyi(100, 0.1, 600);
+    vector<int> cluster8 = makeErdosRenyi(100, 0.1, 700);
+    vector<int> cluster9 = makeErdosRenyi(100, 0.1, 800);
+    vector<int> cluster10 = makeErdosRenyi(100, 0.1, 900);
 
     vector<vector<int>> clusters;
     clusters.push_back(cluster1);
     clusters.push_back(cluster2);
     clusters.push_back(cluster3);
     clusters.push_back(cluster4);
+    clusters.push_back(cluster5);
+    clusters.push_back(cluster6);
+    clusters.push_back(cluster7);
+    clusters.push_back(cluster8);
+    clusters.push_back(cluster9);
+    clusters.push_back(cluster10);
 
     if (_type == "rewire"){
         // rewire edges
