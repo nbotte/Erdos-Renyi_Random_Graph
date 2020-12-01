@@ -161,6 +161,28 @@ void Graph::setNodesActive(double bernProb){
     }
 }
 
+// function that resets the initial opinions for a given graph
+void Graph::resetInitOpinion(){
+    vector<int> v;
+    // fill a vector with the numbers 0 to numberOfNodes
+    for (int i = 0; i < _nodelist.size(); i++){
+        v.push_back(i);
+    }
+    int N = 0;
+    int opinion;
+    while (v.size()){
+        int index = getRandomElement(v, _nodelist.size() - 1);
+        if (N < _nodelist.size()/2){
+            opinion = 0;
+        }
+        else{
+            opinion = 1;
+        }
+        _nodelist[index].setOpinion(opinion);
+        N++;
+    }
+}
+
 // function that counts the fraction of the 2 opinions in the graph (returns a vector with the 2 fractions)
 vector<double> Graph::countOpinionFraction(){
     int opinion0 = 0;
@@ -197,5 +219,17 @@ void Graph::print(){
 // function to check if an edge is in vector 
 bool Graph::contains(const vector<Edge> vec, Edge e){
     return find(vec.begin(), vec.end(), e) != vec.end();
+}
+
+int getRandomElement(vector<int>& v, int length){
+    random_device rd; // will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+    uniform_int_distribution<> dis(0, length); // uniform diwtribution between 0 and numberOfNodes (here: 1000)
+    int n = v.size();
+    int index = dis(gen) % n; // random number between 0 and 999 --> but make sure that it is always in the range of v (size of v changes!)
+    int elem = v[index]; // get random element from vector
+    swap(v[index], v[n-1]);
+    v.pop_back();
+    return elem;    
 }
 

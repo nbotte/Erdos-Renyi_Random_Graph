@@ -48,7 +48,7 @@ public:
     void removeAllNeigh();
     void removeAllHelpNeigh();
     void changeOpinion();
-    void setNewOpinion();
+    void setOpinion(int opinion);
     void addOpinion(int opinion);
     void setOldOpinion(int opinion);
     //void sendOpinion();

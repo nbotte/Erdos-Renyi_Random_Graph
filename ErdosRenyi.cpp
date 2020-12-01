@@ -116,17 +116,7 @@ void Erdos_Renyi_Network::makeGraph(){
     }
 }
 
-int getRandomElement(vector<int>& v, int length){
-    random_device rd; // will be used to obtain a seed for the random number engine
-    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
-    uniform_int_distribution<> dis(0, length); // uniform diwtribution between 0 and numberOfNodes (here: 1000)
-    int n = v.size();
-    int index = dis(gen) % n; // random number between 0 and 999 --> but make sure that it is always in the range of v (size of v changes!)
-    int elem = v[index]; // get random element from vector
-    swap(v[index], v[n-1]);
-    v.pop_back();
-    return elem;    
-}
+
 
 
 

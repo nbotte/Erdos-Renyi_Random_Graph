@@ -40,6 +40,7 @@ public:
     void changeOpinions(); // changes the opinions of the nodes in the graph
     void deactivateNodes(); // makes all the nodes inactive
     void setNodesActive(double bernProb); // sets nodes active according to a bernouillidistribution
+    void resetInitOpinion(); // resets the initial opinions of the nodes in the graph
     vector<double> countOpinionFraction();
 
     void changeRandomOpinion();
@@ -51,5 +52,7 @@ public:
     bool contains(const vector<Edge> vec, Edge e);
 };
 
+// function than returns a random element from a vector
+int getRandomElement(vector<int>& v, int length);
 
 #endif

@@ -129,8 +129,8 @@ void Node::changeOpinion(){
 
 
 // function that sets the opinion of a node equal to its new opinion
-void Node::setNewOpinion(){
-    _opinion = _newOpinion;
+void Node::setOpinion(int opinion){
+    _opinion = opinion;
 }
 
 // function that adds an opinion to the opinionlist

@@ -22,8 +22,8 @@ int main(){
 
     // needs more testing, does opinion dynamics works properly --> see paper 8, smart to make nodes active (+ update opinionlist) in constructor? 
    /* int N = 1000;
-    double p = 0.75;
-    double p_bern = 0.01;*/
+    double p = 0.1;
+    double p_bern = 0.1;*/
     //Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
     //g.print();
 
@@ -95,34 +95,41 @@ int main(){
    // g.print();
    // op1file.close();*/
 
-   /* ofstream opfile("Fraction_of_opinions_75_50_50_no_stubb_paper8_active_001_av_good_init.txt");
+   /* ofstream opfile("Fraction_of_opinions_01_50_50_no_stubb_paper8_active_01_good_av_good_init.txt");
     vector<double> fractionsA(500);
     vector<double> fractionsB(500); 
     // loop over different networks to take averages of the fraction of opinions for each time step
-    for (int n = 0; n < 50; n++){
+    for (int n = 0; n < 10; n++){
         Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0); 
         cout << "Graph: " << n << endl;
-        // for each network: let the opinions evolve in time
-        for (int t = 0; t < 500; t++){
-            g.setNodesActive(p_bern);
-            g.changeOpinions();
-            double oldFractionA = fractionsA[t];
-            double oldFractionB = fractionsB[t];
-            fractionsA[t] = oldFractionA + g.countOpinionFraction()[0];
-            fractionsB[t] = oldFractionB + g.countOpinionFraction()[1];
-            g.deactivateNodes();
+        // for each network, run different simulations --> can this be implemented faster?
+        for (int s = 0; s < 10; s++){
+            // for each network and each simulation: let the opinions evolve in time
+            for (int t = 0; t < 500; t++){
+                g.setNodesActive(p_bern);
+                g.changeOpinions();
+                double oldFractionA = fractionsA[t];
+                double oldFractionB = fractionsB[t];
+                fractionsA[t] = oldFractionA + g.countOpinionFraction()[0];
+                fractionsB[t] = oldFractionB + g.countOpinionFraction()[1];
+                g.deactivateNodes();
+            }
+            // reset the initial opinions
+            g.resetInitOpinion();
         }
     }
     // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
     for (int i = 0; i < 500; i++){
-        opfile << fractionsA[i]/50. << ' ' << fractionsB[i]/50. << endl;
+        opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
     }
     opfile.close();*/
 
     double p_bern = 1.;
+    int N = 1000;
+    int p_add = 0.01;
 
-    Clustered_Random_Network g = Clustered_Random_Network(1000, 0.01, "add");
-    cout << g.averageClustering();
+    /*Clustered_Random_Network g = Clustered_Random_Network(1000, 0.01, "add");
+    cout << g.averageClustering();*/
    /* g.print();
     cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
     for (int i = 0; i < g.nodelist().size(); i++){
@@ -139,28 +146,33 @@ int main(){
         //g.print();
         //cout << endl;
     }*/
-   /* ofstream opfile("Fraction_of_opinions_Clustered_01-001_50_50_no_stubb_one_node_active_1_av_good_init.txt");
+    ofstream opfile("Fraction_of_opinions_Clustered_01-001_50_50_no_stubb_one_node_active_1_av_good_init.txt");
     vector<double> fractionsA(10000);
     vector<double> fractionsB(10000); 
     // loop over different networks to take averages of the fraction of opinions for each time step
-    for (int n = 0; n < 50; n++){
-        Clustered_Random_Network g = Clustered_Random_Network(1000, 0.01, "add");
-        g.setNodesActive(p_bern);
+    for (int n = 0; n < 10; n++){
+        Clustered_Random_Network g = Clustered_Random_Network(N, p_add, "add"); 
         cout << "Graph: " << n << endl;
-        // for each network: let the opinions evolve in time
-        for (int t = 0; t < 10000; t++){
-            g.changeRandomOpinion();
-            double oldFractionA = fractionsA[t];
-            double oldFractionB = fractionsB[t];
-            fractionsA[t] = oldFractionA + g.countOpinionFraction()[0];
-            fractionsB[t] = oldFractionB + g.countOpinionFraction()[1];
+        g.setNodesActive(p_bern);
+        // for each network, run different simulations --> can this be implemented faster?
+        for (int s = 0; s < 10; s++){
+            // for each network and each simulation: let the opinions evolve in time
+            for (int t = 0; t < 10000; t++){
+                g.changeRandomOpinion();
+                double oldFractionA = fractionsA[t];
+                double oldFractionB = fractionsB[t];
+                fractionsA[t] = oldFractionA + g.countOpinionFraction()[0];
+                fractionsB[t] = oldFractionB + g.countOpinionFraction()[1];
+            }
+            // reset the initial opinions
+            g.resetInitOpinion();
         }
     }
     // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
     for (int i = 0; i < 10000; i++){
-        opfile << fractionsA[i]/50. << ' ' << fractionsB[i]/50. << endl;
+        opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
     }
-    opfile.close();*/
+    opfile.close();
    /* int numberOfEdges = 0;
     for (int i = 0; i < g.nodelist().size(); i++){
       //  cout << g.nodelist()[i] << ": ";
