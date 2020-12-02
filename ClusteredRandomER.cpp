@@ -36,16 +36,16 @@ Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, doubl
 
 void Clustered_Random_Network::makeGraph(){
     // is there a nicer way to give indexStart a value?
-    vector<int> cluster1 = makeErdosRenyi(100, 0.1, 0);
-    vector<int> cluster2 = makeErdosRenyi(100, 0.1, 100);
-    vector<int> cluster3 = makeErdosRenyi(100, 0.1, 200);
-    vector<int> cluster4 = makeErdosRenyi(100, 0.1, 300);
-    vector<int> cluster5 = makeErdosRenyi(100, 0.1, 400);
-    vector<int> cluster6 = makeErdosRenyi(100, 0.1, 500);
-    vector<int> cluster7 = makeErdosRenyi(100, 0.1, 600);
-    vector<int> cluster8 = makeErdosRenyi(100, 0.1, 700);
-    vector<int> cluster9 = makeErdosRenyi(100, 0.1, 800);
-    vector<int> cluster10 = makeErdosRenyi(100, 0.1, 900);
+    vector<int> cluster1 = makeErdosRenyi(100, 0.5, 0.5, 0);
+    vector<int> cluster2 = makeErdosRenyi(100, 0.5, 0.5, 100);
+    vector<int> cluster3 = makeErdosRenyi(100, 0.5, 0.5, 200);
+    vector<int> cluster4 = makeErdosRenyi(100, 0.5, 0.5, 300);
+    vector<int> cluster5 = makeErdosRenyi(100, 0.5, 0.5, 400);
+    vector<int> cluster6 = makeErdosRenyi(100, 0.5, 0.5, 500);
+    vector<int> cluster7 = makeErdosRenyi(100, 0.5, 0.5, 600);
+    vector<int> cluster8 = makeErdosRenyi(100, 0.5, 0.5, 700);
+    vector<int> cluster9 = makeErdosRenyi(100, 0.5, 0.5, 800);
+    vector<int> cluster10 = makeErdosRenyi(100, 0.5, 0.5, 900);
 
     vector<vector<int>> clusters;
     clusters.push_back(cluster1);
@@ -74,10 +74,11 @@ void Clustered_Random_Network::makeGraph(){
 
 // function that makes a clustered graph
 // maybe add resistance, opinion, active, etc. as arguments so that you can make clusters with different properties
-vector<int> Clustered_Random_Network::makeErdosRenyi(int numberOfNodes, double edgeProb, int indexStart){
+vector<int> Clustered_Random_Network::makeErdosRenyi(int numberOfNodes, double edgeProb, double initOp0Frac, int indexStart){
     _numberOfNodes = numberOfNodes;
     _edgeProbability = edgeProb;
     _indexStart = indexStart;
+    _initOp0Frac = initOp0Frac;
     this->Erdos_Renyi_Network::makeGraph();
     vector<int> cluster;
     for (int i = indexStart; i < indexStart + numberOfNodes; i++){

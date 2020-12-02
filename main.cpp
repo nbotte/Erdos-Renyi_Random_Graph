@@ -21,11 +21,117 @@ int main(){
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> unfortunately true...! --> but is better if you don't add edges to the edge list
 
     // needs more testing, does opinion dynamics works properly --> see paper 8, smart to make nodes active (+ update opinionlist) in constructor? 
-   /* int N = 1000;
+    int N = 1000;
     double p = 0.1;
-    double p_bern = 0.1;*/
-    //Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);
+    double p_bern = 0.1;
+    double initOp0Frac = 0.5;
     //g.print();
+    
+   /* vector<double> fractionAt0(N);
+    double oldFractionAt0;
+    vector<double> fractionAt500(N);
+    double oldFractionAt500;
+    double binWidth = 0.1;
+    int numberOfBins = 1/binWidth;
+    vector<int> neighOp1HistAt0(numberOfBins);
+    vector<int> neighOp1HistAt500(numberOfBins);
+    // average over different network
+    for (int n = 0; n < 10; n++){
+        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, initOp0Frac, 0);
+        cout << "Graph " << n << endl;
+        // for each network average over different simulation
+        for (int s = 0; s < 10; s++){
+            int opinion1 = 0;
+            cout << "Simulation " << s << endl;
+            // for each node count fraction of neighbors with opinion 1 at t = 0 (averaged)
+            for (int i = 0; i < g.nodelist().size(); i++){
+                if (g.nodelist()[i].neigh().size() != 0){
+                    for (int index : g.nodelist()[i].neigh()){
+                        if (g.nodelist()[index].opinion() == 1){
+                            opinion1++;
+                        }   
+                    }
+                }
+                if (g.nodelist()[i].neigh().size() != 0){
+                    oldFractionAt0 = double(opinion1)/g.nodelist()[i].neigh().size();
+                }
+                else{
+                    oldFractionAt0 = 0.;
+                }
+                fractionAt0[i] += (oldFractionAt0/100.);
+                opinion1 = 0;
+            }
+
+            // let opinions evolve in time
+            for (int i = 0; i < 500; i++){
+                g.setNodesActive(p_bern);
+                g.changeOpinions();
+                g.deactivateNodes();
+            }
+
+            // count fraction of neighbors with opinion 1 at t = 500 + make histogram with number of nodes with a certain fraction of neighbors with opinion 1
+            for (int i = 0; i < g.nodelist().size(); i++){
+                if (g.nodelist()[i].neigh().size() != 0){
+                    for (int index : g.nodelist()[i].neigh()){
+                        if (g.nodelist()[index].opinion() == 1){
+                            opinion1++;
+                        }
+                    }
+                }
+                if (g.nodelist()[i].neigh().size() != 0){
+                    oldFractionAt500 = double(opinion1)/g.nodelist()[i].neigh().size();
+                }
+                else{
+                    oldFractionAt500 = 0.;
+                }
+                fractionAt500[i] += (oldFractionAt500/100.);
+                opinion1 = 0;
+            }
+
+            // reset the initial opinions to start a new simulation for the same network
+            g.resetInitOpinion();
+        }
+    }
+    
+    // make histogram for nodes with certain fraction of neighbors with opinion 1
+    for (int i = 0; i < fractionAt500.size(); i++){
+        // determine position of fraction in the histogram eg 0.111 lies in interval 0-0.1 so position is 0
+        int index0 = int(fractionAt0[i]*10);
+        int index500 = int(fractionAt500[i]*10);
+        if (index0 == 10){
+            index0--;
+        }
+        if (index500 == 10){
+            index500--;
+        }
+        neighOp1HistAt0[index0] += 1;
+        neighOp1HistAt500[index500] += 1;
+    }
+
+    vector<double> HistNorm(numberOfBins);
+    // make normalized histogram at t = 500 by dividing by the one at t = 0
+    for (int i = 0; i < numberOfBins; i++){
+        double normVal;
+        if (neighOp1HistAt0[i] != 0){
+            normVal = double(neighOp1HistAt500[i])/double(neighOp1HistAt0[i]);
+        }
+        else{
+            if (neighOp1HistAt500[i] == 0){
+                normVal = 1.;
+            }
+            else{
+                normVal = double(neighOp1HistAt500[i]);
+            }
+        }
+        HistNorm[i] = normVal;
+    }
+
+    ofstream normfile("Normalized_hist_fraction_friends_opinion1_001_av.txt");
+    for (int i = 0; i < HistNorm.size(); i++){
+        normfile << HistNorm[i] << endl;
+    }*/
+
+
 
    /* for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
@@ -95,12 +201,15 @@ int main(){
    // g.print();
    // op1file.close();*/
 
-   /* ofstream opfile("Fraction_of_opinions_01_50_50_no_stubb_paper8_active_01_good_av_good_init.txt");
-    vector<double> fractionsA(500);
-    vector<double> fractionsB(500); 
+    ofstream opfile("Fraction_of_opinions_01_50_50_no_stubb_paper8_active_01_good_av_good_init.txt");
+    vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
+    vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
+    vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
+    vector<double> variance1(500); // calculate variance of opinion 1 according to Welford's algorithm
+    int count = 1;
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 10; n++){
-        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0); 
+        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, initOp0Frac, 0); 
         cout << "Graph: " << n << endl;
         // for each network, run different simulations --> can this be implemented faster?
         for (int s = 0; s < 10; s++){
@@ -108,28 +217,35 @@ int main(){
             for (int t = 0; t < 500; t++){
                 g.setNodesActive(p_bern);
                 g.changeOpinions();
-                double oldFractionA = fractionsA[t];
-                double oldFractionB = fractionsB[t];
-                fractionsA[t] = oldFractionA + g.countOpinionFraction()[0];
-                fractionsB[t] = oldFractionB + g.countOpinionFraction()[1];
+                double x0 = g.countOpinionFraction()[0];
+                double x1 = g.countOpinionFraction()[1];
+                
+                double oldMean0 = mean0[t];
+                double oldMean1 = mean1[t];
+                mean0[t] = mean0[t] + (x0 - mean0[t])/count;
+                mean1[t] = mean1[t] + (x1 - mean1[t])/count;
+
+                variance0[t] = variance0[t] + (x0 - mean0[t]) * (x0 - oldMean0);
+                variance1[t] = variance1[t] + (x1 - mean1[t]) * (x1 - oldMean1);
                 g.deactivateNodes();
             }
             // reset the initial opinions
             g.resetInitOpinion();
+            count++;
         }
     }
     // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
     for (int i = 0; i < 500; i++){
-        opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
+        opfile << mean0[i] << ' ' << mean1[i] << ' ' << variance0[i]/double(count - 2) << ' ' << variance1[i]/double(count - 2) << endl;
     }
-    opfile.close();*/
+    opfile.close();
 
-    double p_bern = 1.;
+   /* double p_bern = 1.;
     int N = 1000;
-    int p_add = 0.01;
+    int p_add = 0.001;
 
-    /*Clustered_Random_Network g = Clustered_Random_Network(1000, 0.01, "add");
-    cout << g.averageClustering();*/
+    Clustered_Random_Network g = Clustered_Random_Network(N, p_add, "add");
+    cout << g.averageClustering() << endl;*/
    /* g.print();
     cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
     for (int i = 0; i < g.nodelist().size(); i++){
@@ -146,7 +262,7 @@ int main(){
         //g.print();
         //cout << endl;
     }*/
-    ofstream opfile("Fraction_of_opinions_Clustered_01-001_50_50_no_stubb_one_node_active_1_av_good_init.txt");
+   /* ofstream opfile("Fraction_of_opinions_Clustered_01-001_50_50_no_stubb_one_node_active_1_av_good_init.txt");
     vector<double> fractionsA(10000);
     vector<double> fractionsB(10000); 
     // loop over different networks to take averages of the fraction of opinions for each time step
@@ -172,7 +288,7 @@ int main(){
     for (int i = 0; i < 10000; i++){
         opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
     }
-    opfile.close();
+    opfile.close();*/
    /* int numberOfEdges = 0;
     for (int i = 0; i < g.nodelist().size(); i++){
       //  cout << g.nodelist()[i] << ": ";
@@ -188,4 +304,9 @@ int main(){
 // maybe also include adjecency matrix
 
 // QUESTION: does every class need a destructor? + can we assign edges in time slower than N^2?
+
+// Standard variation --> welford's online algorithm (https://jonisalonen.com/2013/deriving-welfords-method-for-computing-variance/) 
+// TO DO: ask how to improve speed of the histogram making
+// TO DO: add averaged histogram to shared file!!
+// TO DO: plot standard variation + ask if you need to calculate this for the 10x10 averages or if you eg need to calculate these averages 5 times and calculate the standard deviation from these 5 different results
 

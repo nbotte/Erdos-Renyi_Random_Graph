@@ -24,7 +24,7 @@ public:
     Clustered_Random_Network(int numberOfNodes, double rewireAddProbability, string type);
 
     // declare member functions of class Clustered_Random_Network 
-    vector<int> makeErdosRenyi(int numberOfNodes, double edgeProb, int indexStart); // function that makes an ER-graph + returns a vector with the indices of the nodes in that cluster
+    vector<int> makeErdosRenyi(int numberOfNodes, double edgeProb, double initOp0Frac, int indexStart); // function that makes an ER-graph + returns a vector with the indices of the nodes in that cluster
     void makeGraph(); // function that makes a clustered graph
     void rewireEdges(vector<vector<int>>); // function that rewires the edges of a graph between different clusters, takes a vector of vectors of indices of the nodes of the different clusters as argument
     void addEdges(vector<vector<int>>); // function that adds edges between clusters

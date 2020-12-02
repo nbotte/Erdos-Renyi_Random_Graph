@@ -22,11 +22,12 @@ using namespace std;
 Erdos_Renyi_Network::Erdos_Renyi_Network(){};
 
 // constructor, construct graph by making the nodes and the edges with a given probability
-Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbability, double bernouilliProbability, int indexStart){
+Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbability, double bernouilliProbability, double initOp0Frac, int indexStart){
     _numberOfNodes = numberOfNodes;
     _edgeProbability = edgeProbability;
     _bernouilliProbability = bernouilliProbability;
     _indexStart = indexStart;
+    _initOp0Frac = initOp0Frac;
 
     // reserve enough memory space for the vectors
     _nodelist.resize(_numberOfNodes); 
@@ -77,7 +78,7 @@ void Erdos_Renyi_Network::makeGraph(){
         resistance = 0.; // good for now, no stubborn nodes
         int index = getRandomElement(v, _numberOfNodes - 1) + _indexStart;
         // Note: _numberOfNodes should be even, otherwise you will get a bias!
-        if (N < _numberOfNodes/2){
+        if (N < int(_numberOfNodes*_initOp0Frac)){
             opinion = 0;
         }
         else{
