@@ -16,12 +16,14 @@ using namespace std;
 
 class Clustered_Random_Network : public Erdos_Renyi_Network{
     int _totalNumberOfNodes; // total number of nodes in the clustered graph
+    vector<int> _clusterSizes; // vector that contains the number of nodes for each cluster (sum should equal totalNumberOfNodes)
+    vector<double> _edgeProbs; // vector that contains the edge probabilities for each cluster
     double _rewireAddProbability; // probability of rewireing or adding edges between clusters (whether you rewire or add depends on 'type' parameter in constructor)
     string _type; // tells whether you rewire or you add edges to make the clustered graph 
 
 public:
     // define a constructor
-    Clustered_Random_Network(int numberOfNodes, double rewireAddProbability, string type);
+    Clustered_Random_Network(int totalNumberOfNodes, vector<int> clusterSizes, vector<double> edgeProbs, double rewireAddProbability, string type);
 
     // declare member functions of class Clustered_Random_Network 
     vector<int> makeErdosRenyi(int numberOfNodes, double edgeProb, double initOp0Frac, int indexStart); // function that makes an ER-graph + returns a vector with the indices of the nodes in that cluster
@@ -32,6 +34,9 @@ public:
     bool checkEdge(Node u, Node v); // function that checks whether there is an edge between 2 vertices u and v that are both neigbors of the same node (used to calculate the local clustering coefficient), returns True if there is an edge
     double localClustering(Node u); // funvtion that calculates the local clustering coefficient of a node in the graph
     double averageClustering(); // function that calculates the average clustering coefficient of the graph
+
+
+    vector<double> countOpinionFractionCluster(int clusterNumber); // count the fractions of opinions in a particular cluster of the clustered graph
 };
 
 #endif

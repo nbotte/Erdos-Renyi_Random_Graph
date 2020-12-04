@@ -21,10 +21,10 @@ int main(){
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> unfortunately true...! --> but is better if you don't add edges to the edge list
 
     // needs more testing, does opinion dynamics works properly --> see paper 8, smart to make nodes active (+ update opinionlist) in constructor? 
-    int N = 1000;
+ /*   int N = 1000;
     double p = 0.1;
     double p_bern = 0.1;
-    double initOp0Frac = 0.5;
+    double initOp0Frac = 0.5;*/
     //g.print();
     
    /* vector<double> fractionAt0(N);
@@ -201,7 +201,7 @@ int main(){
    // g.print();
    // op1file.close();*/
 
-    ofstream opfile("Fraction_of_opinions_01_50_50_no_stubb_paper8_active_01_good_av_good_init.txt");
+   /* ofstream opfile("Fraction_of_opinions_01_50_50_no_stubb_paper8_active_01_good_av_good_init.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -238,13 +238,30 @@ int main(){
     for (int i = 0; i < 500; i++){
         opfile << mean0[i] << ' ' << mean1[i] << ' ' << variance0[i]/double(count - 2) << ' ' << variance1[i]/double(count - 2) << endl;
     }
-    opfile.close();
+    opfile.close();*/
 
-   /* double p_bern = 1.;
+    double p_bern = 0.1;
     int N = 1000;
-    int p_add = 0.001;
+    int p_add = 0.01;
+    double initOp0Frac = 0.2;
+    vector<int> clusterSizes(10);
+    vector<double> edgeProbs(10);
+    for (int i = 0; i < 10; i++){
+        clusterSizes[i] = 100;
+        edgeProbs[i] = 0.1;
+    }
 
-    Clustered_Random_Network g = Clustered_Random_Network(N, p_add, "add");
+   /* Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add"); 
+    g.print();
+    for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i] << ": ";
+        for (int index : g.nodelist()[i].neigh()){
+            cout << g.nodelist()[index] << ' ';
+        }
+        cout << endl;
+    }*/
+
+    /*Clustered_Random_Network g = Clustered_Random_Network(N, p_add, "add");
     cout << g.averageClustering() << endl;*/
    /* g.print();
     cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
@@ -262,33 +279,49 @@ int main(){
         //g.print();
         //cout << endl;
     }*/
-   /* ofstream opfile("Fraction_of_opinions_Clustered_01-001_50_50_no_stubb_one_node_active_1_av_good_init.txt");
-    vector<double> fractionsA(10000);
-    vector<double> fractionsB(10000); 
+
+    // also calculate standard deviation here?
+    ofstream opfile("Fraction_of_opinions_Clustered_cluster0_01-001_20_80_no_stubb_paper8_active_01_av_good_init.txt");
+    vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
+    vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
+    vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
+    vector<double> variance1(500); // calculate variance of opinion 1 according to Welford's algorithm
+    int count = 1;
+
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 10; n++){
-        Clustered_Random_Network g = Clustered_Random_Network(N, p_add, "add"); 
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add"); 
         cout << "Graph: " << n << endl;
-        g.setNodesActive(p_bern);
         // for each network, run different simulations --> can this be implemented faster?
         for (int s = 0; s < 10; s++){
-            // for each network and each simulation: let the opinions evolve in time
-            for (int t = 0; t < 10000; t++){
-                g.changeRandomOpinion();
-                double oldFractionA = fractionsA[t];
-                double oldFractionB = fractionsB[t];
-                fractionsA[t] = oldFractionA + g.countOpinionFraction()[0];
-                fractionsB[t] = oldFractionB + g.countOpinionFraction()[1];
-            }
             // reset the initial opinions
-            g.resetInitOpinion();
+            g.resetInitOpinion(initOp0Frac);
+            // for each network and each simulation: let the opinions evolve in time
+            for (int t = 0; t < 500; t++){
+                g.setNodesActive(p_bern);
+                g.changeOpinions();
+
+                double x0 = g.countOpinionFractionCluster(0)[0];
+                double x1 = g.countOpinionFractionCluster(0)[1];
+
+                double oldMean0 = mean0[t];
+                double oldMean1 = mean1[t];
+                mean0[t] = mean0[t] + (x0 - mean0[t])/count;
+                mean1[t] = mean1[t] + (x1 - mean1[t])/count;
+
+                variance0[t] = variance0[t] + (x0 - mean0[t]) * (x0 - oldMean0);
+                variance1[t] = variance1[t] + (x1 - mean1[t]) * (x1 - oldMean1);
+
+                g.deactivateNodes();
+            }
+            count++;
         }
     }
     // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
-    for (int i = 0; i < 10000; i++){
-        opfile << fractionsA[i]/100. << ' ' << fractionsB[i]/100. << endl;
+    for (int i = 0; i < 500; i++){
+        opfile << mean0[i] << ' ' << mean1[i] << ' ' << variance0[i]/double(count - 2) << ' ' << variance1[i]/double(count - 2) << endl;
     }
-    opfile.close();*/
+    opfile.close();
    /* int numberOfEdges = 0;
     for (int i = 0; i < g.nodelist().size(); i++){
       //  cout << g.nodelist()[i] << ": ";

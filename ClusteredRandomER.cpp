@@ -25,8 +25,10 @@ using namespace std;
 // for now this class seems to work, but can it be implemented nicer/more efficient? what about use of inheritance?
 // TO DO: implement opinion dynamics + make random graphs with number of nodes drawn from log-log distribution
 
-Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, double rewireAddProbability, string type){
+Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, vector<int> clusterSizes, vector<double> edgeProbs, double rewireAddProbability, string type){
     _totalNumberOfNodes = totalNumberOfNodes; // total number of nodes in the clustered graph
+    _clusterSizes = clusterSizes; // vector that contains the number of nodes for each cluster (sum should equal totalNumberOfNodes)
+    _edgeProbs = edgeProbs; // vector that contains the edge probabilities for each cluster
     _rewireAddProbability = rewireAddProbability;
     _type = type; // choice between 'rewire' and 'add'
 
@@ -36,28 +38,14 @@ Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, doubl
 
 void Clustered_Random_Network::makeGraph(){
     // is there a nicer way to give indexStart a value?
-    vector<int> cluster1 = makeErdosRenyi(100, 0.5, 0.5, 0);
-    vector<int> cluster2 = makeErdosRenyi(100, 0.5, 0.5, 100);
-    vector<int> cluster3 = makeErdosRenyi(100, 0.5, 0.5, 200);
-    vector<int> cluster4 = makeErdosRenyi(100, 0.5, 0.5, 300);
-    vector<int> cluster5 = makeErdosRenyi(100, 0.5, 0.5, 400);
-    vector<int> cluster6 = makeErdosRenyi(100, 0.5, 0.5, 500);
-    vector<int> cluster7 = makeErdosRenyi(100, 0.5, 0.5, 600);
-    vector<int> cluster8 = makeErdosRenyi(100, 0.5, 0.5, 700);
-    vector<int> cluster9 = makeErdosRenyi(100, 0.5, 0.5, 800);
-    vector<int> cluster10 = makeErdosRenyi(100, 0.5, 0.5, 900);
-
+    vector<int> cluster;
     vector<vector<int>> clusters;
-    clusters.push_back(cluster1);
-    clusters.push_back(cluster2);
-    clusters.push_back(cluster3);
-    clusters.push_back(cluster4);
-    clusters.push_back(cluster5);
-    clusters.push_back(cluster6);
-    clusters.push_back(cluster7);
-    clusters.push_back(cluster8);
-    clusters.push_back(cluster9);
-    clusters.push_back(cluster10);
+    int indexStart = 0;
+    for (int i = 0; i < _clusterSizes.size(); i++){
+        cluster = makeErdosRenyi(_clusterSizes[i], _edgeProbs[i], 0.5, indexStart);
+        clusters.push_back(cluster);
+        indexStart += _clusterSizes[i];
+    }
 
     if (_type == "rewire"){
         // rewire edges
@@ -201,4 +189,24 @@ double Clustered_Random_Network::averageClustering(){
         clustering += localClustering(_nodelist[u]);
     }
     return clustering/_nodelist.size();
+}
+
+// function that counts the fractions of opinions in a particular cluster of the clustered random graph
+vector<double> Clustered_Random_Network::countOpinionFractionCluster(int clusterNumber){
+    int opinion0 = 0;
+    int opinion1 = 0;
+    vector<double> fractions;
+    int clusterLength = _clusterSizes[clusterNumber];
+    // Attention: this for loop only works if all clusters have equal sizes, if not this should be addapted
+    for (int i = (clusterNumber*clusterLength); i < ((clusterNumber + 1)*clusterLength); i++){
+        if (_nodelist[i].opinion() == 0){
+            opinion0++;
+        }
+        else if (_nodelist[i].opinion() == 1){
+            opinion1++;
+        }
+    }
+    fractions.push_back(double(opinion0)/double(clusterLength));
+    fractions.push_back(double(opinion1)/double(clusterLength));
+    return fractions;
 }

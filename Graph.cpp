@@ -162,7 +162,7 @@ void Graph::setNodesActive(double bernProb){
 }
 
 // function that resets the initial opinions for a given graph
-void Graph::resetInitOpinion(){
+void Graph::resetInitOpinion(double initOp0Frac){
     vector<int> v;
     // fill a vector with the numbers 0 to numberOfNodes
     for (int i = 0; i < _nodelist.size(); i++){
@@ -172,7 +172,7 @@ void Graph::resetInitOpinion(){
     int opinion;
     while (v.size()){
         int index = getRandomElement(v, _nodelist.size() - 1);
-        if (N < _nodelist.size()/2){
+        if (N < int(_nodelist.size()*initOp0Frac)){
             opinion = 0;
         }
         else{
