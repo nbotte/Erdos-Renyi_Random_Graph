@@ -3,6 +3,7 @@
 #include <cmath>
 #include "ClusteredRandomER.h"
 #include "ErdosRenyi.h"
+#include "WattsStrogatz.h"
 #include "Node.h"
 #include "Edge.h"
 #include <math.h>
@@ -240,15 +241,15 @@ int main(){
     }
     opfile.close();*/
 
-    double p_bern = 0.1;
+    /*double p_bern = 0.1;
     int N = 1000;
-    int p_add = 0.01;
-    double initOp0Frac = 0.2;
+    int p_add = 0.001;
+    double initOp0Frac = 0.5;
     vector<int> clusterSizes(10);
     vector<double> edgeProbs(10);
     for (int i = 0; i < 10; i++){
         clusterSizes[i] = 100;
-        edgeProbs[i] = 0.1;
+        edgeProbs[i] = 0.5;
     }
 
    /* Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add"); 
@@ -261,7 +262,7 @@ int main(){
         cout << endl;
     }*/
 
-    /*Clustered_Random_Network g = Clustered_Random_Network(N, p_add, "add");
+    /*Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
     cout << g.averageClustering() << endl;*/
    /* g.print();
     cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
@@ -281,7 +282,7 @@ int main(){
     }*/
 
     // also calculate standard deviation here?
-    ofstream opfile("Fraction_of_opinions_Clustered_cluster0_01-001_20_80_no_stubb_paper8_active_01_av_good_init.txt");
+    /*ofstream opfile("Fraction_of_opinions_Clustered_01-001_50_50_no_stubb_paper8_active_01_av_good_init.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -301,8 +302,8 @@ int main(){
                 g.setNodesActive(p_bern);
                 g.changeOpinions();
 
-                double x0 = g.countOpinionFractionCluster(0)[0];
-                double x1 = g.countOpinionFractionCluster(0)[1];
+                double x0 = g.countOpinionFraction()[0];
+                double x1 = g.countOpinionFraction()[1];
 
                 double oldMean0 = mean0[t];
                 double oldMean1 = mean1[t];
@@ -321,7 +322,7 @@ int main(){
     for (int i = 0; i < 500; i++){
         opfile << mean0[i] << ' ' << mean1[i] << ' ' << variance0[i]/double(count - 2) << ' ' << variance1[i]/double(count - 2) << endl;
     }
-    opfile.close();
+    opfile.close();*/
    /* int numberOfEdges = 0;
     for (int i = 0; i < g.nodelist().size(); i++){
       //  cout << g.nodelist()[i] << ": ";
@@ -332,6 +333,21 @@ int main(){
     cout << endl;
     //cout << numberOfEdges/2 << endl;
     cout << g.averageClustering() << endl;*/
+
+    int N = 100;
+    int K = 10;
+    double beta = 0.1;
+
+    Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta);
+    for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i] << ": ";
+        for (int index : g.nodelist()[i].neigh()){
+            cout << g.nodelist()[index] << ' ';
+        }
+        cout << endl;
+    }
+
+
 };
 
 // maybe also include adjecency matrix
@@ -339,7 +355,6 @@ int main(){
 // QUESTION: does every class need a destructor? + can we assign edges in time slower than N^2?
 
 // Standard variation --> welford's online algorithm (https://jonisalonen.com/2013/deriving-welfords-method-for-computing-variance/) 
-// TO DO: ask how to improve speed of the histogram making
-// TO DO: add averaged histogram to shared file!!
-// TO DO: plot standard variation + ask if you need to calculate this for the 10x10 averages or if you eg need to calculate these averages 5 times and calculate the standard deviation from these 5 different results
 
+// TO DO: add averaged histogram to shared file!!
+// TO DO: check if Watts-Strogatz produces correct network (degree distribution etc --> see wiki: properties)
