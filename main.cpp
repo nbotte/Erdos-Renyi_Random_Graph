@@ -336,28 +336,30 @@ int main(){
 
     int N = 1000;
     int K = 20;
-    double beta = 0.01;
+   // double beta = 0.5;
 
-    int count = 0;
+    ofstream clusFile("Clustering_coefficient_WS_vs_beta.txt");
+    for (int i = 0; i < 100; i++){
+        double beta = double(i) / 100.;
+        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta);
+        clusFile << beta << ' ' << g.overallClustering() << '\n'; 
+    } 
+    clusFile.close();
 
-    Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta); 
-    double x = pow(1-beta, 3) * double(3*(K-2))/double((4*(K-1)));
-    double x1 = double(K)/double(N-1);
-    cout << g.overallClustering() << ' ' << x << endl;
-   /* for (int i = 0; i < g.nodelist().size(); i++){
-       // cout << g.nodelist()[i] << ": ";
+    /*int count = 0;
+
+    for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i] << ": ";
         for (int index : g.nodelist()[i].neigh()){
-            //cout << g.nodelist()[index] << ' ';
+            cout << g.nodelist()[index] << ' ';
             count++;
         }
-        //cout << endl;
+        cout << endl;
     }
-
-    int x = N * K/2;
-
+    int x = N*K/2;
     cout << count/2 << ' ' << x << endl;*/
 
-    /*vector<int> degreeDistr(500);
+   /* vector<int> degreeDistr(500);
     for (int i = 0; i < g.nodelist().size(); i++){
         degreeDistr[g.nodelist()[i].neigh().size()] += 1;
     }
@@ -397,3 +399,4 @@ int main(){
 
 // TO DO: add averaged histogram to shared file!!
 // TO DO: check if Watts-Strogatz produces correct network (degree distribution etc --> see wiki: properties) + make graph of C(beta)/C(0) vs beta --> goes like (1-beta)^3?
+// TO DO: problem with clustering coefficient for large beta?? + peak of degree distr for beta = 1. is wrong?

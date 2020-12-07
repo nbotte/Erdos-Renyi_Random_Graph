@@ -85,12 +85,26 @@ void Watts_Strogatz_Network::rewire(){
                     while (out.back().index() == i || _nodelist[i].containsNeigh(out.back().index())){
                         sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
                     }
-                    _nodelist[i].removeNeigh(index);
-                    _nodelist[i].addNeigh(out.back().index());
-                    _nodelist[out.back().index()].addNeigh(_nodelist[i].index());
+                    _nodelist[i].addHelpNeigh(out.back().index());
+                }
+                else{
+                    _nodelist[i].addHelpNeigh(index);
                 }
             }
+            else if (index > (i + (_meanDegree/2))){
+                _nodelist[i].addHelpNeigh(index);
+            }
         }
+    }
+    for (int i = 0; i < _nodelist.size(); i++){
+        _nodelist[i].removeAllNeigh();
+    }
+    for (int i = 0; i < _nodelist.size(); i++){
+        for (int index : _nodelist[i].helpNeigh()){
+            _nodelist[i].addNeigh(index);
+            _nodelist[index].addNeigh(_nodelist[i].index());
+        }
+        _nodelist[i].removeAllHelpNeigh();
     }
 }
 

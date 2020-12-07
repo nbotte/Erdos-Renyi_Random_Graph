@@ -106,7 +106,7 @@ void Clustered_Random_Network::rewireEdges(vector<vector<int>> clusters){
                         _nodelist[clusters[0][i]].addHelpNeigh(out.back());
                     }
                     else{
-                    _nodelist[clusters[0][i]].addHelpNeigh(index);
+                        _nodelist[clusters[0][i]].addHelpNeigh(index);
                     }
                 }     
             }
@@ -155,32 +155,6 @@ void Clustered_Random_Network::addEdges(vector<vector<int>> clusters){
         // move current cluster back to its original position
         std::swap(clusters[0], clusters[c]);
     }
-}
-
-// function that calculates the local clustering of a node
-double Clustered_Random_Network::localClustering(Node n){
-    int triangles = 0;
-    // check if there is an edge between any pair of neighbours
-    for (int index : n.neigh()){
-        for (int index2 : n.neigh()){
-            if (index2 != index){
-                if (checkEdge(_nodelist[index], _nodelist[index2]) || checkEdge(_nodelist[index2], _nodelist[index])){
-                    triangles++;
-                }
-            }
-        }
-    }
-    double localClus = double(triangles)/(double(n.neigh().size())*(double(n.neigh().size())-1));
-    return localClus;
-}
-
-// function that calculates the average clustering coefficient, brute force for now --> high clustering takes quite a long time to compute, low clustering is fine
-double Clustered_Random_Network::averageClustering(){
-    double clustering = 0.;
-    for (int u = 0; u < _nodelist.size(); u++){
-        clustering += localClustering(_nodelist[u]);
-    }
-    return clustering/_nodelist.size();
 }
 
 // function that counts the fractions of opinions in a particular cluster of the clustered random graph

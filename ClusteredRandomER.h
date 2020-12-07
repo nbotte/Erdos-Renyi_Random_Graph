@@ -31,10 +31,6 @@ public:
     void rewireEdges(vector<vector<int>>); // function that rewires the edges of a graph between different clusters, takes a vector of vectors of indices of the nodes of the different clusters as argument
     void addEdges(vector<vector<int>>); // function that adds edges between clusters
 
-    double localClustering(Node u); // funvtion that calculates the local clustering coefficient of a node in the graph
-    double averageClustering(); // function that calculates the average clustering coefficient of the graph
-
-
     vector<double> countOpinionFractionCluster(int clusterNumber); // count the fractions of opinions in a particular cluster of the clustered graph
 };
 
