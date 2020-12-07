@@ -24,7 +24,13 @@ public:
     // declare member functions of class Watts-Strogatz
     void makeGraph(); // function that generates a Watts-Strogatz graph
     void makeRegularLattice(); // function that makes a regular lattice
-    void rewire(); // function that rewires the edges of the regular lattice    
+    void rewire(); // function that rewires the edges of the regular lattice  
+
+    int numberOfTriangles(); // function that calculates the number of triangles in the graph
+    int numberOfTriples(); // function that calculates the number of connected triples in the graph
+
+    double overallClustering(); // function that returns the overall clustering coefficient (transitivity) of the network
+
 };
 
 #endif

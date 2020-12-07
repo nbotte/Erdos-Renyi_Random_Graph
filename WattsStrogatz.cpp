@@ -87,8 +87,51 @@ void Watts_Strogatz_Network::rewire(){
                     }
                     _nodelist[i].removeNeigh(index);
                     _nodelist[i].addNeigh(out.back().index());
+                    _nodelist[out.back().index()].addNeigh(_nodelist[i].index());
                 }
             }
         }
     }
+}
+
+// function that calculates the number of triangles in the graph
+int Watts_Strogatz_Network::numberOfTriangles(){
+    int triangles = 0;
+    // loop over all nodes
+    for (int i = 0; i < _nodelist.size(); i++){ 
+        // for each node: check if there is an edge between any pair of neighbours --> counts each tiangle three times
+        for (int index : _nodelist[i].neigh()){
+            for (int index2 : _nodelist[i].neigh()){
+                // counts each triangle twice
+                if (index2 != index){
+                    if (checkEdge(_nodelist[index], _nodelist[index2]) || checkEdge(_nodelist[index2], _nodelist[index])){
+                        triangles++; 
+                    }
+                }
+            }
+        }
+    }
+    // each triangle is counted three times + each edge is counted twice 
+    return triangles/6;
+}
+
+// function that calculates the number of connected triples in the graph
+int Watts_Strogatz_Network::numberOfTriples(){
+    int triples = 0;
+    // loop over all nodes
+    for (int i  = 0; i < _nodelist.size(); i++){
+        // for each node:  count the number of triples with that node in the center
+        // https://math.stackexchange.com/questions/60578/what-is-the-term-for-a-factorial-type-operation-but-with-summation-instead-of-p
+        int k = _nodelist[i].neigh().size() - 1;
+        int triple = k*(k+1)/2;
+        triples += triple;
+    }
+    // each triple is counted twice (the node in the middle of the triplet doesn't count the triplet)
+    return triples;
+}
+
+// function that returns the overall clustering coefficient (transitivity) of the network
+double Watts_Strogatz_Network::overallClustering(){
+    double Clus = double(3*numberOfTriangles()) / double(numberOfTriples()); 
+    return Clus;
 }

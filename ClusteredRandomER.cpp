@@ -157,14 +157,6 @@ void Clustered_Random_Network::addEdges(vector<vector<int>> clusters){
     }
 }
 
-// function that checks whether there is an edge between the nodes u and v
-bool Clustered_Random_Network::checkEdge(Node u, Node v){
-    if (v.containsNeigh(u.index())){
-        return true;
-    }
-    else{ return false;}
-}
-
 // function that calculates the local clustering of a node
 double Clustered_Random_Network::localClustering(Node n){
     int triangles = 0;

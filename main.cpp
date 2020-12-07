@@ -334,18 +334,57 @@ int main(){
     //cout << numberOfEdges/2 << endl;
     cout << g.averageClustering() << endl;*/
 
-    int N = 100;
-    int K = 10;
-    double beta = 0.1;
+    int N = 1000;
+    int K = 20;
+    double beta = 0.01;
 
-    Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta);
-    for (int i = 0; i < g.nodelist().size(); i++){
-        cout << g.nodelist()[i] << ": ";
+    int count = 0;
+
+    Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta); 
+    double x = pow(1-beta, 3) * double(3*(K-2))/double((4*(K-1)));
+    double x1 = double(K)/double(N-1);
+    cout << g.overallClustering() << ' ' << x << endl;
+   /* for (int i = 0; i < g.nodelist().size(); i++){
+       // cout << g.nodelist()[i] << ": ";
         for (int index : g.nodelist()[i].neigh()){
-            cout << g.nodelist()[index] << ' ';
+            //cout << g.nodelist()[index] << ' ';
+            count++;
         }
-        cout << endl;
+        //cout << endl;
     }
+
+    int x = N * K/2;
+
+    cout << count/2 << ' ' << x << endl;*/
+
+    /*vector<int> degreeDistr(500);
+    for (int i = 0; i < g.nodelist().size(); i++){
+        degreeDistr[g.nodelist()[i].neigh().size()] += 1;
+    }
+    ofstream degreeFile("Degree_distribution_Watts-Strogatz_05.txt");
+    for (int i = 0; i < degreeDistr.size(); i++){
+        degreeFile << i << ' ' << degreeDistr[i] << '\n';
+    }
+
+    degreeFile.close();
+    vector<int> degreeDistrAv(500);
+    for (int k = 0; k < 100; k++){
+        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta);
+        cout << "Graph: " << k << endl;
+        for (int i = 0; i < g.nodelist().size(); i++){
+            degreeDistrAv[g.nodelist()[i].neigh().size()] += 1;
+        }
+    }
+
+
+    ofstream degreeFileAv("Degree_distribution_Watts-Strogatz_05_av.txt");
+    for (int i = 0; i < degreeDistrAv.size(); i++){
+        degreeFileAv << i << ' ' << degreeDistrAv[i]/100 << '\n';
+    }
+
+    degreeFileAv.close();*/
+
+
 
 
 };
@@ -357,4 +396,4 @@ int main(){
 // Standard variation --> welford's online algorithm (https://jonisalonen.com/2013/deriving-welfords-method-for-computing-variance/) 
 
 // TO DO: add averaged histogram to shared file!!
-// TO DO: check if Watts-Strogatz produces correct network (degree distribution etc --> see wiki: properties)
+// TO DO: check if Watts-Strogatz produces correct network (degree distribution etc --> see wiki: properties) + make graph of C(beta)/C(0) vs beta --> goes like (1-beta)^3?

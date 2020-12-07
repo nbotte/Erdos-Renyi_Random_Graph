@@ -35,6 +35,8 @@ public:
     void addEdge(Edge e); // function to add edges to the edgelist
     void removeEdge(Edge e); // function to remove edges from the edgelist
     void removeAllEdges(); // function that removes all the edges from the graph
+    bool checkEdge(Node u, Node v); // function that checks whether there is an edge between 2 vertices u and v that are both neigbors of the same node (used to calculate the local clustering coefficient), returns True if there is an edge
+
 
     // opinion dynamics functions of a graph
     void changeOpinions(); // changes the opinions of the nodes in the graph

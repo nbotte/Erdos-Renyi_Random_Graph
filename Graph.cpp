@@ -69,6 +69,14 @@ void Graph::removeAllEdges(){
     _edgelist.clear(); // remove the edges
 }
 
+// function that checks whether there is an edge between the nodes u and v
+bool Graph::checkEdge(Node u, Node v){
+    if (v.containsNeigh(u.index())){
+        return true;
+    }
+    else{ return false;}
+}
+
 // function to change the opinions of the nodes in graph based on majority model
 void Graph::changeOpinions(){ 
     // first: each active node sends it current opinion to its neighbours
