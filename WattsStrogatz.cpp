@@ -21,10 +21,11 @@ using namespace std;
 // https://en.wikipedia.org/wiki/Watts%E2%80%93Strogatz_model
 
 // implement constructor
-Watts_Strogatz_Network::Watts_Strogatz_Network(int numberOfNodes, int meanDegree, double rewireProb){
+Watts_Strogatz_Network::Watts_Strogatz_Network(int numberOfNodes, int meanDegree, double rewireProb, double initOp0Frac){
     _numberOfNodes = numberOfNodes;
     _meanDegree = meanDegree;
     _rewireProb = rewireProb;
+    _initOp0Frac = initOp0Frac;
 
     _nodelist.resize(_numberOfNodes); 
 
@@ -40,16 +41,33 @@ void Watts_Strogatz_Network::makeGraph(){
 
 // function that makes a regular lattice
 void Watts_Strogatz_Network::makeRegularLattice(){
-    // opinion, active, resistance = 0 for now
-    double resistance = 0.; // variable that determines the resistance of a node
-    int opinion = 0; // variable that determines the opinion of a node
-    bool active = false; // variable that determines if node is active
-    
-    // add nodes to the nodelist
+    double fractionResistance = 0.; // set the fraction of stubborn/resistant nodes
+    double resistance; // variable that determines the resistance of a node
+    int opinion; // variable that determines the opinion of a node
+    bool active; // variable that determines if node is active
+
+    vector<int> v;
+    // fill a vector with the numbers 0 to numberOfNodes
     for (int i = 0; i < _numberOfNodes; i++){
-        int index = i;
+        v.push_back(i);
+    }
+    
+    // add nodes with a certain random distribution of opinion 0 and 1 to the nodelist
+    int N = 0;
+    while (v.size()){
+        active = 0.; // default: no nodes are active
+        resistance = 0.; // good for now, no stubborn nodes
+        int index = getRandomElement(v, _numberOfNodes - 1);
+        // Note: _numberOfNodes should be even, otherwise you will get a bias!
+        if (N < int(_numberOfNodes*_initOp0Frac)){
+            opinion = 0;
+        }
+        else{
+            opinion = 1;
+        }
         Node n = Node(index, opinion, resistance, active);
         addNode(n);
+        N++;
     }
 
     // add edges of the regular lattice
@@ -99,13 +117,16 @@ void Watts_Strogatz_Network::rewire(){
     for (int i = 0; i < _nodelist.size(); i++){
         _nodelist[i].removeAllNeigh();
     }
+    ofstream pairFile("Pairs.txt");
     for (int i = 0; i < _nodelist.size(); i++){
         for (int index : _nodelist[i].helpNeigh()){
             _nodelist[i].addNeigh(index);
+            pairFile << i << '\t' << index << '\n';
             _nodelist[index].addNeigh(_nodelist[i].index());
         }
         _nodelist[i].removeAllHelpNeigh();
     }
+    pairFile.close();
 }
 
 // function that calculates the number of triangles in the graph

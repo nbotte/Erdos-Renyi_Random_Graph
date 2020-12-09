@@ -97,6 +97,15 @@ int main(){
     // make histogram for nodes with certain fraction of neighbors with opinion 1
     for (int i = 0; i < fractionAt500.size(); i++){
         // determine position of fraction in the histogram eg 0.111 lies in interval 0-0.1 so position is 0
+
+            // reset the initial opinions to start a new simulation for the same network
+            g.resetInitOpinion();
+        }
+    }
+    
+    // make histogram for nodes with certain fraction of neighbors with opinion 1
+    for (int i = 0; i < fractionAt500.size(); i++){
+        // determine position of fraction in the histogram eg 0.111 lies in interval 0-0.1 so position is 0
         int index0 = int(fractionAt0[i]*10);
         int index500 = int(fractionAt500[i]*10);
         if (index0 == 10){
@@ -336,28 +345,70 @@ int main(){
 
     int N = 1000;
     int K = 20;
-   // double beta = 0.5;
+    double initOp0Frac = 0.2;
+    double beta = 0.1;
+    double p_bern = 0.1;
 
-    ofstream clusFile("Clustering_coefficient_WS_vs_beta.txt");
+    ofstream opfile("Fraction_of_opinions_WS_01-20_20_80_no_stubb_paper8_active_01_av_good_init.txt");
+    vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
+    vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
+    vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
+    vector<double> variance1(500); // calculate variance of opinion 1 according to Welford's algorithm
+    int count = 1;
+
+    // loop over different networks to take averages of the fraction of opinions for each time step
+    for (int n = 0; n < 10; n++){
+        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac); 
+        cout << "Graph: " << n << endl;
+        // for each network, run different simulations --> can this be implemented faster?
+        for (int s = 0; s < 10; s++){
+            // reset the initial opinions
+            g.resetInitOpinion(initOp0Frac);
+            // for each network and each simulation: let the opinions evolve in time
+            for (int t = 0; t < 500; t++){
+                g.setNodesActive(p_bern);
+                g.changeOpinions();
+
+                double x0 = g.countOpinionFraction()[0];
+                double x1 = g.countOpinionFraction()[1];
+
+                double oldMean0 = mean0[t];
+                double oldMean1 = mean1[t];
+                mean0[t] = mean0[t] + (x0 - mean0[t])/count;
+                mean1[t] = mean1[t] + (x1 - mean1[t])/count;
+
+                variance0[t] = variance0[t] + (x0 - mean0[t]) * (x0 - oldMean0);
+                variance1[t] = variance1[t] + (x1 - mean1[t]) * (x1 - oldMean1);
+
+                g.deactivateNodes();
+            }
+            count++;
+        }
+    }
+
+    // for each time step: print the average opinion fraction over the different graphs to see the opinion evolution
+    for (int i = 0; i < 500; i++){
+        opfile << mean0[i] << ' ' << mean1[i] << ' ' << variance0[i]/double(count - 2) << ' ' << variance1[i]/double(count - 2) << endl;
+    }
+    opfile.close();
+
+   /* ofstream clusFile("Clustering_coefficient_WS_vs_beta.txt");
     for (int i = 0; i < 100; i++){
         double beta = double(i) / 100.;
         Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta);
         clusFile << beta << ' ' << g.overallClustering() << '\n'; 
     } 
-    clusFile.close();
+    clusFile.close();*/
 
-    /*int count = 0;
+    /*Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac); 
 
     for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
         for (int index : g.nodelist()[i].neigh()){
             cout << g.nodelist()[index] << ' ';
-            count++;
         }
         cout << endl;
-    }
-    int x = N*K/2;
-    cout << count/2 << ' ' << x << endl;*/
+    }*/
 
    /* vector<int> degreeDistr(500);
     for (int i = 0; i < g.nodelist().size(); i++){
