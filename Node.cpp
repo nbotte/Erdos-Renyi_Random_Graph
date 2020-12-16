@@ -109,7 +109,7 @@ void Node::changeOpinion(){
     double r = dis(gen); // generate a random number that will if the resistant node changes its opinion or not
     
     // first: order the hidden list neighOpinion according to some rule and only look at first 20 opinions
-    orderOpinionsPR();
+    orderOpinionsREC();
 
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){

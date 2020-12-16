@@ -22,12 +22,23 @@ int main(){
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> unfortunately true...! --> but is better if you don't add edges to the edge list
 
     // needs more testing, does opinion dynamics works properly --> see paper 8, smart to make nodes active (+ update opinionlist) in constructor? 
-    int N = 1000;
+   /* int N = 1000;
     int K = 6;
     double p = 0.1;
     double initOp0Frac = 0.5;
     double beta = 0.01; // should be small enough in order to deviate from random case
+    double p_bern = 0.1;*/
+
     double p_bern = 0.1;
+    int N = 1000;
+    int p_add = 0.001;
+    double initOp0Frac = 0.5;
+    vector<int> clusterSizes(50); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(50);
+    for (int i = 0; i < 50; i++){
+        clusterSizes[i] = 20;
+        edgeProbs[i] = 0.5;
+    }
 
     vector<double> fractionAt0(N);
     vector<double> fractionAt500(N);
@@ -38,12 +49,12 @@ int main(){
 
 
     // average over different networks
-    for (int n = 0; n < 1; n++){
-        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
+    for (int n = 0; n < 10; n++){
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
         cout << "Graph " << n << endl;
 
         // for each network average over different simulation
-        for (int s = 0; s < 1; s++){
+        for (int s = 0; s < 10; s++){
             cout << "Simulation " << s << endl;
 
             for (int i = 0; i < g.nodelist().size(); i++){
@@ -138,7 +149,7 @@ int main(){
         }
     }*/
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_WS_001_PR.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_Clustered_REC.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -258,12 +269,12 @@ int main(){
     int N = 1000;
     int p_add = 0.001;
     double initOp0Frac = 0.5;
-    vector<int> clusterSizes(10);
-    vector<double> edgeProbs(10);
-    for (int i = 0; i < 10; i++){
-        clusterSizes[i] = 100;
+    vector<int> clusterSizes(50); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(50);
+    for (int i = 0; i < 50; i++){
+        clusterSizes[i] = 20;
         edgeProbs[i] = 0.5;
-    }
+    }*/
 
    /* Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add"); 
     g.print();
@@ -295,7 +306,7 @@ int main(){
     }*/
 
     // also calculate standard deviation here?
-    /*ofstream opfile("Fraction_of_opinions_Clustered_01-001_50_50_no_stubb_paper8_active_01_av_good_init.txt");
+    /*ofstream opfile("Fraction_of_opinions_Clustered_Cluster4_05-0001_50_50_no_stubb_paper8_active_01_av_good_init.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -315,8 +326,8 @@ int main(){
                 g.setNodesActive(p_bern);
                 g.changeOpinions();
 
-                double x0 = g.countOpinionFraction()[0];
-                double x1 = g.countOpinionFraction()[1];
+                double x0 = g.countOpinionFractionCluster(4)[0];
+                double x1 = g.countOpinionFractionCluster(4)[1];
 
                 double oldMean0 = mean0[t];
                 double oldMean1 = mean1[t];
