@@ -5,6 +5,7 @@
 #include <iostream>
 #include "boost/circular_buffer.hpp"
 #include <list>
+#include <vector>
 using namespace std;
 
 #ifndef NODE_H
@@ -22,7 +23,7 @@ class Node{
     bool _active; // declare active variable (= determines if node is active or not)
     //bool _wasActive; // declare wasActive variable (= determines if the node was active in the previous timestep)
 
-    list<int> _neighOpinion;
+    vector<int> _neighOpinion; // this is the hidden list (use vector dataset) with the opinions that the neighbors posted since the last time the node was active (see paper 8)
 
 public: 
     Node(); // define default constructor
@@ -39,7 +40,7 @@ public:
     double resistance() const;
     bool active() const;
 
-    list<int> neighOpinion() const;
+    vector<int> neighOpinion() const;
 
     // declare member functions of class Node
     void addNeigh(int index);
@@ -58,6 +59,8 @@ public:
 
     void addNeighOpinion(int opinion);
     void removeAllNeighOpinion();
+    void orderOpinionsPR(); 
+    void orderOpinionsREC();
 
     bool containsNeigh(int n); 
 

@@ -124,7 +124,7 @@ void Graph::changeOpinions(){
     for (int i = 0; i < _nodelist.size(); i++){
         if (_nodelist[i].active()){
             for (int index : _nodelist[i].neigh()){
-                _nodelist[index].addOpinion(_nodelist[i].oldOpinion());
+                _nodelist[index].addNeighOpinion(_nodelist[i].oldOpinion());
             }
         }
     }

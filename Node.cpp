@@ -6,6 +6,7 @@
 #include <iostream>
 #include "boost/circular_buffer.hpp"
 #include <list>
+#include <vector>
 #include <random>
 #include <algorithm>
 using namespace std;
@@ -28,7 +29,7 @@ Node::Node(int index, int opinion, double resistance, bool active){
     _resistance = resistance; 
     _active = active; 
    // _wasActive = true;
-   _neighOpinion = list<int>();
+   _neighOpinion = vector<int>(); // this is the hidden list (use vector dataset) with the opinions that the neighbors posted since the last time the node was active (see paper 8)
 }
 
 // implementation of the getters
@@ -42,7 +43,7 @@ boost::circular_buffer<int> Node::opinionlist() const {return _opinionlist;}
 double Node::resistance() const {return _resistance;}
 bool Node::active() const {return _active;}
 
-list<int> Node::neighOpinion() const {return _neighOpinion;}
+vector<int> Node::neighOpinion() const {return _neighOpinion;}
 
 // function to add an index of a neighbour to the list of indices of neighbours of a node
 void Node::addNeigh(int index){
@@ -69,6 +70,31 @@ void Node::removeAllHelpNeigh(){
     _helpNeigh.clear();
 }
 
+// function that orders the opinions in the hidden timeline neighOpinion
+// here the PR ordering is used
+void Node::orderOpinionsPR(){
+    // first: count the number of opinions equal to own opinion
+    int count = 0;
+    for (int i = 0; i < _neighOpinion.size(); i++){
+        if (_neighOpinion[i] == _opinion){
+            count++;
+        }
+    }
+
+    // then: order the opinions according to your own opinion
+    for (int i = 0; i < count; i++){
+        while (_neighOpinion[i] != _opinion){
+            std::rotate(_neighOpinion.begin() + i, _neighOpinion.begin() + i + 1, _neighOpinion.end());
+        }
+    }
+}
+
+// function that orders the opinions in the hidden timeline neighOpinion
+// here the REC ordering is used
+void Node::orderOpinionsREC(){
+    std::reverse(_neighOpinion.begin(), _neighOpinion.end());
+}
+
 // function to change the opinion of the node
 // Need to change this according to opinion dynamics of paper 8? --> did this, but no resistance implemented yet!
 void Node::changeOpinion(){
@@ -81,21 +107,34 @@ void Node::changeOpinion(){
 
     double o = dis(gen); // generate a random number that will determine the new opinion of the node (see paper 8)
     double r = dis(gen); // generate a random number that will if the resistant node changes its opinion or not
- 
+    
+    // first: order the hidden list neighOpinion according to some rule and only look at first 20 opinions
+    orderOpinionsPR();
+
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
-        // count the number of opinion 0 and 1 in the opinionlist of the node
-        if (_opinionlist.size() != 0){
-            for (int n : _opinionlist){
+        // count the number of opinion 0 and 1 of the first 20 opinions in the ordered list
+        if (_neighOpinion.size() != 0){
+            int k = 0; // determines the number of opinions you should consider
+            if (_neighOpinion.size() >= 20){
+                k = 20;
+            }
+            else if (_neighOpinion.size() < 20){
+                k = _neighOpinion.size();
+            }
+            for (int i = 0; i < k; i++){
              //   cout << n << ' ';
-                if (n == 0){
+                if (_neighOpinion[i] == 0){
                     opinion0++;
                 }
-                else if (n == 1){
+                else if (_neighOpinion[i] == 1){
                     opinion1++;
                 }
             }
         
+            // remove all opinions in the timeline  
+            removeAllNeighOpinion();  
+
           // cout << endl;
           //  cout << opinion0 << '-' << opinion1 << endl;
            /* if (opinion0 > opinion1){
@@ -108,8 +147,8 @@ void Node::changeOpinion(){
                 _newOpinion = _opinion;
             }*/
           //  cout << _opinionlist.size() << '-' << opinion0 << '-' << opinion1 << endl;
-            double fraction0 = double(opinion0)/_opinionlist.size();
-            double fraction1 = double(opinion1)/_opinionlist.size();
+            double fraction0 = double(opinion0)/k;
+            double fraction1 = double(opinion1)/k;
             
            // cout << o << '-' << fraction0 << '-' << fraction1 << endl;
 
@@ -164,6 +203,7 @@ void Node::setActive(bool active){
     _wasActive = _active;
 }*/
 
+// add opinion to the hidden list of posted opinions of neighbors
 void Node::addNeighOpinion(int opinion){
     _neighOpinion.push_back(opinion);
 }

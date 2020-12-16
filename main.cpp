@@ -22,46 +22,90 @@ int main(){
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> unfortunately true...! --> but is better if you don't add edges to the edge list
 
     // needs more testing, does opinion dynamics works properly --> see paper 8, smart to make nodes active (+ update opinionlist) in constructor? 
- /*   int N = 1000;
+    int N = 1000;
+    int K = 6;
     double p = 0.1;
+    double initOp0Frac = 0.5;
+    double beta = 0.01; // should be small enough in order to deviate from random case
     double p_bern = 0.1;
-    double initOp0Frac = 0.5;*/
-    //g.print();
-    
-   /* vector<double> fractionAt0(N);
-    double oldFractionAt0;
+
+    vector<double> fractionAt0(N);
     vector<double> fractionAt500(N);
-    double oldFractionAt500;
     double binWidth = 0.1;
     int numberOfBins = 1/binWidth;
-    vector<int> neighOp1HistAt0(numberOfBins);
     vector<int> neighOp1HistAt500(numberOfBins);
-    // average over different network
-    for (int n = 0; n < 10; n++){
-        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, initOp0Frac, 0);
+    vector<int> neighOp1HistAt0(numberOfBins);
+
+
+    // average over different networks
+    for (int n = 0; n < 1; n++){
+        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
+        cout << "Graph " << n << endl;
+
+        // for each network average over different simulation
+        for (int s = 0; s < 1; s++){
+            cout << "Simulation " << s << endl;
+
+            for (int i = 0; i < g.nodelist().size(); i++){
+                int opinion1 = 0;
+                if (g.nodelist()[i].neigh().size() != 0){
+                    for (int index : g.nodelist()[i].neigh()){
+                        if (g.nodelist()[index].opinion() == 1){
+                            opinion1++;                    
+                        }
+                    }
+                    fractionAt0[i] = double(opinion1)/double(g.nodelist()[i].neigh().size());
+                    // determine position of fraction in the histogram eg 0.111 lies in interval 0-0.1 so position is 0
+                    int index0 = int(fractionAt0[i]*10);
+        
+                    if (index0 == 10){
+                        index0--;
+                    }
+                    neighOp1HistAt0[index0] += 1; 
+                }
+            }
+
+            // let opinions evolve in time
+            for (int i = 0; i < 500; i++){
+                g.setNodesActive(p_bern);
+                g.changeOpinions();
+                g.deactivateNodes();
+            }
+
+            // count fraction of neighbors with opinion 1 at t = 500 + make histogram with number of nodes with a certain fraction of neighbors with opinion 1
+            for (int i = 0; i < g.nodelist().size(); i++){
+                int opinion1 = 0;
+                if (g.nodelist()[i].neigh().size() != 0){
+                    for (int index : g.nodelist()[i].neigh()){
+                        if (g.nodelist()[index].opinion() == 1){
+                            opinion1++;                    
+                        }
+                    }
+                    fractionAt500[i] = double(opinion1)/double(g.nodelist()[i].neigh().size());
+                    // determine position of fraction in the histogram eg 0.111 lies in interval 0-0.1 so position is 0
+                    int index500 = int(fractionAt500[i]*10);
+                    if (index500 == 10){
+                        index500--;
+                    }
+                    neighOp1HistAt500[index500] += 1;
+                }
+            }
+            // reset the initial opinions to start a new simulation for the same network
+            g.resetInitOpinion(initOp0Frac);
+        }
+    } 
+
+    //g.print();
+    // for now: make histogram only for t=500, t=0 not necessary
+  //  vector<double> fractionAt500(N);
+    //double oldFractionAt500;
+   /* for (int n = 0; n < 10; n++){
+        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
         cout << "Graph " << n << endl;
         // for each network average over different simulation
         for (int s = 0; s < 10; s++){
             int opinion1 = 0;
             cout << "Simulation " << s << endl;
-            // for each node count fraction of neighbors with opinion 1 at t = 0 (averaged)
-            for (int i = 0; i < g.nodelist().size(); i++){
-                if (g.nodelist()[i].neigh().size() != 0){
-                    for (int index : g.nodelist()[i].neigh()){
-                        if (g.nodelist()[index].opinion() == 1){
-                            opinion1++;
-                        }   
-                    }
-                }
-                if (g.nodelist()[i].neigh().size() != 0){
-                    oldFractionAt0 = double(opinion1)/g.nodelist()[i].neigh().size();
-                }
-                else{
-                    oldFractionAt0 = 0.;
-                }
-                fractionAt0[i] += (oldFractionAt0/100.);
-                opinion1 = 0;
-            }
 
             // let opinions evolve in time
             for (int i = 0; i < 500; i++){
@@ -90,56 +134,16 @@ int main(){
             }
 
             // reset the initial opinions to start a new simulation for the same network
-            g.resetInitOpinion();
+            g.resetInitOpinion(initOp0Frac);
         }
-    }
-    
-    // make histogram for nodes with certain fraction of neighbors with opinion 1
-    for (int i = 0; i < fractionAt500.size(); i++){
-        // determine position of fraction in the histogram eg 0.111 lies in interval 0-0.1 so position is 0
-
-            // reset the initial opinions to start a new simulation for the same network
-            g.resetInitOpinion();
-        }
-    }
-    
-    // make histogram for nodes with certain fraction of neighbors with opinion 1
-    for (int i = 0; i < fractionAt500.size(); i++){
-        // determine position of fraction in the histogram eg 0.111 lies in interval 0-0.1 so position is 0
-        int index0 = int(fractionAt0[i]*10);
-        int index500 = int(fractionAt500[i]*10);
-        if (index0 == 10){
-            index0--;
-        }
-        if (index500 == 10){
-            index500--;
-        }
-        neighOp1HistAt0[index0] += 1;
-        neighOp1HistAt500[index500] += 1;
-    }
-
-    vector<double> HistNorm(numberOfBins);
-    // make normalized histogram at t = 500 by dividing by the one at t = 0
-    for (int i = 0; i < numberOfBins; i++){
-        double normVal;
-        if (neighOp1HistAt0[i] != 0){
-            normVal = double(neighOp1HistAt500[i])/double(neighOp1HistAt0[i]);
-        }
-        else{
-            if (neighOp1HistAt500[i] == 0){
-                normVal = 1.;
-            }
-            else{
-                normVal = double(neighOp1HistAt500[i]);
-            }
-        }
-        HistNorm[i] = normVal;
-    }
-
-    ofstream normfile("Normalized_hist_fraction_friends_opinion1_001_av.txt");
-    for (int i = 0; i < HistNorm.size(); i++){
-        normfile << HistNorm[i] << endl;
     }*/
+
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_WS_001_PR.txt");
+    for (int i = 0; i < neighOp1HistAt500.size(); i++){
+        double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
+        normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
+    }
+    normfile.close();
 
 
 
@@ -343,13 +347,13 @@ int main(){
     //cout << numberOfEdges/2 << endl;
     cout << g.averageClustering() << endl;*/
 
-    int N = 1000;
+   /* int N = 1000;
     int K = 20;
-    double initOp0Frac = 0.2;
-    double beta = 0.1;
+    double initOp0Frac = 0.5;
+    double beta = 0.01; // should be small enough in order to deviate from random case
     double p_bern = 0.1;
 
-    ofstream opfile("Fraction_of_opinions_WS_01-20_20_80_no_stubb_paper8_active_01_av_good_init.txt");
+    ofstream opfile("Fraction_of_opinions_WS_001-20_20_80_no_stubb_paper8_active_01_av_good_init.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -390,7 +394,7 @@ int main(){
     for (int i = 0; i < 500; i++){
         opfile << mean0[i] << ' ' << mean1[i] << ' ' << variance0[i]/double(count - 2) << ' ' << variance1[i]/double(count - 2) << endl;
     }
-    opfile.close();
+    opfile.close();*/
 
    /* ofstream clusFile("Clustering_coefficient_WS_vs_beta.txt");
     for (int i = 0; i < 100; i++){
@@ -451,3 +455,5 @@ int main(){
 // TO DO: add averaged histogram to shared file!!
 // TO DO: check if Watts-Strogatz produces correct network (degree distribution etc --> see wiki: properties) + make graph of C(beta)/C(0) vs beta --> goes like (1-beta)^3?
 // TO DO: problem with clustering coefficient for large beta?? + peak of degree distr for beta = 1. is wrong?
+
+// for clustersizes drawn from power-law: http://antoineallard.github.io/graph_cpp_library/group__RandomNumberGenerators.html, http://antoineallard.github.io/graph_cpp_library/group__RandomNumberGenerators.html#ga273ce7be1b9abcf307fe726b7f7761ba
