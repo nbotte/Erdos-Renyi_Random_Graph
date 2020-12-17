@@ -31,13 +31,13 @@ int main(){
 
     double p_bern = 0.1;
     int N = 1000;
-    int p_add = 0.001;
+    int p_add = 0.01;
     double initOp0Frac = 0.5;
-    vector<int> clusterSizes(50); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(50);
-    for (int i = 0; i < 50; i++){
-        clusterSizes[i] = 20;
-        edgeProbs[i] = 0.5;
+    vector<int> clusterSizes(100); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(100);
+    for (int i = 0; i < 100; i++){
+        clusterSizes[i] = 10;
+        edgeProbs[i] = 0.1;
     }
 
     vector<double> fractionAt0(N);
@@ -56,6 +56,9 @@ int main(){
         // for each network average over different simulation
         for (int s = 0; s < 10; s++){
             cout << "Simulation " << s << endl;
+
+            // reset the initial opinions to start a new simulation for the same network
+            g.resetInitOpinion(initOp0Frac);
 
             for (int i = 0; i < g.nodelist().size(); i++){
                 int opinion1 = 0;
@@ -101,8 +104,6 @@ int main(){
                     neighOp1HistAt500[index500] += 1;
                 }
             }
-            // reset the initial opinions to start a new simulation for the same network
-            g.resetInitOpinion(initOp0Frac);
         }
     } 
 
@@ -149,7 +150,7 @@ int main(){
         }
     }*/
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_Clustered_REC.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_Clustered_01-001_100-10_REC.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -463,8 +464,6 @@ int main(){
 
 // Standard variation --> welford's online algorithm (https://jonisalonen.com/2013/deriving-welfords-method-for-computing-variance/) 
 
-// TO DO: add averaged histogram to shared file!!
-// TO DO: check if Watts-Strogatz produces correct network (degree distribution etc --> see wiki: properties) + make graph of C(beta)/C(0) vs beta --> goes like (1-beta)^3?
-// TO DO: problem with clustering coefficient for large beta?? + peak of degree distr for beta = 1. is wrong?
+// TO DO: check echo chambers for SBM with p_add big, so looks more like ER --> needs further testing!
 
 // for clustersizes drawn from power-law: http://antoineallard.github.io/graph_cpp_library/group__RandomNumberGenerators.html, http://antoineallard.github.io/graph_cpp_library/group__RandomNumberGenerators.html#ga273ce7be1b9abcf307fe726b7f7761ba
