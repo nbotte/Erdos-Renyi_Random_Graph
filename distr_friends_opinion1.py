@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 hist = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_0_REC.txt")
 hist1 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_0_PR.txt")
 
+# probably need to change size of t and y back to 10!
 t = np.zeros(7)
 y = np.zeros(7)
 
