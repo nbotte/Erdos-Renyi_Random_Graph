@@ -115,7 +115,7 @@ void Graph::changeOpinions(){
         }
     }
 
-    // second: each active node gets a new opinion according to the opinions in its opinionlist
+    // second: each active node gets a new opinion according to the opinions on its timeline
     for (int i = 0; i < _nodelist.size(); i++){
         _nodelist[i].changeOpinion(); // changeOpinion checks if the node is active, so only active nodes get updated
     }
@@ -128,32 +128,6 @@ void Graph::changeOpinions(){
             }
         }
     }
-
-
-
-    /*for (int i = 0; i < _nodelist.size(); i++){
-        for (int index : _nodelist[i].neigh()){
-            _nodelist[i].addNeighOpinion(_nodelist[index].opinion());
-        }
-    }
-    // second: each active node gets a new opinion according to the opinions in its opinionlist
-    for (int i = 0; i < _nodelist.size(); i++){
-        _nodelist[i].changeOpinion();
-    } */
-    /*for (int i = 0; i < _nodelist.size(); i++){
-        _nodelist[i].setNewOpinion();
-        _nodelist[i].removeAllNeighOpinion();
-        if (_nodelist[i].active()){
-            for (int index : _nodelist[i].neigh()){
-                _nodelist[index].addOpinion(_nodelist[i].oldOpinion());
-            } 
-        }
-    }*/
-/*for (int i = 0; i < _nodelist.size(); i++){
-        if (_nodelist[i].active()){
-            _nodelist[i].setOldOpinion(_nodelist[i].opinion());
-        }
-    }*/
 }
 
 void Graph::changeRandomOpinion(){

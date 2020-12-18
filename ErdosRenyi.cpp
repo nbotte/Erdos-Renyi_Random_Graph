@@ -56,20 +56,6 @@ void Erdos_Renyi_Network::makeGraph(){
         v.push_back(i);
     }
 
-    /*for (int i = 0; i < _numberOfNodes; i++){
-        if (i % 2){
-            opinion = 0;
-        }
-        else{
-            opinion = 1;
-        }
-        resistance = 0.;
-        active = 0.;
-        int index = _indexStart + i;
-        Node n = Node(index, opinion, resistance, active);
-        addNode(n);
-    }*/
-
     // first 500 indices obtained from the permutated vector v will have an opinion zero, others get opinion 1
     // resistance of node is not implemented yet
     int N = 0;

@@ -107,23 +107,19 @@ void Node::changeOpinion(){
 
     double o = dis(gen); // generate a random number that will determine the new opinion of the node (see paper 8)
     double r = dis(gen); // generate a random number that will if the resistant node changes its opinion or not
-    
-    // first: order the hidden list neighOpinion according to some rule and only look at first 20 opinions
-    orderOpinionsREC();
 
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
+        // first: order the hidden list neighOpinion according to some rule and only look at first 20 opinions
+        orderOpinionsPR();
+
         // count the number of opinion 0 and 1 of the first 20 opinions in the ordered list
         if (_neighOpinion.size() != 0){
-            int k = 0; // determines the number of opinions you should consider
             if (_neighOpinion.size() >= 20){
-                k = 20;
+                // only keep max 20 posts
+                _neighOpinion.resize(20);
             }
-            else if (_neighOpinion.size() < 20){
-                k = _neighOpinion.size();
-            }
-            for (int i = 0; i < k; i++){
-             //   cout << n << ' ';
+            for (int i = 0; i < _neighOpinion.size(); i++){
                 if (_neighOpinion[i] == 0){
                     opinion0++;
                 }
@@ -131,26 +127,9 @@ void Node::changeOpinion(){
                     opinion1++;
                 }
             }
-        
-            // remove all opinions in the timeline  
-            removeAllNeighOpinion();  
 
-          // cout << endl;
-          //  cout << opinion0 << '-' << opinion1 << endl;
-           /* if (opinion0 > opinion1){
-                _newOpinion = 0;
-            }
-            else if (opinion1 > opinion0){
-                _newOpinion = 1;
-            }
-            else{
-                _newOpinion = _opinion;
-            }*/
-          //  cout << _opinionlist.size() << '-' << opinion0 << '-' << opinion1 << endl;
-            double fraction0 = double(opinion0)/k;
-            double fraction1 = double(opinion1)/k;
-            
-           // cout << o << '-' << fraction0 << '-' << fraction1 << endl;
+            double fraction0 = double(opinion0)/_neighOpinion.size();
+            double fraction1 = double(opinion1)/_neighOpinion.size();
 
             if (o < fraction0){
                 _opinion = 0;
@@ -165,7 +144,6 @@ void Node::changeOpinion(){
         
     }
 }
-
 
 // function that sets the opinion of a node equal to its new opinion
 void Node::setOpinion(int opinion){

@@ -22,23 +22,23 @@ int main(){
     // N = 1000 and p = 0.1 takes a really long time to run (>1h30min) --> unfortunately true...! --> but is better if you don't add edges to the edge list
 
     // needs more testing, does opinion dynamics works properly --> see paper 8, smart to make nodes active (+ update opinionlist) in constructor? 
-   /* int N = 1000;
-    int K = 6;
-    double p = 0.1;
-    double initOp0Frac = 0.5;
-    double beta = 0.01; // should be small enough in order to deviate from random case
-    double p_bern = 0.1;*/
-
-    double p_bern = 0.1;
     int N = 1000;
-    int p_add = 0.01;
+    int K = 6;
+    double p = 0.01;
+    double initOp0Frac = 0.5;
+    double beta = 0.; // should be small enough in order to deviate from random case
+    double p_bern = 0.1;
+
+    /*double p_bern = 0.1;
+    int N = 1000;
+    double p_add = 0.01;
     double initOp0Frac = 0.5;
     vector<int> clusterSizes(100); // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs(100);
     for (int i = 0; i < 100; i++){
         clusterSizes[i] = 10;
         edgeProbs[i] = 0.1;
-    }
+    }*/
 
     vector<double> fractionAt0(N);
     vector<double> fractionAt500(N);
@@ -50,7 +50,7 @@ int main(){
 
     // average over different networks
     for (int n = 0; n < 10; n++){
-        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
         cout << "Graph " << n << endl;
 
         // for each network average over different simulation
@@ -150,7 +150,7 @@ int main(){
         }
     }*/
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_Clustered_01-001_100-10_REC.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_WS_0_PR.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -213,8 +213,8 @@ int main(){
 
     degreeFileAv.close();*/
 
-    //ofstream op1file("Fraction_of_opinions_1_50_50_no_stubb_paper8_active_01_good_init.txt"); 
-   /* Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);  
+    /*ofstream op1file("Fraction_of_opinions_1_50_50_no_stubb_paper8_active_01_good_init.txt"); 
+    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, 0);  
     for (int t=0; t<1000; t++){
         g.setNodesActive(p_bern);
         cout << g.countOpinionFraction()[0] << ' ' << g.countOpinionFraction()[1] << endl;
@@ -226,8 +226,12 @@ int main(){
   //  g.changeOpinions();
    // g.print();
    // op1file.close();*/
+  /* int N = 1000;
+   double p = 0.01;
+   double p_bern = 0.1;
+   double initOp0Frac = 0.5;
 
-   /* ofstream opfile("Fraction_of_opinions_01_50_50_no_stubb_paper8_active_01_good_av_good_init.txt");
+    ofstream opfile("Fraction_of_opinions_ER_001_50_50_no_stubb_paper8_active_01_good_av_good_init.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -256,7 +260,7 @@ int main(){
                 g.deactivateNodes();
             }
             // reset the initial opinions
-            g.resetInitOpinion();
+            g.resetInitOpinion(initOp0Frac);
             count++;
         }
     }
