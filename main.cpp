@@ -29,16 +29,13 @@ int main(){
     double beta = 0.; // should be small enough in order to deviate from random case
     double p_bern = 0.1;
 
-    /*double p_bern = 0.1;
-    int N = 1000;
-    double p_add = 0.01;
-    double initOp0Frac = 0.5;
-    vector<int> clusterSizes(100); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(100);
-    for (int i = 0; i < 100; i++){
-        clusterSizes[i] = 10;
-        edgeProbs[i] = 0.1;
-    }*/
+    double p_add = 0.001;
+    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(10);
+    for (int i = 0; i < 10; i++){
+        clusterSizes[i] = 100;
+        edgeProbs[i] = 0.01;
+    }
 
     vector<double> fractionAt0(N);
     vector<double> fractionAt500(N);
@@ -50,7 +47,7 @@ int main(){
 
     // average over different networks
     for (int n = 0; n < 10; n++){
-        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
         cout << "Graph " << n << endl;
 
         // for each network average over different simulation
@@ -150,7 +147,7 @@ int main(){
         }
     }*/
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_WS_0_PR.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_01-001_PR.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;

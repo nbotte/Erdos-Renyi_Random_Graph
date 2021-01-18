@@ -1,15 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-hist = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_0_REC.txt")
-hist1 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_0_PR.txt")
+hist = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_1-001_REC.txt")
+hist1 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_1-001_PR.txt")
 
 # probably need to change size of t and y back to 10!
-t = np.zeros(7)
-y = np.zeros(7)
+t = np.zeros(10)
+y = np.zeros(10)
 
-for i in range(7):
-    t[i] = i/7
+for i in range(10):
+    t[i] = i/10
     y[i] = 1
 
 print(len(t))
@@ -25,6 +25,6 @@ plt.ylim(0, 20)
 
 plt.legend(loc='best')
 
-plt.title('Normalized average distribution of friends with the same opinion 1\nbeta = 0, K = 6, p_act = 0.1, N = 1000\nWatts-Strogatz network, 10 x 10 averaged')
-plt.savefig('Normalized_hist_fraction_friends_opinion1_WS_0_REC_PR.png')
+plt.title('Normalized average distribution of friends with the same opinion 1\np_cl = 0.1, p_add = 0.001\nStochastic block model (10 x 100), 10 x 10 averaged')
+plt.savefig('Normalized_hist_fraction_friends_opinion1_SBM_1-001_REC_PR.png')
 plt.show()
