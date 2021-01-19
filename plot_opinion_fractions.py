@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-fractions_av0 = np.loadtxt('Fraction_of_opinions_Clustered_Cluster4_05-0001_50_50_no_stubb_paper8_active_01_av_good_init.txt')
-#fractions_av3 = np.loadtxt('Fraction_of_opinions_Clustered_cluster6_01-001_50_50_no_stubb_paper8_active_01_av_good_init.txt')
+fractions_REC = np.loadtxt('Fraction_of_opinions_Clustered_Cluster3_001-001_50_50_no_stubb_paper8_active_01_av_good_init_REC.txt')
+fractions_PR = np.loadtxt('Fraction_of_opinions_Clustered_Cluster3_001-001_50_50_no_stubb_paper8_active_01_av_good_init_PR.txt')
 #fractions_50_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_50_bern_050_av.txt')
 #fractions_25_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_25_bern_050_av.txt')
 #fractions_1_av = np.loadtxt('Fraction_of_opinions_1_70_30_all_stubb_100_bern_5_av.txt')
@@ -34,28 +34,28 @@ plt.savefig('Standard_Deviation_Clustered_01-001_50_50_no_stubb_one_node_active_
 plt.show()"""
 
 fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
-st = fig.suptitle("Stochastic block model, 10 x 10 averaged")
-axes[0].plot(t, y)
+st = fig.suptitle("Stochastic block model (10 x 100), 10 x 10 averaged")
+#axes[0].plot(t, y)
 #axes[0].plot(t[::10], fractions_av0[:,0][::10], label='Opinion 0')
-axes[0].plot(t[::10], fractions_av0[:,1][::10], label='Opinion 1')
+axes[0].plot(t[::10], fractions_REC[:,1][::10], label='Opinion 1, REC')
 axes[0].legend(loc='best')
 axes[0].set_xlabel("Timesteps t")
-axes[0].set_ylabel("Opinion fraction")
-#axes[0].set_ylim(0.45, 0.55)
-axes[0].title.set_text("Opinion fraction vs time, 50/50\n" r"$p_{cl}$ = 0.5, $p_{add}$ = 0.001")
+axes[0].set_ylabel("Opinion fraction inside a community, REC")
+axes[0].set_ylim(0.45, 0.55)
+axes[0].title.set_text("Opinion fraction inside a community vs time, REC, 50/50\n"r"$p_{cl}$ = 0.01, $p_{add}$ = 0.01")
 
-axes[1].plot(t[::10], fractions_av0[:,2][::10], label='Standard deviation')
+axes[1].plot(t[::10], fractions_PR[:,1][::10], label='Opinion 1, PR')
 #axes[1].plot(t[::10], fractions_av3[:,1][::10], label='Standard deviation')
 #axes[1].plot(t, y)
 axes[1].legend(loc='best')
 axes[1].set_xlabel("Timesteps t")
-axes[1].set_ylabel("Standard deviation")
-#axes[1].set_ylim(0.35, 0.55)
-axes[1].title.set_text(r"Standard deviation for each timestep")
+axes[1].set_ylabel("Opinion fraction inside a community, PR")
+axes[1].set_ylim(0.45, 0.55)
+axes[1].title.set_text("Opinion fraction inside a community vs time, PR, 50/50\n"r"$p_{cl}$ = 0.01, $p_{add}$ = 0.01")
 # shift subplots down:
 st.set_y(0.03)
 fig.subplots_adjust(bottom=0.1)
 
 fig.tight_layout()
-fig.savefig('Fraction_of_opinions_Clustered_Cluster4_05-0001_50_50_no_stubb_paper8_active_01_av_good_init.png')
+fig.savefig('Fraction_of_opinions_Clustered_Cluster3_001-001_50_50_no_stubb_paper8_active_01_av_good_init_REC_PR.png')
 plt.show()

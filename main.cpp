@@ -15,7 +15,6 @@
 #include <list>
 using namespace std;
 
-// look at static functions to make graph.utils that has makeER function 
 
 int main(){
     // looks ok, but needs further testing
@@ -30,11 +29,11 @@ int main(){
     double p_bern = 0.1;
 
     double p_add = 0.001;
-    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(10);
-    for (int i = 0; i < 10; i++){
-        clusterSizes[i] = 100;
-        edgeProbs[i] = 0.01;
+    vector<int> clusterSizes(20); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(20);
+    for (int i = 0; i < 20; i++){
+        clusterSizes[i] = 50;
+        edgeProbs[i] = 0.1;
     }
 
     vector<double> fractionAt0(N);
@@ -147,7 +146,7 @@ int main(){
         }
     }*/
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_01-001_PR.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_1-001_REC.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -308,7 +307,7 @@ int main(){
     }*/
 
     // also calculate standard deviation here?
-    /*ofstream opfile("Fraction_of_opinions_Clustered_Cluster4_05-0001_50_50_no_stubb_paper8_active_01_av_good_init.txt");
+  /*  ofstream opfile("Fraction_of_opinions_Clustered_Cluster3_01-0001_50_50_no_stubb_paper8_active_01_av_good_init_REC.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -328,8 +327,8 @@ int main(){
                 g.setNodesActive(p_bern);
                 g.changeOpinions();
 
-                double x0 = g.countOpinionFractionCluster(4)[0];
-                double x1 = g.countOpinionFractionCluster(4)[1];
+                double x0 = g.countOpinionFractionCluster(3)[0];
+                double x1 = g.countOpinionFractionCluster(3)[1];
 
                 double oldMean0 = mean0[t];
                 double oldMean1 = mean1[t];
