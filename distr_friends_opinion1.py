@@ -25,6 +25,6 @@ plt.ylim(0, 20)
 
 plt.legend(loc='best')
 
-plt.title('Normalized average distribution of friends with the same opinion 1\np_cl = 0.1, p_add = 0.001\nStochastic block model (20 x 50), 10 x 10 averaged')
-plt.savefig('Normalized_hist_fraction_friends_opinion1_SBM_1-001_20x50_REC_PR.png')
+plt.title('Normalized average distribution of friends with the same opinion 1\np_cl = 0.1, p_add = 0.001\nStochastic block model (100 x 10), 10 x 10 averaged')
+plt.savefig('Normalized_hist_fraction_friends_opinion1_SBM_1-001_100x10_REC_PR.png')
 plt.show()

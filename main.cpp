@@ -29,14 +29,14 @@ int main(){
     double p_bern = 0.1;
 
     double p_add = 0.001;
-    vector<int> clusterSizes(20); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(20);
-    for (int i = 0; i < 20; i++){
-        clusterSizes[i] = 50;
+    vector<int> clusterSizes(100); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(100);
+    for (int i = 0; i < 100; i++){
+        clusterSizes[i] = 10;
         edgeProbs[i] = 0.1;
     }
 
-    vector<double> fractionAt0(N);
+    /*vector<double> fractionAt0(N);
     vector<double> fractionAt500(N);
     double binWidth = 0.1;
     int numberOfBins = 1/binWidth;
@@ -101,7 +101,7 @@ int main(){
                 }
             }
         }
-    } 
+    } */
 
     //g.print();
     // for now: make histogram only for t=500, t=0 not necessary
@@ -146,12 +146,12 @@ int main(){
         }
     }*/
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_1-001_REC.txt");
+  /*  ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_1-001_PR.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
     }
-    normfile.close();
+    normfile.close();*/
 
 
 
@@ -307,7 +307,7 @@ int main(){
     }*/
 
     // also calculate standard deviation here?
-  /*  ofstream opfile("Fraction_of_opinions_Clustered_Cluster3_01-0001_50_50_no_stubb_paper8_active_01_av_good_init_REC.txt");
+    ofstream opfile("Fraction_of_opinions_Clustered_Cluster5_01-0001_50_50_no_stubb_paper8_active_01_av_good_init_REC.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -327,8 +327,8 @@ int main(){
                 g.setNodesActive(p_bern);
                 g.changeOpinions();
 
-                double x0 = g.countOpinionFractionCluster(3)[0];
-                double x1 = g.countOpinionFractionCluster(3)[1];
+                double x0 = g.countOpinionFractionCluster(5)[0];
+                double x1 = g.countOpinionFractionCluster(5)[1];
 
                 double oldMean0 = mean0[t];
                 double oldMean1 = mean1[t];
@@ -347,7 +347,7 @@ int main(){
     for (int i = 0; i < 500; i++){
         opfile << mean0[i] << ' ' << mean1[i] << ' ' << variance0[i]/double(count - 2) << ' ' << variance1[i]/double(count - 2) << endl;
     }
-    opfile.close();*/
+    opfile.close();
    /* int numberOfEdges = 0;
     for (int i = 0; i < g.nodelist().size(); i++){
       //  cout << g.nodelist()[i] << ": ";
