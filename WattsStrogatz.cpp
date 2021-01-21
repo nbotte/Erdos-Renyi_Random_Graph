@@ -41,10 +41,14 @@ void Watts_Strogatz_Network::makeGraph(){
 
 // function that makes a regular lattice
 void Watts_Strogatz_Network::makeRegularLattice(){
-    double fractionResistance = 0.; // set the fraction of stubborn/resistant nodes
+    double fractionResistance = 0.1; // set the fraction of stubborn/resistant nodes
     double resistance; // variable that determines the resistance of a node
     int opinion; // variable that determines the opinion of a node
     bool active; // variable that determines if node is active
+
+    random_device rd; // will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+    uniform_real_distribution<> dis(0, 1); // uniform diwtribution between 0 and 1
 
     vector<int> v;
     // fill a vector with the numbers 0 to numberOfNodes
@@ -55,8 +59,14 @@ void Watts_Strogatz_Network::makeRegularLattice(){
     // add nodes with a certain random distribution of opinion 0 and 1 to the nodelist
     int N = 0;
     while (v.size()){
+        double r = dis(gen); // random number that will determine if node is stubborn or not
         active = 0.; // default: no nodes are active
-        resistance = 0.; // good for now, no stubborn nodes
+        if (r < fractionResistance){
+            resistance = 1.; // if node is resistant it is completely stubborn (for now)
+        }
+        else{ 
+            resistance = 0.;
+        }
         int index = getRandomElement(v, _numberOfNodes - 1);
         // Note: _numberOfNodes should be even, otherwise you will get a bias!
         if (N < int(_numberOfNodes*_initOp0Frac)){
