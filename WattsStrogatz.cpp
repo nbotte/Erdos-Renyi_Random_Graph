@@ -41,7 +41,7 @@ void Watts_Strogatz_Network::makeGraph(){
 
 // function that makes a regular lattice
 void Watts_Strogatz_Network::makeRegularLattice(){
-    double fractionResistance = 0.1; // set the fraction of stubborn/resistant nodes
+    double fractionResistance = 0.5; // set the fraction of stubborn/resistant nodes
     double resistance; // variable that determines the resistance of a node
     int opinion; // variable that determines the opinion of a node
     bool active; // variable that determines if node is active

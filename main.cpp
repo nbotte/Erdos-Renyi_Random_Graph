@@ -100,7 +100,7 @@ void distr_of_friends(){
         }
     } 
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_WS_PR_beta-001_res-01.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_WS_REC_beta-001_res-05.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -126,7 +126,7 @@ void evolution_of_opinions(){
         edgeProbs[i] = 0.1;
     }*/
 
-    ofstream opfile("Fraction_of_opinions_WS_50_50_no_stubb_paper8_active_01_av_good_init_PR_beta-001_res-01.txt");
+    ofstream opfile("Fraction_of_opinions_WS_50_50_no_stubb_paper8_active_01_av_good_init_REC_beta-001_res-05.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
