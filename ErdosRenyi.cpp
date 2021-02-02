@@ -45,7 +45,7 @@ void Erdos_Renyi_Network::makeGraph(){
     bernoulli_distribution disBern(_bernouilliProbability);
 
     // add nodes to the graph with some distribution of the 2 possible opinions
-    double fractionResistance = 0.; // set the fraction of stubborn/resistant nodes
+    double fractionResistance = 0.5; // set the fraction of stubborn/resistant nodes
     double resistance; // variable that determines the resistance of a node
     int opinion; // variable that determines the opinion of a node
     bool active; // variable that determines if node is active
@@ -61,7 +61,13 @@ void Erdos_Renyi_Network::makeGraph(){
     int N = 0;
     while (v.size()){
         active = 0.; // default: no nodes are active
-        resistance = 0.; // good for now, no stubborn nodes
+        double r = dis(gen); // random number that will determine if node is stubborn or not
+        if (r < fractionResistance){
+            resistance = 1.; // if node is resistant it is completely stubborn (for now)
+        }
+        else{ 
+            resistance = 0.;
+        }        
         int index = getRandomElement(v, _numberOfNodes - 1) + _indexStart;
         // Note: _numberOfNodes should be even, otherwise you will get a bias!
         if (N < int(_numberOfNodes*_initOp0Frac)){

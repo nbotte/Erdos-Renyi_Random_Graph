@@ -56,6 +56,7 @@ public:
     void deactivate();
     void setActive(bool active);
     void setWasActive();
+    void setResistance(double resistance);
 
     void addNeighOpinion(int opinion);
     void removeAllNeighOpinion();
