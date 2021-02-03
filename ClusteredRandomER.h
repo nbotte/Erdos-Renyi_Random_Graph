@@ -26,11 +26,12 @@ public:
     Clustered_Random_Network(int totalNumberOfNodes, vector<int> clusterSizes, vector<double> edgeProbs, double rewireAddProbability, string type);
 
     // declare member functions of class Clustered_Random_Network 
-    vector<int> makeErdosRenyi(int numberOfNodes, double edgeProb, double initOp0Frac, int indexStart); // function that makes an ER-graph + returns a vector with the indices of the nodes in that cluster
+    vector<int> makeErdosRenyi(int numberOfNodes, double edgeProb, double initOp0Frac, int indexStart, int cluster); // function that makes an ER-graph + returns a vector with the indices of the nodes in that cluster
     void makeGraph(); // function that makes a clustered graph
     void rewireEdges(vector<vector<int>>); // function that rewires the edges of a graph between different clusters, takes a vector of vectors of indices of the nodes of the different clusters as argument
     void addEdges(vector<vector<int>>); // function that adds edges between clusters
     void makeRandomFractionStubborn(double fractionResistant); // function that makes a fraction of randomly selected nodes stubborn
+    double calculateModularity(); // function that calculates the modularity of the SBM (based on the clusters that construct the model!) (returns the calculated modularity)
 
     vector<double> countOpinionFractionCluster(int clusterNumber); // count the fractions of opinions in a particular cluster of the clustered graph
 };

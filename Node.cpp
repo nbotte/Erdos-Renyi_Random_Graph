@@ -29,7 +29,9 @@ Node::Node(int index, int opinion, double resistance, bool active){
     _resistance = resistance; 
     _active = active; 
    // _wasActive = true;
-   _neighOpinion = vector<int>(); // this is the hidden list (use vector dataset) with the opinions that the neighbors posted since the last time the node was active (see paper 8)
+    _neighOpinion = vector<int>(); // this is the hidden list (use vector dataset) with the opinions that the neighbors posted since the last time the node was active (see paper 8)
+    _cluster = 0; // variable that determines to what cluster the node belongs; mainly used in the SBM, BUT can also be used to optimize modularity etc...; Default zero 
+
 }
 
 // implementation of the getters
@@ -42,6 +44,7 @@ int Node::newOpinion() const {return _newOpinion;}
 boost::circular_buffer<int> Node::opinionlist() const {return _opinionlist;}
 double Node::resistance() const {return _resistance;}
 bool Node::active() const {return _active;}
+int Node::cluster() const {return _cluster;}
 
 vector<int> Node::neighOpinion() const {return _neighOpinion;}
 
@@ -167,6 +170,11 @@ void Node::setOldOpinion(int opinion){
 // function that sets the resistance of the node
 void Node::setResistance(double resistance){
     _resistance = resistance;
+}
+
+// function that sets the cluster to which the node belongs
+void Node::setCluster(int cluster){
+    _cluster = cluster;
 }
 
 // function that sends the opinion of the node to the opinionlist of its neighbours

@@ -103,6 +103,16 @@ double Graph::averageClustering(){
     return clustering/_nodelist.size();
 }
 
+// function that calculates the number of edges in the graph
+int Graph::numberOfEdges(){
+    int edges = 0;
+    for (int i = 0; i < _nodelist.size(); i++){
+        edges += (_nodelist[i].neigh().size());
+    }
+    int totalEdges = edges/2;
+    return totalEdges;
+}
+
 // function to change the opinions of the nodes in graph based on majority model
 void Graph::changeOpinions(){ 
     // first: each active node sends it current opinion to its neighbours

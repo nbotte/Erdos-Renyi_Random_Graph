@@ -42,7 +42,7 @@ void Clustered_Random_Network::makeGraph(){
     vector<vector<int>> clusters;
     int indexStart = 0;
     for (int i = 0; i < _clusterSizes.size(); i++){
-        cluster = makeErdosRenyi(_clusterSizes[i], _edgeProbs[i], 0.5, indexStart);
+        cluster = makeErdosRenyi(_clusterSizes[i], _edgeProbs[i], 0.5, indexStart, i);
         clusters.push_back(cluster);
         indexStart += _clusterSizes[i];
     }
@@ -62,7 +62,7 @@ void Clustered_Random_Network::makeGraph(){
 
 // function that makes a clustered graph
 // maybe add resistance, opinion, active, etc. as arguments so that you can make clusters with different properties
-vector<int> Clustered_Random_Network::makeErdosRenyi(int numberOfNodes, double edgeProb, double initOp0Frac, int indexStart){
+vector<int> Clustered_Random_Network::makeErdosRenyi(int numberOfNodes, double edgeProb, double initOp0Frac, int indexStart, int clust){
     _numberOfNodes = numberOfNodes;
     _edgeProbability = edgeProb;
     _indexStart = indexStart;
@@ -71,6 +71,7 @@ vector<int> Clustered_Random_Network::makeErdosRenyi(int numberOfNodes, double e
     vector<int> cluster;
     for (int i = indexStart; i < indexStart + numberOfNodes; i++){
         cluster.push_back(i);
+        _nodelist[i].setCluster(clust); // set to which cluster the node belongs
     }
     return cluster;
 }
@@ -189,4 +190,35 @@ vector<double> Clustered_Random_Network::countOpinionFractionCluster(int cluster
     fractions.push_back(double(opinion0)/double(clusterLength));
     fractions.push_back(double(opinion1)/double(clusterLength));
     return fractions;
+}
+
+// function that calculates the modularity of the SBM (based on the clusters that construct the model!) (returns the calculated modularity)
+double Clustered_Random_Network::calculateModularity(){
+    int refClus = 0;
+    double mod = 0.; // total modularity
+    int L_c = 0; // total number of links in community C
+    int k_c = 0; // total degree of nodes in community C
+    int L = numberOfEdges(); // total number of links in graph
+    int i = 0;
+    while (i < _nodelist.size()){
+        int cluster = _nodelist[i].cluster();
+        if (cluster == refClus){
+            for (int neigh : _nodelist[i].neigh()){
+                k_c++;
+                if (_nodelist[neigh].cluster() == cluster){
+                    L_c++;
+                }
+            }
+            i++;
+        }
+        else{
+            mod += (double(L_c)/double(2*L) - pow(double(k_c)/double(2*L), 2));
+            L_c = 0;
+            k_c = 0;
+            refClus = cluster;
+        }
+    }
+    // this is needed to add the modularity of the last cluster as well
+    mod += (double(L_c)/double(L) - pow(double(k_c)/double(2*L), 2));
+    return mod;
 }

@@ -25,13 +25,13 @@ void distr_of_friends(){
     double p_bern = 0.1;
 
     // part needed for clustered random network
-    /*double p_add = 0.001;
+    double p_add = 0.01;
     vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs(10);
     for (int i = 0; i < 10; i++){
         clusterSizes[i] = 100;
-        edgeProbs[i] = 0.1;
-    }*/
+        edgeProbs[i] = 0.01;
+    }
 
     vector<double> fractionAt0(N);
     vector<double> fractionAt500(N);
@@ -40,10 +40,13 @@ void distr_of_friends(){
     vector<int> neighOp1HistAt500(numberOfBins);
     vector<int> neighOp1HistAt0(numberOfBins);
 
+    double mod = 0.;
+
 
     // average over different networks
     for (int n = 0; n < 10; n++){
-        Erdos_Renyi_Network g = Erdos_Renyi_Network(N, beta, p_bern, initOp0Frac, 0);
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+        mod += (g.calculateModularity()/10.);
        // g.makeRandomFractionStubborn(0.5);
         cout << "Graph " << n << endl;
 
@@ -101,12 +104,13 @@ void distr_of_friends(){
         }
     } 
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_ER_PR_001_res=05.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_001-001_res=0_10x100.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
     }
     normfile.close();
+    cout << mod << endl;
 }
 
 // function that calculates the evolution of opinions in a particular network
@@ -219,42 +223,43 @@ void degree_distr(){
 
 // function to do small tests
 void test(){
-    int N = 10;
+    int N = 100;
     int K = 4;
     double beta = 0.1;
     double initOp0Frac = 0.5;
     double p_bern = 1.;
 
     // part needed for clustered random network
-    /*double p_add = 0.001;
+    double p_add = 0.1;
     vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs(10);
     for (int i = 0; i < 10; i++){
         clusterSizes[i] = 10;
-        edgeProbs[i] = 0.1;
+        edgeProbs[i] = 0.2;
+    }
+
+    Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+    cout << g.calculateModularity() << endl;
+    /*g.setNodesActive(p_bern);
+
+    for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i] << ": ";
+        for (int index : g.nodelist()[i].neigh()){
+            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].cluster() << '\t';
+        }
+        cout << endl;
+    }
+
+    g.changeOpinions();
+    g.changeOpinions();
+
+    for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i] << ": ";
+        for (int index : g.nodelist()[i].neigh()){
+            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].cluster() << '\t';
+        }
+        cout << endl;
     }*/
-
-    Erdos_Renyi_Network g = Erdos_Renyi_Network(N, beta, p_bern, initOp0Frac, 0);
-    g.setNodesActive(p_bern);
-
-    for (int i = 0; i < g.nodelist().size(); i++){
-        cout << g.nodelist()[i] << ": ";
-        for (int index : g.nodelist()[i].neigh()){
-            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].resistance() << '\t';
-        }
-        cout << endl;
-    }
-
-    g.changeOpinions();
-    g.changeOpinions();
-
-    for (int i = 0; i < g.nodelist().size(); i++){
-        cout << g.nodelist()[i] << ": ";
-        for (int index : g.nodelist()[i].neigh()){
-            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].resistance() << '\t';
-        }
-        cout << endl;
-    }
 }
 
 int main(){

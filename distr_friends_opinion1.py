@@ -1,3 +1,5 @@
+''' NOTE: START MAKING NICE PLOTS THAT YOU CAN INSERT IN THESIS'''
+
 import numpy as np
 import matplotlib.pyplot as plt
 

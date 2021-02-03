@@ -38,6 +38,7 @@ public:
     bool checkEdge(Node u, Node v); // function that checks whether there is an edge between 2 vertices u and v that are both neigbors of the same node (used to calculate the local clustering coefficient), returns True if there is an edge
     double localClustering(Node u); // function that calculates the local clustering coefficient of a node in the graph
     double averageClustering(); // function that calculates the average clustering coefficient of the graph
+    int numberOfEdges(); // function that calculates the number of edges in the graph
 
     // opinion dynamics functions of a graph
     void changeOpinions(); // changes the opinions of the nodes in the graph

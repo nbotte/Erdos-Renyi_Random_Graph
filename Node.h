@@ -24,6 +24,7 @@ class Node{
     //bool _wasActive; // declare wasActive variable (= determines if the node was active in the previous timestep)
 
     vector<int> _neighOpinion; // this is the hidden list (use vector dataset) with the opinions that the neighbors posted since the last time the node was active (see paper 8)
+    int _cluster; // variable that determines to what cluster the node belongs; mainly used in the SBM, BUT can also be used to optimize modularity etc... 
 
 public: 
     Node(); // define default constructor
@@ -39,6 +40,7 @@ public:
     boost::circular_buffer<int> opinionlist() const;
     double resistance() const;
     bool active() const;
+    int cluster() const;
 
     vector<int> neighOpinion() const;
 
@@ -57,6 +59,7 @@ public:
     void setActive(bool active);
     void setWasActive();
     void setResistance(double resistance);
+    void setCluster(int cluster);
 
     void addNeighOpinion(int opinion);
     void removeAllNeighOpinion();
