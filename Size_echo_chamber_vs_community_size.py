@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-def func(x, a, b, c):
-    return a*np.exp(b*x) + c
+def func(x, a, b):
+    return a*np.exp(b*x)
 
 echo_chambers1 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_res=0_10x100.txt")
 echo_chambers2 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-001_res=0_10x100.txt")
@@ -32,7 +32,7 @@ print(popt)
 xf = np.linspace(0,0.95,50)
 
 plt.plot(mod, echo, 'o', label = 'data points')
-plt.plot(xf, func(xf, *popt), label=r"exponential fit $y = ae^{bx} + c$")
+plt.plot(xf, func(xf, *popt), label=r"exponential fit $y = ae^{bx}$")
 plt.xlabel("Modularity")
 plt.ylabel("Fraction of nodes with all neigbors having the same opinion 0")
 plt.legend(loc='best')

@@ -25,12 +25,12 @@ void distr_of_friends(){
     double p_bern = 0.1;
 
     // part needed for clustered random network
-    double p_add = 0.01;
+    double p_add = 0.001;
     vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs(10);
     for (int i = 0; i < 10; i++){
         clusterSizes[i] = 100;
-        edgeProbs[i] = 0.01;
+        edgeProbs[i] = 0.1;
     }
 
     vector<double> fractionAt0(N);
@@ -41,13 +41,18 @@ void distr_of_friends(){
     vector<int> neighOp1HistAt0(numberOfBins);
 
     double mod = 0.;
-
+    int stubborn = 0;
 
     // average over different networks
     for (int n = 0; n < 10; n++){
         Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
-        mod += (g.calculateModularity()/10.);
-       // g.makeRandomFractionStubborn(0.5);
+        //mod += (g.calculateModularity()/10.);
+        g.makeRandomCommunityFractionStubborn(0.5);
+        for (int i = 0; i < g.nodelist().size(); i++){
+            if (g.nodelist()[i].resistance() == 1.){
+                stubborn++;
+            }
+        }
         cout << "Graph " << n << endl;
 
         // for each network average over different simulation
@@ -104,13 +109,16 @@ void distr_of_friends(){
         }
     } 
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_001-001_res=0_10x100.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_resComm=05_10x100.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
     }
     normfile.close();
-    cout << mod << endl;
+    stubborn = stubborn/10;
+    cout << stubborn << endl;
+
+    //cout << mod << endl;
 }
 
 // function that calculates the evolution of opinions in a particular network
@@ -223,29 +231,37 @@ void degree_distr(){
 
 // function to do small tests
 void test(){
-    int N = 100;
+    int N = 1000;
     int K = 4;
     double beta = 0.1;
     double initOp0Frac = 0.5;
     double p_bern = 1.;
 
     // part needed for clustered random network
-    double p_add = 0.1;
+    double p_add = 0.001;
     vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs(10);
     for (int i = 0; i < 10; i++){
-        clusterSizes[i] = 10;
-        edgeProbs[i] = 0.2;
+        clusterSizes[i] = 100;
+        edgeProbs[i] = 0.1;
     }
 
     Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
-    cout << g.calculateModularity() << endl;
-    /*g.setNodesActive(p_bern);
-
+    g.makeRandomFractionStubborn(0.3);
+    int stubborn = 0;
     for (int i = 0; i < g.nodelist().size(); i++){
+        if (g.nodelist()[i].resistance() == 1.){
+            stubborn++;
+        }
+    }
+    cout << stubborn << endl;
+    //cout << g.calculateModularity() << endl;
+    g.setNodesActive(p_bern);
+
+    /*for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
         for (int index : g.nodelist()[i].neigh()){
-            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].cluster() << '\t';
+            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].cluster() << ' ' << g.nodelist()[index].resistance() << '\t';
         }
         cout << endl;
     }
@@ -256,7 +272,7 @@ void test(){
     for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
         for (int index : g.nodelist()[i].neigh()){
-            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].cluster() << '\t';
+            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].cluster() << ' ' << g.nodelist()[index].resistance() << '\t';
         }
         cout << endl;
     }*/

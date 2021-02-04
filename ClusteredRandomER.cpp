@@ -172,6 +172,25 @@ void Clustered_Random_Network::makeRandomFractionStubborn(double fractionResista
     }
 }
 
+// function that makes a random fraction of communities stubborn
+void Clustered_Random_Network::makeRandomCommunityFractionStubborn(double fractionResistant){
+    random_device rd; // will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+    uniform_real_distribution<> dis(0.0, 1.0);
+
+    int k = 0;
+    for (int i = 0; i < _clusterSizes.size(); i++){
+        double r = dis(gen); // random number that will determine if cluster is stubborn or not
+        if (r < fractionResistant){
+            for (int j = k; j < k + _clusterSizes[i]; j++){
+               _nodelist[j].setResistance(1.);
+            }
+        }
+        k += _clusterSizes[i];
+    }
+}
+
+
 // function that counts the fractions of opinions in a particular cluster of the clustered random graph
 vector<double> Clustered_Random_Network::countOpinionFractionCluster(int clusterNumber){
     int opinion0 = 0;
