@@ -25,13 +25,20 @@ void distr_of_friends(){
     double p_bern = 0.1;
 
     // part needed for clustered random network
-    double p_add = 0.001;
-    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(10);
-    for (int i = 0; i < 10; i++){
-        clusterSizes[i] = 100;
-        edgeProbs[i] = 0.1;
+    ifstream file;
+    file.open("Community_sizes_powerlaw.txt", ios::in);
+    if(!file){
+        cout << "No such file";
     }
+    double p_add = 0.001;
+    vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs = {};
+    double x;
+    while (file >> x){
+        clusterSizes.push_back(x);
+        edgeProbs.push_back(0.1);
+    }
+    file.close();
 
     vector<double> fractionAt0(N);
     vector<double> fractionAt500(N);
@@ -47,12 +54,12 @@ void distr_of_friends(){
     for (int n = 0; n < 10; n++){
         Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
         //mod += (g.calculateModularity()/10.);
-        g.makeRandomCommunityFractionStubborn(0.5);
-        for (int i = 0; i < g.nodelist().size(); i++){
+        //g.makeRandomCommunityFractionStubborn(0.3);
+        /*for (int i = 0; i < g.nodelist().size(); i++){
             if (g.nodelist()[i].resistance() == 1.){
                 stubborn++;
             }
-        }
+        }*/
         cout << "Graph " << n << endl;
 
         // for each network average over different simulation
@@ -73,7 +80,6 @@ void distr_of_friends(){
                     fractionAt0[i] = double(opinion1)/double(g.nodelist()[i].neigh().size());
                     // determine position of fraction in the histogram eg 0.111 lies in interval 0-0.1 so position is 0
                     int index0 = int(fractionAt0[i]*10);
-        
                     if (index0 == 10){
                         index0--;
                     }
@@ -109,14 +115,14 @@ void distr_of_friends(){
         }
     } 
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_resComm=05_10x100.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_REC_01-0001_res=0_powerlaw.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
     }
     normfile.close();
-    stubborn = stubborn/10;
-    cout << stubborn << endl;
+    //stubborn = stubborn/10;
+    //cout << stubborn << endl;
 
     //cout << mod << endl;
 }
@@ -131,15 +137,22 @@ void evolution_of_opinions(){
     double p_bern = 0.1;
 
     // part needed for clustered random network
-   /* double p_add = 0.001;
-    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(10);
-    for (int i = 0; i < 10; i++){
-        clusterSizes[i] = 100;
-        edgeProbs[i] = 0.1;
-    }*/
+    ifstream file;
+    file.open("Community_sizes_powerlaw.txt", ios::in);
+    if(!file){
+        cout << "No such file";
+    }
+    double p_add = 0.001;
+    vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs = {};
+    double x;
+    while (file >> x){
+        clusterSizes.push_back(x);
+        edgeProbs.push_back(0.1);
+    }
+    file.close();
 
-    ofstream opfile("Fraction_of_opinions_WS_50_50_no_stubb_paper8_active_01_av_good_init_REC_beta-001_res-05.txt");
+    ofstream opfile("Fraction_of_opinions_SBM_50_50_no_stubb_paper8_active_01_av_good_init_PR_01-0001_res-0_powerlaw.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -148,7 +161,7 @@ void evolution_of_opinions(){
 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 10; n++){
-        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
         cout << "Graph: " << n << endl;
         // for each network, run different simulations --> can this be implemented faster?
         for (int s = 0; s < 10; s++){
@@ -231,42 +244,54 @@ void degree_distr(){
 
 // function to do small tests
 void test(){
-    int N = 1000;
+    int N = 100;
     int K = 4;
     double beta = 0.1;
     double initOp0Frac = 0.5;
     double p_bern = 1.;
 
     // part needed for clustered random network
+    ifstream file;
+    file.open("Community_sizes_powerlaw.txt", ios::in);
+    if(!file){
+        cout << "No such file";
+    }
     double p_add = 0.001;
-    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(10);
-    for (int i = 0; i < 10; i++){
-        clusterSizes[i] = 100;
-        edgeProbs[i] = 0.1;
+    vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs = {};
+    double x;
+    while (file >> x){
+        clusterSizes.push_back(x);
+        edgeProbs.push_back(0.5);
+    }
+    file.close();
+
+    for (int i = 0; i < clusterSizes.size(); i++){
+        cout << clusterSizes[i] << ' ' << edgeProbs[i] << endl;
     }
 
     Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
-    g.makeRandomFractionStubborn(0.3);
+
+    /*g.makeRandomFractionStubborn(0.3);
     int stubborn = 0;
     for (int i = 0; i < g.nodelist().size(); i++){
         if (g.nodelist()[i].resistance() == 1.){
             stubborn++;
         }
     }
-    cout << stubborn << endl;
+    cout << stubborn << endl;*/
     //cout << g.calculateModularity() << endl;
     g.setNodesActive(p_bern);
 
-    /*for (int i = 0; i < g.nodelist().size(); i++){
-        cout << g.nodelist()[i] << ": ";
+    for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i] << ' ' << g.nodelist()[i].cluster() << ": ";
         for (int index : g.nodelist()[i].neigh()){
-            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].cluster() << ' ' << g.nodelist()[index].resistance() << '\t';
+            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].cluster() << '\t';
         }
         cout << endl;
     }
 
-    g.changeOpinions();
+    /*g.changeOpinions();
     g.changeOpinions();
 
     for (int i = 0; i < g.nodelist().size(); i++){

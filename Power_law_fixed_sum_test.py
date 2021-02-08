@@ -13,9 +13,11 @@ def power_law(k_min, k_max, y, gamma):
 # to generate a distribution you need to create an array
 nodes = 1000
 scale_free_distribution = np.zeros(nodes)
-k_min = 1.0
-k_max = 1000*k_min
+k_min = 5.0
+k_max = 200*k_min
 gamma = 1.5
+
+f = open("Community_sizes_powerlaw.txt", "w+")
 
 for n in range(nodes):
     scale_free_distribution[n] = power_law(k_min, k_max,np.random.uniform(0,1), gamma)
@@ -36,13 +38,11 @@ sizes = []
 
 while hit is False:
     elem = np.random.choice(distr)
-    print(int(elem))
     sum = sum + int(elem)
-    print(sum)
-    if sum == 1000:
+    if sum == nodes:
         hit = True
         sizes.append(elem)
-    elif sum < 1000:
+    elif sum < nodes:
         hit = False
         sizes.append(elem)
     else:
@@ -50,4 +50,5 @@ while hit is False:
 
 print(sum)
 for elem in sizes:
-    print(elem)
+    f.write(repr(elem) + "\n")
+f.close()
