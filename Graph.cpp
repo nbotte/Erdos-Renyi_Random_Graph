@@ -201,6 +201,23 @@ void Graph::resetInitOpinion(double initOp0Frac){
     }
 }
 
+// function that makes a fraction of randomly selected nodes stubborn
+void Graph::makeRandomFractionStubborn(double fractionResistant){
+    random_device rd; // will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+    uniform_real_distribution<> dis(0.0, 1.0);
+
+    for (int i = 0; i < _nodelist.size(); i++){
+        double r = dis(gen); // random number that will determine if node is stubborn or not
+        if (r < fractionResistant){
+            _nodelist[i].setResistance(1.);
+        }
+        else{
+            _nodelist[i].setResistance(0.);
+        }
+    }
+}
+
 // function that counts the fraction of the 2 opinions in the graph (returns a vector with the 2 fractions)
 vector<double> Graph::countOpinionFraction(){
     int opinion0 = 0;

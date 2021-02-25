@@ -65,6 +65,7 @@ public:
     void removeAllNeighOpinion();
     void orderOpinionsPR(); 
     void orderOpinionsREC();
+    void orderOpinionsREF();
 
     bool containsNeigh(int n); 
 

@@ -158,20 +158,6 @@ void Clustered_Random_Network::addEdges(vector<vector<int>> clusters){
     }
 }
 
-// function that makes a fraction of randomly selected nodes stubborn
-void Clustered_Random_Network::makeRandomFractionStubborn(double fractionResistant){
-    random_device rd; // will be used to obtain a seed for the random number engine
-    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
-    uniform_real_distribution<> dis(0.0, 1.0);
-
-    for (int i = 0; i < _nodelist.size(); i++){
-        double r = dis(gen); // random number that will determine if node is stubborn or not
-        if (r < fractionResistant){
-            _nodelist[i].setResistance(1.);
-        }
-    }
-}
-
 // function that makes a random fraction of communities stubborn
 void Clustered_Random_Network::makeRandomCommunityFractionStubborn(double fractionResistant){
     random_device rd; // will be used to obtain a seed for the random number engine
@@ -184,6 +170,11 @@ void Clustered_Random_Network::makeRandomCommunityFractionStubborn(double fracti
         if (r < fractionResistant){
             for (int j = k; j < k + _clusterSizes[i]; j++){
                _nodelist[j].setResistance(1.);
+            }
+        }
+        else{
+            for (int j = k; j < k + _clusterSizes[i]; j++){
+               _nodelist[j].setResistance(0.);
             }
         }
         k += _clusterSizes[i];

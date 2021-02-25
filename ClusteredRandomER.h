@@ -30,7 +30,6 @@ public:
     void makeGraph(); // function that makes a clustered graph
     void rewireEdges(vector<vector<int>>); // function that rewires the edges of a graph between different clusters, takes a vector of vectors of indices of the nodes of the different clusters as argument
     void addEdges(vector<vector<int>>); // function that adds edges between clusters
-    void makeRandomFractionStubborn(double fractionResistant); // function that makes a fraction of randomly selected nodes stubborn
     void makeRandomCommunityFractionStubborn(double fractionResistant); // function that makes a random fraction of communities stubborn
     double calculateModularity(); // function that calculates the modularity of the SBM (based on the clusters that construct the model!) (returns the calculated modularity)
 

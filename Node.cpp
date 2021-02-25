@@ -74,7 +74,7 @@ void Node::removeAllHelpNeigh(){
 }
 
 // function that orders the opinions in the hidden timeline neighOpinion
-// here the PR ordering is used
+// here the PR ordering is used (orders according to opinion of node)
 void Node::orderOpinionsPR(){
     // first: count the number of opinions equal to own opinion
     int count = 0;
@@ -84,7 +84,7 @@ void Node::orderOpinionsPR(){
         }
     }
 
-    // then: order the opinions according to your own opinion
+    // then: order the opinions according to your own opinion 
     for (int i = 0; i < count; i++){
         while (_neighOpinion[i] != _opinion){
             std::rotate(_neighOpinion.begin() + i, _neighOpinion.begin() + i + 1, _neighOpinion.end());
@@ -93,9 +93,15 @@ void Node::orderOpinionsPR(){
 }
 
 // function that orders the opinions in the hidden timeline neighOpinion
-// here the REC ordering is used
+// here the REC ordering is used (orders according to what is most recent)
 void Node::orderOpinionsREC(){
     std::reverse(_neighOpinion.begin(), _neighOpinion.end());
+}
+
+// function that orders the opinions in the hidden timeline neighOpinion
+// here the REF ordering is used (orders randomly)
+void Node::orderOpinionsREF(){
+    std::random_shuffle(_neighOpinion.begin(), _neighOpinion.end());
 }
 
 // function to change the opinion of the node
@@ -114,7 +120,7 @@ void Node::changeOpinion(){
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
         // first: order the hidden list neighOpinion according to some rule and only look at first 20 opinions
-        orderOpinionsREC();
+        orderOpinionsPR();
 
         // count the number of opinion 0 and 1 of the first 20 opinions in the ordered list
         if (_neighOpinion.size() != 0){

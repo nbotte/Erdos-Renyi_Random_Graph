@@ -40,6 +40,8 @@ public:
     double averageClustering(); // function that calculates the average clustering coefficient of the graph
     int numberOfEdges(); // function that calculates the number of edges in the graph
 
+    void makeRandomFractionStubborn(double fractionResistant); // function that makes a fraction of randomly selected nodes stubborn
+
     // opinion dynamics functions of a graph
     void changeOpinions(); // changes the opinions of the nodes in the graph
     void deactivateNodes(); // makes all the nodes inactive

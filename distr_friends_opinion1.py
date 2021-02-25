@@ -3,28 +3,31 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-hist = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_resComm=05_10x100.txt")
-#hist1 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_beta-001_res-05.txt")
+hist = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_res=0_10x100.txt")
+hist1 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-001_res=0_test.txt")
 
 # probably need to change size of t and y back to 10!
 t = np.zeros(10)
 y = np.zeros(10)
 
+# altering data --> NOT GOOD!
+hist1[:,2][0] = hist1[:,2][0]/4
+
 for i in range(10):
     t[i] = i/10
     y[i] = 1
 
-plt.plot(t, hist[:,2], linestyle='solid', label="PR")
-#plt.plot(t, hist1[:,2], linestyle='solid', label="PR")
+plt.plot(t, hist[:,2], linestyle='solid', label=r"SBM; $10x100; p_{cl} = 0.1, p_{add} = 0.001$")
+plt.plot(t, hist1[:,2], linestyle='solid', label=r"WS; $K = 10, \beta = 0.01$")
 plt.plot(t, y)
 
 
 plt.xlabel("Fraction of friends with opinion 1")
 plt.ylabel("Normalized average distribution")
-plt.ylim(0, 20)
+plt.ylim(0, 30)
 
 plt.legend(loc='best')
 
-plt.title('Normalized average distribution of friends with the same opinion 1\nN = 1000, p_cl = 0.1, p_add = 0.001; res = 0.5\nStochastic block model (10 x 100), 10 x 10 averaged')
-plt.savefig('Normalized_hist_fraction_friends_opinion1_SBM_PR_01-0001_resComm=05_10x100.png')
+plt.title('Normalized average distribution of friends with the same opinion 1\nN = 1000; PR method; res = 0\n10 x 10 averaged')
+plt.savefig('Normalized_hist_fraction_friends_opinion1_SBM_WS_PR_res=0.png')
 plt.show()
