@@ -111,6 +111,8 @@ poptWS, pcovWS = curve_fit(func, stubborn, echoWS)
 print(poptWS)
 xf = np.linspace(0,0.7,50)
 
+plt.plot(stubborn, echoWS, 'o', label = r'WS, $K = 10; \beta = 0.01$')
+plt.plot(xf, func(xf, *poptWS))
 plt.plot(stubborn, echoSBMH, 'o', label = r'SBM, 10x100, $p_{cl} = 0.1; p_{add} = 0.001$, high mod')
 plt.plot(xf, func(xf, *poptSBMH))
 plt.plot(stubborn, echoSBM, 'o', label = r'SBM, 50x20, $p_{cl} = 0.3; p_{add} = 0.005$, medium mod')
@@ -119,8 +121,7 @@ plt.plot(stubborn, echoSBML, 'o', label = r'SBM, 100x10, $p_{cl} = 0.1; p_{add} 
 plt.plot(xf, func(xf, *poptSBML))
 plt.plot(stubborn[::2], echoER, 'o', label = r'ER, $p = 0.01$')
 plt.plot(xf, func_lin(xf, *poptER))
-plt.plot(stubborn, echoWS, 'o', label = r'WS, $K = 10; \beta = 0.01$')
-plt.plot(xf, func(xf, *poptWS))
+
 plt.xlabel("Fraction of stubborn people")
 plt.ylabel("Fraction of nodes with all neigbors having the same opinion 0\n(echo chamber size)")
 plt.legend(loc='best')

@@ -25,24 +25,24 @@ void distr_of_friends(){
     double p_bern = 0.1;
 
     // part needed for clustered random network
-    /*ifstream file;
+    ifstream file;
     file.open("Community_sizes_powerlaw.txt", ios::in);
     if(!file){
         cout << "No such file";
-    }*/
-    double p_add = 0.005;
-    vector<int> clusterSizes(50); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(50);
-    /*double x;
+    }
+    double p_add = 0.001;
+    vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs = {};
+    double x;
     while (file >> x){
         clusterSizes.push_back(x);
         edgeProbs.push_back(0.5);
     }
-    file.close();*/
-    for (int i = 0; i < clusterSizes.size(); i++){
-        clusterSizes[i] = 20;
-        edgeProbs[i] = 0.3;
-    }
+    file.close();
+    /*for (int i = 0; i < clusterSizes.size(); i++){
+        clusterSizes[i] = 100;
+        edgeProbs[i] = 0.1;
+    }*/
 
     vector<double> fractionAt0(N);
     vector<double> fractionAt500(N);
@@ -51,30 +51,57 @@ void distr_of_friends(){
     vector<int> neighOp1HistAt500(numberOfBins);
     vector<int> neighOp1HistAt0(numberOfBins);
 
-    //double mod = 0.;
-    int stubborn = 0;
+    // needed to calculate variance (see https://jonisalonen.com/2013/deriving-welfords-method-for-computing-variance/)
+   /* double meanAt0op0 = 0.;
+    double oldMeanAt0op0 = 0.;
+    double meanAt0op1 = 0.;
+    double oldMeanAt0op1 = 0.;
+    double varAt0op0 = 0.;
+    double varAt0op1 = 0.;
+
+    double meanAt500op0 = 0.;
+    double oldMeanAt500op0 = 0.;
+    double meanAt500op1 = 0.;
+    double oldMeanAt500op1 = 0.;
+    double varAt500op0 = 0.;
+    double varAt500op1 = 0.;
+
+    int xAt0op0 = 0;
+    int xAt0op1 = 0;
+    int xAt500op0 = 0;
+    int xAt500op1 = 0;
+
+    vector<int> xVecAt0op0;
+    vector<int> xVecAt0op1;
+    vector<int> xVecAt500op0;
+    vector<int> xVecAt500op1;
+
+    int count = 1;*/
+
+    double mod = 0.;
+    //int stubborn = 0;
 
     // average over different networks
-    for (int n = 0; n < 10; n++){
-        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
-        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
-        //mod += (g.calculateModularity()/10.);
+    for (int n = 0; n < 15; n++){
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+       // Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
+        mod += (g.calculateModularity()/15.);
         
         cout << "Graph " << n << endl;
 
         // for each network average over different simulation
-        for (int s = 0; s < 10; s++){
+        for (int s = 0; s < 15; s++){
             cout << "Simulation " << s << endl;
 
             // reset the initial opinions to start a new simulation for the same network + make nodes stubborn
             g.resetInitOpinion(initOp0Frac);
-            //g.makeRandomFractionStubborn(0.6);
+            //g.makeRandomFractionStubborn(0.1);
 
-            for (int i = 0; i < g.nodelist().size(); i++){
+           /* for (int i = 0; i < g.nodelist().size(); i++){
                 if (g.nodelist()[i].resistance() == 1.){
                     stubborn++;
                 }
-            }
+            }*/
 
             for (int i = 0; i < g.nodelist().size(); i++){
                 int opinion1 = 0;
@@ -91,9 +118,28 @@ void distr_of_friends(){
                     if (index0 == 10){
                         index0--;
                     }
+                    /*if (index0 == 0){
+                        xAt0op0++;
+                    }
+                    if (index0 == 9){
+                        xAt0op1++;
+                    }*/
                     neighOp1HistAt0[index0] += 1;  
                 }
             }
+            // calculate variance at t = 0 for all neigh having op0 and for all neigh having op1
+           /* oldMeanAt0op0 = meanAt0op0;
+            meanAt0op0 = meanAt0op0 + (double(xAt0op0) - meanAt0op0)/count;
+            varAt0op0 = varAt0op0 + (double(xAt0op0) - meanAt0op0) * (double(xAt0op0) - oldMeanAt0op0);
+            oldMeanAt0op1 = meanAt0op1;
+            meanAt0op1 = meanAt0op1 + (double(xAt0op1) - meanAt0op1)/count;
+            varAt0op1 = varAt0op1 + (double(xAt0op1) - meanAt0op1) * (double(xAt0op1) - oldMeanAt0op1);
+
+            xVecAt0op0.push_back(xAt0op0);
+            xVecAt0op1.push_back(xAt0op1);
+
+            xAt0op0 = 0;
+            xAt0op1 = 0;*/
 
             // let opinions evolve in time
             for (int i = 0; i < 500; i++){
@@ -117,23 +163,51 @@ void distr_of_friends(){
                     if (index500 == 10){
                         index500--;
                     }
+                    /*if (index500 == 0){
+                        xAt500op0++;
+                    }
+                    if (index500 == 9){
+                        xAt500op1++;
+                    }*/
                     neighOp1HistAt500[index500] += 1;
                 }
             }
+            // calculate variance at t = 500 for all neigh having op0 and for all neigh having op1
+           /* oldMeanAt500op0 = meanAt500op0;
+            meanAt500op0 = meanAt500op0 + (double(xAt500op0) - meanAt500op0)/count;
+            varAt500op0 = varAt500op0 + (double(xAt500op0) - meanAt500op0) * (double(xAt500op0) - oldMeanAt500op0);
+            oldMeanAt500op1 = meanAt500op1;
+            meanAt500op1 = meanAt500op1 + (double(xAt500op1) - meanAt500op1)/count;
+            varAt500op1 = varAt500op1 + (double(xAt500op1) - meanAt500op1) * (double(xAt500op1) - oldMeanAt500op1);
+
+            xVecAt500op0.push_back(xAt500op0);
+            xVecAt500op1.push_back(xAt500op1);
+            
+            xAt500op0 = 0;
+            xAt500op1 = 0;
+
+            count++; */
         }
     } 
 
-    //ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_03-0005_res=06_50x20.txt");
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_WS_PR_6-001_res=0_test.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_05-0001_res=0_powerlaw_moreAv.txt");
+   /* ofstream varfile("Hist_500_and_0_fraction_friends_opinion1_WS_PR_6-001_res=0_mean_var.txt");
+    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_WS_PR_6-001_res=0_xvalues.txt");*/
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
     }
+    /*varfile << meanAt0op0 << ' ' << varAt0op0/double(count - 2) << '\n' << meanAt0op1 << ' ' << varAt0op1/double(count - 2) << '\n' <<  meanAt500op0 << ' ' << varAt500op0/double(count - 2) << '\n' << meanAt500op1 << ' ' << varAt500op1/double(count - 2) << endl;
+    for (int i = 0; i < 100; i++){
+        xfile << xVecAt0op0[i] << ' ' << xVecAt0op1[i] << ' ' << xVecAt500op0[i] << ' ' << xVecAt500op1[i] << endl;
+    }*/
     normfile.close();
-    stubborn = stubborn/100;
-    cout << stubborn << endl;
+   /* varfile.close();
+    xfile.close();*/
+    /*stubborn = stubborn/100;
+    cout << stubborn << endl;*/
 
-    //cout << mod << endl;
+    cout << mod << endl;
 }
 
 // function that calculates the evolution of opinions in a particular network
