@@ -1,6 +1,6 @@
 import numpy as np
 
-xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_6-001_res=0_xvalues.txt")
+xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_res=0_10x100_xvalues_moreAv.txt")
 
 xAt0op0 = xvalues[:,0]
 xAt0op1 = xvalues[:,1]
@@ -34,10 +34,16 @@ E_y1 = np.mean(Y1)
 VarX = np.var(X)
 VarY = np.var(Y)
 
+StdX = np.std(X)
+StdY = np.std(Y)
+
 VarX1 = np.var(X1)
 VarY1 = np.var(Y1)
 
-print(E_x, np.mean(xAt0op0), VarX, np.sqrt(VarX), np.var(xAt0op0), np.sqrt(np.var(xAt0op0)))
+StdX1 = np.std(X1)
+StdY1 = np.std(Y1)
+
+print(E_x, np.mean(xAt0op0), VarX, np.sqrt(VarX), np.var(xAt0op0), np.sqrt(np.var(xAt0op0)), StdX, StdY)
 
 '''for i in range(len(Y)):
     print(xAt500op0[i])'''
@@ -45,8 +51,14 @@ print(E_x, np.mean(xAt0op0), VarX, np.sqrt(VarX), np.var(xAt0op0), np.sqrt(np.va
 X2 = np.square(X)
 Y2 = np.square(Y)
 
+E_X2 = np.mean(X2)
+E_Y2 = np.mean(Y2)
+
 X12 = np.square(X1)
 Y12 = np.square(Y1)
+
+E_X12 = np.mean(X12)
+E_Y12 = np.mean(Y12)
 
 covX2Y2 = np.cov(X2, Y2)[0][1]
 covXY = np.cov(X, Y)[0][1]
@@ -54,7 +66,7 @@ covXY = np.cov(X, Y)[0][1]
 cov1X2Y2 = np.cov(X12, Y12)[0][1]
 cov1XY = np.cov(X1, Y1)[0][1]
 
-VarXY = covX2Y2 + (VarX + E_x**2)*(VarY + E_y**2) - (covXY + E_x * E_y)**2
+VarXY = E_X2 * E_Y2 - E_y**2 * E_x**2
 
-Var1XY = cov1X2Y2 + (VarX1 + E_x1**2)*(VarY1 + E_y1**2) - (cov1XY + E_x1 * E_y1)**2
-print(VarXY, np.sqrt(VarXY), Var1XY, np.sqrt(Var1XY))
+Var1XY = E_X12 * E_Y12 - E_y1**2 * E_x1**2
+print(E_y*E_x, np.sqrt(VarXY), E_y1*E_x1, np.sqrt(Var1XY))

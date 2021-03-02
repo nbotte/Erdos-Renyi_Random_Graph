@@ -27,7 +27,8 @@ Node::Node(int index, int opinion, double resistance, bool active){
     _newOpinion; 
     _opinionlist.set_capacity(20); // only keep the 20 newest opinions of the neighbours
     _resistance = resistance; 
-    _active = active; 
+    _active = active;
+    _threshold = 0.; // default threshold is 0. (no "stubborness")
    // _wasActive = true;
     _neighOpinion = vector<int>(); // this is the hidden list (use vector dataset) with the opinions that the neighbors posted since the last time the node was active (see paper 8)
     _cluster = 0; // variable that determines to what cluster the node belongs; mainly used in the SBM, BUT can also be used to optimize modularity etc...; Default zero 
@@ -43,6 +44,7 @@ int Node::oldOpinion() const {return _oldOpinion;}
 int Node::newOpinion() const {return _newOpinion;}
 boost::circular_buffer<int> Node::opinionlist() const {return _opinionlist;}
 double Node::resistance() const {return _resistance;}
+double Node::threshold() const {return _threshold;}
 bool Node::active() const {return _active;}
 int Node::cluster() const {return _cluster;}
 
@@ -108,7 +110,6 @@ void Node::orderOpinionsREF(){
 // Need to change this according to opinion dynamics of paper 8? --> did this, but no resistance implemented yet!
 void Node::changeOpinion(){
     int opinion0 = 0; // counter that counts the number of neighbours with opinion 0
-    int opinion1 = 0; // counter that counts the number of neighbours with opinion 1
 
     random_device rd; // will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
@@ -132,15 +133,13 @@ void Node::changeOpinion(){
                 if (_neighOpinion[i] == 0){
                     opinion0++;
                 }
-                else if (_neighOpinion[i] == 1){
-                    opinion1++;
-                }
             }
 
             double fraction0 = double(opinion0)/_neighOpinion.size();
-            double fraction1 = double(opinion1)/_neighOpinion.size();
+            double fraction1 = 1. - fraction0;
 
-            if (_resistance == 0.){    
+            // if fraction0 and fraction1 are both higher than the threshold to change opinion, you change to opinion 0 or 1 with a probability equal to the corresponding fraction
+            if (fraction0 > _threshold && fraction1 > _threshold){    
                 if (o < fraction0){
                     _opinion = 0;
                 }
@@ -151,7 +150,16 @@ void Node::changeOpinion(){
                     _opinion = _opinion;
                 }
             }
-            else if (_resistance == 1.){
+            // if fraction0 is higher than the threshold and fraction1 lower, you adopt opinion 0
+            else if (fraction0 > _threshold && fraction1 <= _threshold){
+                _opinion = 0;
+            }
+            // if fraction1 is higher than the threshold and fraction0 lower, you adopt opinion 1
+            else if (fraction1 > _threshold && fraction0 <= _threshold){
+                _opinion = 1;
+            }
+            // if both fraction are under the threshold, you don't change your opinion 
+            else if (fraction1 <= _threshold && fraction0 <= _threshold){
                 _opinion = _opinion;
             }
         }      
@@ -176,6 +184,11 @@ void Node::setOldOpinion(int opinion){
 // function that sets the resistance of the node
 void Node::setResistance(double resistance){
     _resistance = resistance;
+}
+
+// function that sets the threshold of the node
+void Node::setThreshold(double threshold){
+    _threshold = threshold;
 }
 
 // function that sets the cluster to which the node belongs

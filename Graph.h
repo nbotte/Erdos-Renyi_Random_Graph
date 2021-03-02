@@ -47,6 +47,7 @@ public:
     void deactivateNodes(); // makes all the nodes inactive
     void setNodesActive(double bernProb); // sets nodes active according to a bernouillidistribution
     void resetInitOpinion(double initOp0Frac); // resets the initial opinions of the nodes in the graph
+    void setNodeThreshold(double threshold); // function that sets the threshold of all the nodes in the graph to the same value
     vector<double> countOpinionFraction();
 
     void changeRandomOpinion();

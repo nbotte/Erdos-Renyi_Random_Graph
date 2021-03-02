@@ -20,6 +20,7 @@ class Node{
     int _newOpinion; // declare newOpinion variable (= opinion of node at the next time step, choice between 0 and 1)
     boost::circular_buffer<int> _opinionlist; // this list contains up to the 20 newest previous opinions of the neighbours of the node
     double _resistance; // declare resistance variable (= stubborness of the node, resistance to change his opinion)
+    double _threshold; // variable that contains the treshold for a node to change opinion or not (kind of determines its stubborness)
     bool _active; // declare active variable (= determines if node is active or not)
     //bool _wasActive; // declare wasActive variable (= determines if the node was active in the previous timestep)
 
@@ -39,6 +40,7 @@ public:
     int newOpinion() const;
     boost::circular_buffer<int> opinionlist() const;
     double resistance() const;
+    double threshold() const;
     bool active() const;
     int cluster() const;
 
@@ -59,6 +61,7 @@ public:
     void setActive(bool active);
     void setWasActive();
     void setResistance(double resistance);
+    void setThreshold(double threshold);
     void setCluster(int cluster);
 
     void addNeighOpinion(int opinion);

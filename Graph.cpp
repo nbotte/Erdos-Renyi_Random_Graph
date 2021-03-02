@@ -201,6 +201,13 @@ void Graph::resetInitOpinion(double initOp0Frac){
     }
 }
 
+// function that sets the threshold of all the nodes in the graph to the same value
+void Graph::setNodeThreshold(double threshold){
+    for (int i = 0; i < _nodelist.size(); i++){
+        _nodelist[i].setThreshold(threshold);
+    }
+}
+
 // function that makes a fraction of randomly selected nodes stubborn
 void Graph::makeRandomFractionStubborn(double fractionResistant){
     random_device rd; // will be used to obtain a seed for the random number engine
