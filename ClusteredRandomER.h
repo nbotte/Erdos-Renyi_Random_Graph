@@ -32,6 +32,7 @@ public:
     void addEdges(vector<vector<int>>); // function that adds edges between clusters
     void makeRandomCommunityFractionStubborn(double fractionResistant); // function that makes a random fraction of communities stubborn
     double calculateModularity(); // function that calculates the modularity of the SBM (based on the clusters that construct the model!) (returns the calculated modularity)
+    void setCommunityOpinion(double frac0, int cluster, int indexStart); // function that gives opinion to nodes in a community (possible to give opinions according to any distribution you want); argument are opinion distribution and int that determines which community we are talking about + indexStart that determines corresponding position of nodes in nodelist
 
     vector<double> countOpinionFractionCluster(int clusterNumber); // count the fractions of opinions in a particular cluster of the clustered graph
 };

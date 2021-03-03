@@ -181,6 +181,29 @@ void Clustered_Random_Network::makeRandomCommunityFractionStubborn(double fracti
     }
 }
 
+// function that gives opinion to nodes in a community (possible to give opinions according to any distribution you want)
+// frac0 determines the opinion distribution in that community
+// cluster determines which community we are dealing with
+// indexStart determines the corresponding position of the nodes in the nodelist
+void Clustered_Random_Network::setCommunityOpinion(double frac0, int cluster, int indexStart){
+    random_device rd; // will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+    uniform_real_distribution<> dis(0.0, 1.0);
+
+    int clusterSize = _clusterSizes[cluster];
+
+    // give nodes in that community their opinion
+    for (int i = indexStart; i < indexStart + clusterSize; i++){
+        double r = dis(gen); // random number that determines opinion of node
+        if (r < frac0){
+            _nodelist[i].setOpinion(0);
+        }
+        else{
+            _nodelist[i].setOpinion(1);
+        }
+    }
+}
+
 
 // function that counts the fractions of opinions in a particular cluster of the clustered random graph
 vector<double> Clustered_Random_Network::countOpinionFractionCluster(int clusterNumber){
