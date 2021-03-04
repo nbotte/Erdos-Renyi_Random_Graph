@@ -121,7 +121,7 @@ void Node::changeOpinion(){
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
         // first: order the hidden list neighOpinion according to some rule and only look at first 20 opinions
-        orderOpinionsPR();
+        orderOpinionsREC();
 
         // count the number of opinion 0 and 1 of the first 20 opinions in the ordered list
         if (_neighOpinion.size() != 0){
@@ -137,6 +137,8 @@ void Node::changeOpinion(){
 
             double fraction0 = double(opinion0)/_neighOpinion.size();
             double fraction1 = 1. - fraction0;
+
+            //cout << fraction0 << ' ' << fraction1 << endl;
 
             // if fraction0 and fraction1 are both higher than the threshold to change opinion, you change to opinion 0 or 1 with a probability equal to the corresponding fraction
             if (fraction0 > _threshold && fraction1 > _threshold){    
@@ -162,6 +164,17 @@ void Node::changeOpinion(){
             else if (fraction1 <= _threshold && fraction0 <= _threshold){
                 _opinion = _opinion;
             }
+
+            // majority model
+            /*if (fraction0 > fraction1){
+                _opinion = 0;
+            }
+            else if (fraction0 < fraction1){
+                _opinion = 1;
+            }
+            else{
+                _opinion = _opinion;
+            }*/
         }      
         
     }

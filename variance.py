@@ -1,6 +1,6 @@
 import numpy as np
 
-xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_6-001_T=0_xvalues.txt")
+xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_007-00005_10x100_T=1_xvalues.txt")
 
 xAt0op0 = xvalues[:,0]
 xAt0op1 = xvalues[:,1]
@@ -80,4 +80,7 @@ cov1XY = np.cov(X1, Y1)[0][1]
 VarXY = E_X2 * E_Y2 - E_y**2 * E_x**2
 
 Var1XY = E_X12 * E_Y12 - E_y1**2 * E_x1**2
+meanVar = (VarXY + Var1XY)/2
+meanSTD = (np.sqrt(VarXY) + np.sqrt(Var1XY))/2
+print(np.sqrt(meanVar), meanSTD)
 print(E_y*E_x, np.sqrt(VarXY), E_y1*E_x1, np.sqrt(Var1XY))

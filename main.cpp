@@ -88,14 +88,14 @@ void distr_of_friends(){
     int x_500_0 = 0;
     int x_500_1 = 0;
 
-    //double mod = 0.;
+   // double mod = 0.;
     //int stubborn = 0;
 
     // average over different networks
     for (int n = 0; n < 10; n++){
-        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
-        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
-        g.setNodeThreshold(0.8);
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+        //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
+        g.setNodeThreshold(0.);
         //mod += (g.calculateModularity()/10.);
         
         cout << "Graph " << n << endl;
@@ -210,10 +210,10 @@ void distr_of_friends(){
         }
     } 
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_WS_PR_6-001_T=08.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_REC_007-00005_10x100_T=0.txt");
    // ofstream varfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_res=0_10x100_mean_var_11_bins.txt");
-    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_WS_PR_6-001_T=08_xvalues.txt");
-    ofstream echofile("Echo_chamber_WS_PR_6-001_T=08.txt");
+    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM_REC_007-00005_10x100_T=0_xvalues.txt");
+    ofstream echofile("Echo_chamber_SBM_REC_007-00005_10x100_T=0.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -232,7 +232,7 @@ void distr_of_friends(){
     /*stubborn = stubborn/100;
     cout << stubborn << endl;*/
 
-    //cout << mod << endl;
+   // cout << mod << endl;
 }
 
 // function that calculates the evolution of opinions in a particular network
@@ -263,10 +263,10 @@ void evolution_of_opinions(){
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
         clusterSizes[i] = 100;
-        edgeProbs[i] = 0.06;
+        edgeProbs[i] = 0.07;
     }
 
-    ofstream opfile("Fraction_of_opinions_WS_50_50_no_stubb_paper8_active_01_av_good_init_PR_6-001_T=08.txt");
+    ofstream opfile("Fraction_of_opinions_SBM_50_50_no_stubb_paper8_active_01_av_good_init_REC_007-00005_10x100_T=0.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -275,9 +275,9 @@ void evolution_of_opinions(){
 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 10; n++){
-        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
-        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
-        g.setNodeThreshold(0.8);
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+        //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
+        g.setNodeThreshold(0.);
         cout << "Graph: " << n << endl;
         // for each network, run different simulations --> can this be implemented faster?
         for (int s = 0; s < 10; s++){
