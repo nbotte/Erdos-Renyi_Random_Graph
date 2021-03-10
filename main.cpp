@@ -11,6 +11,7 @@
 #include <iomanip>
 #include <fstream>
 #include <iostream>
+#include <random>
 #include <vector>
 #include <list>
 using namespace std;
@@ -30,11 +31,11 @@ void distr_of_friends(){
     if(!file){
         cout << "No such file";
     }*/
-    double p_add = 0.002;
+    double p_add = 0.008;
     /*vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs = {};*/
-    vector<int> clusterSizes(100); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(100);
+    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(10);
     /*double x;
     while (file >> x){
         clusterSizes.push_back(x);
@@ -47,8 +48,8 @@ void distr_of_friends(){
     }
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
-        clusterSizes[i] = 10;
-        edgeProbs[i] = 0.9;
+        clusterSizes[i] = 100;
+        edgeProbs[i] = 0.03;
     }
 
     vector<double> fractionAt0(N);
@@ -96,6 +97,10 @@ void distr_of_friends(){
    // double mod = 0.;
     //int stubborn = 0;
 
+    random_device rd; // will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+    uniform_real_distribution<> dis(0.0, 1.0);
+
     // average over different networks
     for (int n = 0; n < 10; n++){
         Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
@@ -110,8 +115,22 @@ void distr_of_friends(){
             cout << "Simulation " << s << endl;
 
             // reset the initial opinions to start a new simulation for the same network + make nodes stubborn
-            g.resetInitOpinion(initOp0Frac);
+            //g.resetInitOpinion(initOp0Frac);
             //g.makeRandomFractionStubborn(0.1);
+
+            // give each community opinions according to predefined distributions
+            int indexStart = 0;
+            for (int i = 0; i < clusterSizes.size(); i++){
+                double r = dis(gen); // draw a random number that will determine whether the community has one opinion or not
+                if (i < 2){
+                    g.setCommunityOpinion(1., i, indexStart);
+                }
+                else{
+                    g.setCommunityOpinion(0.5, i, indexStart);
+                }
+                //g.setCommunityOpinion(0.6, i, indexStart);
+                indexStart += clusterSizes[i];
+            }
 
            /* for (int i = 0; i < g.nodelist().size(); i++){
                 if (g.nodelist()[i].resistance() == 1.){
@@ -215,10 +234,10 @@ void distr_of_friends(){
         }
     } 
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_REC_09-0002_100x10_T=0.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=02_other=50-50_REC_003-0008_10x100_T=0_sameComm.txt");
    // ofstream varfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_res=0_10x100_mean_var_11_bins.txt");
-    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM_REC_09-0002_100x10_T=0_xvalues.txt");
-    ofstream echofile("Echo_chamber_SBM_REC_09-0002_100x10_T=0.txt");
+    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=02_other=50-50_REC_003-0008_10x100_T=0_sameComm_xvalues.txt");
+    ofstream echofile("Echo_chamber_SBM_commOp0=02_other=50-50_REC_003-0008_10x100_T=0_sameComm.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -255,11 +274,11 @@ void evolution_of_opinions(){
     if(!file){
         cout << "No such file";
     }*/
-    double p_add = 0.002;
+    double p_add = 0.008;
     /*vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs = {};*/
-    vector<int> clusterSizes(100); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(100);
+    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(10);
     /*double x;
     while (file >> x){
         clusterSizes.push_back(x);
@@ -272,16 +291,23 @@ void evolution_of_opinions(){
     }
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
-        clusterSizes[i] = 10;
-        edgeProbs[i] = 0.9;
+        clusterSizes[i] = 100;
+        edgeProbs[i] = 0.03;
     }
 
-    ofstream opfile("Fraction_of_opinions_SBM_50_50_no_stubb_paper8_active_01_av_good_init_REC_09-0002_100x10_T=0.txt");
+    ofstream opfile("Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=02_other=50-50_REC_003-0008_10x100_T=0_sameComm.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
     vector<double> variance1(500); // calculate variance of opinion 1 according to Welford's algorithm
     int count = 1;
+
+    vector<double> commOp0Begin(clusterSizes.size()); // vector that contains the fraction of opinion 0 in each community at beginning of simulation --> also check for n, s = 1 (to see things without averaging)
+    vector<double> commOp0End(clusterSizes.size()); // vector that contains the fraction of opinion 0 in each community at end of simulation --> also check for n, s = 1 (to see things without averaging)
+
+    random_device rd; // will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
+    uniform_real_distribution<> dis(0.0, 1.0);
 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 10; n++){
@@ -292,7 +318,28 @@ void evolution_of_opinions(){
         // for each network, run different simulations --> can this be implemented faster?
         for (int s = 0; s < 10; s++){
             // reset the initial opinions
-            g.resetInitOpinion(initOp0Frac);
+            //g.resetInitOpinion(initOp0Frac);
+
+            // give each community opinions according to predefined distributions
+            int indexStart = 0;
+            for (int i = 0; i < clusterSizes.size(); i++){
+                double r = dis(gen); // draw a random number that will determine whether the community has one opinion or not
+                if (i < 2){
+                    g.setCommunityOpinion(1., i, indexStart);
+                }
+                else{
+                    g.setCommunityOpinion(0.5, i, indexStart);
+                }
+                //g.setCommunityOpinion(0.6, i, indexStart);
+                indexStart += clusterSizes[i];
+            }
+
+            // At beginning of each time evolution: calculate fraction of opinion 0 in each cluster
+            for (int i = 0; i < clusterSizes.size(); i++){
+                double frac0 = g.countOpinionFractionCluster(i)[0];
+                commOp0Begin[i] += frac0;
+            }
+
             // for each network and each simulation: let the opinions evolve in time
             for (int t = 0; t < 500; t++){
                 g.setNodesActive(p_bern);
@@ -311,6 +358,11 @@ void evolution_of_opinions(){
 
                 g.deactivateNodes();
             }
+            // At end of each time evolution: calculate fraction of opinion 0 in each cluster
+            for (int i = 0; i < clusterSizes.size(); i++){
+                double frac0 = g.countOpinionFractionCluster(i)[0];
+                commOp0End[i] += frac0;
+            }
             count++;
         }
     }
@@ -319,6 +371,15 @@ void evolution_of_opinions(){
         opfile << mean0[i] << ' ' << mean1[i] << ' ' << variance0[i]/double(count - 2) << ' ' << variance1[i]/double(count - 2) << endl;
     }
     opfile.close();
+
+    // write community opinion 0 fractions at end of time evolution to file
+    ofstream commfile("Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=02_other=50-50_REC_003-0008_10x100_T=0_sameComm.txt");
+    for (int i = 0; i < commOp0End.size(); i++){
+        double frac0Begin = commOp0Begin[i]/100.;
+        double frac0End = commOp0End[i]/100.;
+        commfile << frac0Begin << ' ' << frac0End << endl;
+    }
+    commfile.close();
 }
 
 // function that calculates the degree distribution + the average degree distribution of a particular network
@@ -383,11 +444,11 @@ void Av_degree(){
     if(!file){
         cout << "No such file";
     }*/
-    double p_add = 0.0015;
+    double p_add = 0.008;
    /* vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs = {};*/
-    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(10);
+    vector<int> clusterSizes(100); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(100);
     /*double x;
     while (file >> x){
         clusterSizes.push_back(x);
@@ -400,8 +461,8 @@ void Av_degree(){
     }
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
-        clusterSizes[i] = 100;
-        edgeProbs[i] = 0.1;
+        clusterSizes[i] = 10;
+        edgeProbs[i] = 0.3;
     }
     int degree = 0;
     Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
@@ -493,10 +554,10 @@ void test(){
 }
 
 int main(){
-    //distr_of_friends();
-    //evolution_of_opinions();
+    distr_of_friends();
+    evolution_of_opinions();
     //degree_distr();
-    Av_degree();
+    //Av_degree();
     //test();
 
    /* ofstream clusFile("Clustering_coefficient_WS_vs_beta.txt");
