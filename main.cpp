@@ -122,13 +122,13 @@ void distr_of_friends(){
             int indexStart = 0;
             for (int i = 0; i < clusterSizes.size(); i++){
                 double r = dis(gen); // draw a random number that will determine whether the community has one opinion or not
-                if (i < 2){
+                if (r < 0.6){
                     g.setCommunityOpinion(1., i, indexStart);
                 }
                 else{
                     g.setCommunityOpinion(0.5, i, indexStart);
                 }
-                //g.setCommunityOpinion(0.6, i, indexStart);
+               // g.setCommunityOpinion(0.8, i, indexStart);
                 indexStart += clusterSizes[i];
             }
 
@@ -234,10 +234,10 @@ void distr_of_friends(){
         }
     } 
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=02_other=50-50_REC_003-0008_10x100_T=0_sameComm.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=06_other=50-50_REC_003-0008_10x100_T=0.txt");
    // ofstream varfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_res=0_10x100_mean_var_11_bins.txt");
-    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=02_other=50-50_REC_003-0008_10x100_T=0_sameComm_xvalues.txt");
-    ofstream echofile("Echo_chamber_SBM_commOp0=02_other=50-50_REC_003-0008_10x100_T=0_sameComm.txt");
+    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=06_other=50-50_REC_003-0008_10x100_T=0_xvalues.txt");
+    ofstream echofile("Echo_chamber_SBM_commOp0=06_other=50-50_REC_003-0008_10x100_T=0.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -295,7 +295,7 @@ void evolution_of_opinions(){
         edgeProbs[i] = 0.03;
     }
 
-    ofstream opfile("Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=02_other=50-50_REC_003-0008_10x100_T=0_sameComm.txt");
+    ofstream opfile("Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=06_other=50-50_REC_003-0008_10x100_T=0.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -324,13 +324,13 @@ void evolution_of_opinions(){
             int indexStart = 0;
             for (int i = 0; i < clusterSizes.size(); i++){
                 double r = dis(gen); // draw a random number that will determine whether the community has one opinion or not
-                if (i < 2){
+                if (r < 0.6){
                     g.setCommunityOpinion(1., i, indexStart);
                 }
                 else{
                     g.setCommunityOpinion(0.5, i, indexStart);
                 }
-                //g.setCommunityOpinion(0.6, i, indexStart);
+                //g.setCommunityOpinion(0.8, i, indexStart);
                 indexStart += clusterSizes[i];
             }
 
@@ -373,7 +373,7 @@ void evolution_of_opinions(){
     opfile.close();
 
     // write community opinion 0 fractions at end of time evolution to file
-    ofstream commfile("Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=02_other=50-50_REC_003-0008_10x100_T=0_sameComm.txt");
+    ofstream commfile("Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=06_other=50-50_REC_003-0008_10x100_T=0.txt");
     for (int i = 0; i < commOp0End.size(); i++){
         double frac0Begin = commOp0Begin[i]/100.;
         double frac0End = commOp0End[i]/100.;

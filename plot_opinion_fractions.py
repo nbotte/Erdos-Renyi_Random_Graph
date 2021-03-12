@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-fractions_rand = np.loadtxt('Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=01_other=44-56_PR_01-0001_10x100_T=0_random.txt')
-fractions_comm01 = np.loadtxt('Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=01_other=44-56_PR_01-0001_10x100_T=0.txt')
-#fractions_sameComm01 = np.loadtxt('Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=01_other=50-50_PR_01-0001_10x100_T=0_sameComm.txt')
+fractions_rand = np.loadtxt('Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=04_other=50-50_REC_01-0001_10x100_T=0_random=70-30.txt')
+fractions_comm02 = np.loadtxt('Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=04_other=50-50_REC_01-0001_10x100_T=0.txt')
+fractions_sameComm02 = np.loadtxt('Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=04_other=50-50_REC_01-0001_10x100_T=0_sameComm.txt')
 #fractions_PR = np.loadtxt('Fraction_of_opinions_Clustered_Cluster5_01-0001_50_50_no_stubb_paper8_active_01_av_good_init_PR.txt')
 #fractions_50_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_50_bern_050_av.txt')
 #fractions_25_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_25_bern_050_av.txt')
@@ -14,13 +14,13 @@ y = np.zeros(500)
 
 for i in range(len(t)):
     t[i] = i
-    y[i] = 0.5
+    y[i] = 0.7
 
 #plt.plot(t, fractions_0_av[:,0], label='Stubborness = 0')
 #plt.plot(t[::10], fractions_av[:,0][::10], label='Opinion 0')
-plt.plot(t[::10], fractions_rand[:,0][::10], label='50/50, PR')
-plt.plot(t[::10], fractions_comm01[:,0][::10], label='0.1 community opinion 0, other 44/56; PR')
-#plt.plot(t[::10], fractions_sameComm01[:,0][::10], label='0.1 community opinion 0 (same comm.), other 50/50; PR')
+plt.plot(t[::10], fractions_rand[:,0][::10], label='70/30, REC')
+plt.plot(t[::10], fractions_comm02[:,0][::10], label='0.4 community opinion 0, other 50/50; REC')
+plt.plot(t[::10], fractions_sameComm02[:,0][::10], label='0.4 community opinion 0 (same comm.), other 50/50; REC')
 plt.plot(t[::10], y[::10])
 #plt.plot(t, fractions_25_av[:,0], label='Stubborness = 0.25')
 #plt.plot(t, fractions_1_av[:,1], label='Stubborness = 1')
@@ -28,11 +28,11 @@ plt.xlabel("Timesteps t")
 #plt.ylabel("Opinion fraction")
 plt.ylabel("Opinion 0 fracion")
 #plt.xlim(0, 50)
-#plt.ylim(0.45, 0.55)
-plt.legend(loc='best')
-plt.title('Opinion fraction vs time, 50/50\n' r'$10 x 100; p_{cl} = 0.1; p_{add} = 0.001$' '\nSBM, 10 x 10 averaged')
+plt.ylim(0.5, 1.2)
+plt.legend(loc='upper right')
+plt.title('Opinion fraction vs time, 70/30\n' r'$10 x 100; p_{cl} = 0.1; p_{add} = 0.001$' '\nSBM, 10 x 10 averaged')
 #plt.title('Standard deviation for each timestep\nStochastic block model, 10 x 10 averaged')
-plt.savefig('Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=01_other=44-56_PR_01-0001_10x100_T=0_random=50-50_sameComm.png')
+plt.savefig('Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=04_other=50-50_REC_01-0001_10x100_T=0_random=70-30_sameComm.png')
 #plt.savefig('Standard_Deviation_Clustered_01-001_50_50_no_stubb_one_node_active_1_av_good_init.png')
 
 plt.show()
