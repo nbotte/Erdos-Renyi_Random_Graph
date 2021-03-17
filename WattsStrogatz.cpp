@@ -20,12 +20,16 @@ using namespace std;
 
 // https://en.wikipedia.org/wiki/Watts%E2%80%93Strogatz_model
 
+// implement default constructor
+Watts_Strogatz_Network::Watts_Strogatz_Network(){};
+
 // implement constructor
-Watts_Strogatz_Network::Watts_Strogatz_Network(int numberOfNodes, int meanDegree, double rewireProb, double initOp0Frac){
+Watts_Strogatz_Network::Watts_Strogatz_Network(int numberOfNodes, int meanDegree, double rewireProb, double initOp0Frac, int indexStart){
     _numberOfNodes = numberOfNodes;
     _meanDegree = meanDegree;
     _rewireProb = rewireProb;
     _initOp0Frac = initOp0Frac;
+    _indexStart = indexStart;
 
     _nodelist.resize(_numberOfNodes); 
 
@@ -57,7 +61,7 @@ void Watts_Strogatz_Network::makeRegularLattice(){
         active = 0.; // default: no nodes are active
         resistance = 0.; // default: no stubborn nodes
         
-        int index = getRandomElement(v, _numberOfNodes - 1);
+        int index = getRandomElement(v, _numberOfNodes - 1) + _indexStart;
         // Note: _numberOfNodes should be even, otherwise you will get a bias!
         if (N < int(_numberOfNodes*_initOp0Frac)){
             opinion = 0;
@@ -71,8 +75,8 @@ void Watts_Strogatz_Network::makeRegularLattice(){
     }
 
     // add edges of the regular lattice
-    for (int i = 0; i < _numberOfNodes; i++){
-        for (int j = i; j < _numberOfNodes; j++){
+    for (int i = _indexStart; i < _numberOfNodes + _indexStart; i++){
+        for (int j = i; j < _numberOfNodes + _indexStart; j++){
            if (0 < abs(i-j)%(_numberOfNodes-1-(_meanDegree/2)) && abs(i-j)%(_numberOfNodes-1-(_meanDegree/2)) <= (_meanDegree/2)){
                 auto N = make_shared<Node>(_nodelist[i]);
                 auto M = make_shared<Node>(_nodelist[j]);
@@ -92,7 +96,7 @@ void Watts_Strogatz_Network::rewire(){
     size_t nelem = 1;
     vector<Node> out; // will contain the random node to which you rewire
 
-    for (int i = 0; i < _nodelist.size(); i++){
+    for (int i = _indexStart; i < _indexStart + _numberOfNodes; i++){
         for (int index : _nodelist[i].neigh()){
             if (i < index && index <= (i + (_meanDegree/2))){
                 double r = dis(gen); // draw a random number that will determine whether the edge is rewired or not
@@ -114,11 +118,11 @@ void Watts_Strogatz_Network::rewire(){
             }
         }
     }
-    for (int i = 0; i < _nodelist.size(); i++){
+    for (int i = _indexStart; i < _numberOfNodes + _indexStart; i++){
         _nodelist[i].removeAllNeigh();
     }
     ofstream pairFile("Pairs.txt");
-    for (int i = 0; i < _nodelist.size(); i++){
+    for (int i = _indexStart; i < _numberOfNodes + _indexStart; i++){
         for (int index : _nodelist[i].helpNeigh()){
             _nodelist[i].addNeigh(index);
             pairFile << i << '\t' << index << '\n';

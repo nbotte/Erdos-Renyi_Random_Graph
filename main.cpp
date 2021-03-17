@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include "ClusteredRandomER.h"
+#include "ClusteredRandomWS.h"
 #include "ErdosRenyi.h"
 #include "WattsStrogatz.h"
 #include "Node.h"
@@ -105,7 +106,7 @@ void distr_of_friends(){
     for (int n = 0; n < 10; n++){
         Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
         //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
-        g.setNodeThreshold(0.);
+        g.setNodeThreshold(0.2);
         //mod += (g.calculateModularity()/10.);
         
         cout << "Graph " << n << endl;
@@ -115,22 +116,22 @@ void distr_of_friends(){
             cout << "Simulation " << s << endl;
 
             // reset the initial opinions to start a new simulation for the same network + make nodes stubborn
-            //g.resetInitOpinion(initOp0Frac);
+            g.resetInitOpinion(initOp0Frac);
             //g.makeRandomFractionStubborn(0.1);
 
             // give each community opinions according to predefined distributions
-            int indexStart = 0;
+            /*int indexStart = 0;
             for (int i = 0; i < clusterSizes.size(); i++){
                 double r = dis(gen); // draw a random number that will determine whether the community has one opinion or not
-                if (r < 0.6){
+                if (r < 0.3){
                     g.setCommunityOpinion(1., i, indexStart);
                 }
                 else{
-                    g.setCommunityOpinion(0.5, i, indexStart);
+                    g.setCommunityOpinion(0.286, i, indexStart);
                 }
-               // g.setCommunityOpinion(0.8, i, indexStart);
+                //g.setCommunityOpinion(0.5, i, indexStart);
                 indexStart += clusterSizes[i];
-            }
+            }*/
 
            /* for (int i = 0; i < g.nodelist().size(); i++){
                 if (g.nodelist()[i].resistance() == 1.){
@@ -234,10 +235,10 @@ void distr_of_friends(){
         }
     } 
 
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=06_other=50-50_REC_003-0008_10x100_T=0.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_003-0008_10x100_majT=02.txt");
    // ofstream varfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_res=0_10x100_mean_var_11_bins.txt");
-    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=06_other=50-50_REC_003-0008_10x100_T=0_xvalues.txt");
-    ofstream echofile("Echo_chamber_SBM_commOp0=06_other=50-50_REC_003-0008_10x100_T=0.txt");
+    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_003-0008_10x100_majT=02_xvalues.txt");
+    ofstream echofile("Echo_chamber_SBM_PR_003-0008_10x100_majT=02.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -295,7 +296,7 @@ void evolution_of_opinions(){
         edgeProbs[i] = 0.03;
     }
 
-    ofstream opfile("Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=06_other=50-50_REC_003-0008_10x100_T=0.txt");
+    ofstream opfile("Fraction_of_opinions_SBM_active_01_av_good_init_PR_003-0008_10x100_majT=02.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -313,26 +314,26 @@ void evolution_of_opinions(){
     for (int n = 0; n < 10; n++){
         Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
         //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
-        g.setNodeThreshold(0.);
+        g.setNodeThreshold(0.2);
         cout << "Graph: " << n << endl;
         // for each network, run different simulations --> can this be implemented faster?
         for (int s = 0; s < 10; s++){
             // reset the initial opinions
-            //g.resetInitOpinion(initOp0Frac);
+            g.resetInitOpinion(initOp0Frac);
 
             // give each community opinions according to predefined distributions
-            int indexStart = 0;
+            /*int indexStart = 0;
             for (int i = 0; i < clusterSizes.size(); i++){
                 double r = dis(gen); // draw a random number that will determine whether the community has one opinion or not
-                if (r < 0.6){
+                if (r < 0.3){
                     g.setCommunityOpinion(1., i, indexStart);
                 }
                 else{
-                    g.setCommunityOpinion(0.5, i, indexStart);
+                    g.setCommunityOpinion(0.286, i, indexStart);
                 }
-                //g.setCommunityOpinion(0.8, i, indexStart);
+                //g.setCommunityOpinion(0.5, i, indexStart);
                 indexStart += clusterSizes[i];
-            }
+            }*/
 
             // At beginning of each time evolution: calculate fraction of opinion 0 in each cluster
             for (int i = 0; i < clusterSizes.size(); i++){
@@ -373,7 +374,7 @@ void evolution_of_opinions(){
     opfile.close();
 
     // write community opinion 0 fractions at end of time evolution to file
-    ofstream commfile("Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=06_other=50-50_REC_003-0008_10x100_T=0.txt");
+    ofstream commfile("Fraction_of_opinion0_comm_SBM_active_01_av_good_init_PR_003-0008_10x100_majT=02.txt");
     for (int i = 0; i < commOp0End.size(); i++){
         double frac0Begin = commOp0Begin[i]/100.;
         double frac0End = commOp0End[i]/100.;
@@ -476,7 +477,7 @@ void Av_degree(){
 
 // function to do small tests
 void test(){
-    int N = 1000;
+    int N = 100;
     int K = 4;
     double beta = 0.05;
     double initOp0Frac = 0.5;
@@ -489,8 +490,9 @@ void test(){
         cout << "No such file";
     }*/
     double p_add = 0.002;
-    vector<int> clusterSizes(50); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(50);
+    vector<int> clusterSizes(5); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(5);
+    vector<int> meanDegrees(5);
     /*double x;
     while (file >> x){
         clusterSizes.push_back(x);
@@ -499,12 +501,13 @@ void test(){
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
         clusterSizes[i] = 20;
-        edgeProbs[i] = 0.25;
+        edgeProbs[i] = 0.01;
+        meanDegrees[i] = 4;
     }
 
-    Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+    Clustered_Random_WS_Network g = Clustered_Random_WS_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
     //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
-    cout << g.calculateModularity() << endl;
+    cout << g.calculateModularity() << ' ' << g.averageClustering() << endl;
    /* int k = 0;
     for (int i = 0; i < clusterSizes.size(); i++){
         if (i%2){
@@ -530,18 +533,18 @@ void test(){
     }
     cout << stubborn << endl;*/
     //cout << g.calculateModularity() << endl;
-    /*g.setNodesActive(p_bern);
-    g.setNodeThreshold(0.5);
+    //g.setNodesActive(p_bern);
+    //g.setNodeThreshold(0.5);
 
-    for (int i = 0; i < g.nodelist().size(); i++){
-        cout << g.nodelist()[i] << ": ";
+    /*for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i] << ' ' << g.nodelist()[i].cluster() << ": ";
         for (int index : g.nodelist()[i].neigh()){
-            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].threshold() << '\t';
+            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].cluster() << '\t';
         }
         cout << endl;
-    }
+    }*/
 
-    g.changeOpinions();
+   /* g.changeOpinions();
     g.changeOpinions();
 
     for (int i = 0; i < g.nodelist().size(); i++){

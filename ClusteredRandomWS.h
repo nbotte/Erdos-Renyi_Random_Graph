@@ -27,7 +27,7 @@ public:
     Clustered_Random_WS_Network(int totalNumberOfNodes, vector<int> clusterSizes, vector<double> edgeProbs, vector<int> meanDegrees, double rewireAddProbability, string type);
 
     // declare member functions of class Clustered_Random_Network 
-    vector<int> makeWattsStrogatz(int numberOfNodes, double edgeProb, double initOp0Frac, int indexStart, int cluster); // function that makes an ER-graph + returns a vector with the indices of the nodes in that cluster
+    vector<int> makeWattsStrogatz(int numberOfNodes, int meanDegree, double beta, double initOp0Frac, int indexStart, int cluster); // function that makes an ER-graph + returns a vector with the indices of the nodes in that cluster
     void makeGraph(); // function that makes a clustered graph
     void rewireEdges(vector<vector<int>>); // function that rewires the edges of a graph between different clusters, takes a vector of vectors of indices of the nodes of the different clusters as argument
     void addEdges(vector<vector<int>>); // function that adds edges between clusters

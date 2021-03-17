@@ -18,9 +18,13 @@ public:
     int _meanDegree; // the mean degree of the network, should be an even integer (N >> K >> ln(N))
     double _rewireProb; // probability to rewire the edges of the regular lattice
     double _initOp0Frac; // initial fraction of nodes with opinion 0
+    int _indexStart; // this is mainly needed to construct WS networks as constituents for the SBM_WS
+
+    // define default constructor
+    Watts_Strogatz_Network();
 
     // constructor
-    Watts_Strogatz_Network(int numberOfNodes, int meanDegree, double rewireProb, double initOp0Frac);
+    Watts_Strogatz_Network(int numberOfNodes, int meanDegree, double rewireProb, double initOp0Frac, int indexStart);
 
     // declare member functions of class Watts-Strogatz
     void makeGraph(); // function that generates a Watts-Strogatz graph
