@@ -1,8 +1,9 @@
 // Nina Botte
 
 #include <cmath>
-#include "ClusteredRandomER.h"
-#include "ClusteredRandomWS.h"
+//#include "ClusteredRandomER.h"
+//#include "ClusteredRandomWS.h"
+#include "ClusteredRandom.h"
 #include "ErdosRenyi.h"
 #include "WattsStrogatz.h"
 #include "Node.h"
@@ -20,10 +21,10 @@ using namespace std;
 // function that calculates the distribution of friends with the same opinion 1 for a particular network (according to paper 8)
 void distr_of_friends(){
     int N = 1000;
-    int K = 6;
+    int K = 10;
     double p = 0.01;
     double initOp0Frac = 0.5;
-    double beta = 0.01; // should be small enough in order to deviate from random case
+    double beta = 0.06; // should be small enough in order to deviate from random case
     double p_bern = 0.1;
 
     // part needed for clustered random network
@@ -32,11 +33,12 @@ void distr_of_friends(){
     if(!file){
         cout << "No such file";
     }*/
-    double p_add = 0.008;
+    double p_add = 0.001;
     /*vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs = {};*/
     vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs(10);
+    vector<int> meanDegrees(10);
     /*double x;
     while (file >> x){
         clusterSizes.push_back(x);
@@ -50,7 +52,8 @@ void distr_of_friends(){
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
         clusterSizes[i] = 100;
-        edgeProbs[i] = 0.03;
+        edgeProbs[i] = 0.01;
+        meanDegrees[i] = 10;
     }
 
     vector<double> fractionAt0(N);
@@ -104,9 +107,10 @@ void distr_of_friends(){
 
     // average over different networks
     for (int n = 0; n < 10; n++){
-        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
-        //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
-        g.setNodeThreshold(0.2);
+        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
+       // Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac, 0);
+        g.setNodeThreshold(0.);
         //mod += (g.calculateModularity()/10.);
         
         cout << "Graph " << n << endl;
@@ -234,11 +238,14 @@ void distr_of_friends(){
             count++; 
         }
     } 
-
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_003-0008_10x100_majT=02.txt");
+    neighOp1HistAt0[0] = x_0_0;
+    neighOp1HistAt0[neighOp1HistAt0.size() - 1] = x_0_1;
+    neighOp1HistAt500[0] = x_500_0;
+    neighOp1HistAt500[neighOp1HistAt500.size() - 1] = x_500_1;
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM-WS_REC_10-001-0001_10x100_T=0_test.txt");
    // ofstream varfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_res=0_10x100_mean_var_11_bins.txt");
-    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_003-0008_10x100_majT=02_xvalues.txt");
-    ofstream echofile("Echo_chamber_SBM_PR_003-0008_10x100_majT=02.txt");
+    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM-WS_REC_10-001-0001_10x100_T=0_xvalues_test.txt");
+    ofstream echofile("Echo_chamber_SBM-WS_REC_10-001-0001_10x100_T=0_test.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -263,10 +270,10 @@ void distr_of_friends(){
 // function that calculates the evolution of opinions in a particular network
 void evolution_of_opinions(){
     int N = 1000;
-    int K = 6;
+    int K = 10;
     double p = 0.01;
     double initOp0Frac = 0.5;
-    double beta = 0.01; // should be small enough in order to deviate from random case
+    double beta = 0.06; // should be small enough in order to deviate from random case
     double p_bern = 0.1;
 
     // part needed for clustered random network
@@ -275,11 +282,12 @@ void evolution_of_opinions(){
     if(!file){
         cout << "No such file";
     }*/
-    double p_add = 0.008;
+    double p_add = 0.001;
     /*vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs = {};*/
     vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs(10);
+    vector<int> meanDegrees(10);
     /*double x;
     while (file >> x){
         clusterSizes.push_back(x);
@@ -293,10 +301,11 @@ void evolution_of_opinions(){
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
         clusterSizes[i] = 100;
-        edgeProbs[i] = 0.03;
+        edgeProbs[i] = 0.01;
+        meanDegrees[i] = 10;
     }
 
-    ofstream opfile("Fraction_of_opinions_SBM_active_01_av_good_init_PR_003-0008_10x100_majT=02.txt");
+    ofstream opfile("Fraction_of_opinions_WS_active_01_av_good_init_PR_10-006_T=0.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -312,9 +321,10 @@ void evolution_of_opinions(){
 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 10; n++){
-        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
-        //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
-        g.setNodeThreshold(0.2);
+        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+       // Clustered_Random_WS_Network g = Clustered_Random_WS_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
+        Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac, 0);
+        g.setNodeThreshold(0.);
         cout << "Graph: " << n << endl;
         // for each network, run different simulations --> can this be implemented faster?
         for (int s = 0; s < 10; s++){
@@ -336,10 +346,10 @@ void evolution_of_opinions(){
             }*/
 
             // At beginning of each time evolution: calculate fraction of opinion 0 in each cluster
-            for (int i = 0; i < clusterSizes.size(); i++){
+          /*  for (int i = 0; i < clusterSizes.size(); i++){
                 double frac0 = g.countOpinionFractionCluster(i)[0];
                 commOp0Begin[i] += frac0;
-            }
+            }*/
 
             // for each network and each simulation: let the opinions evolve in time
             for (int t = 0; t < 500; t++){
@@ -360,10 +370,10 @@ void evolution_of_opinions(){
                 g.deactivateNodes();
             }
             // At end of each time evolution: calculate fraction of opinion 0 in each cluster
-            for (int i = 0; i < clusterSizes.size(); i++){
+           /* for (int i = 0; i < clusterSizes.size(); i++){
                 double frac0 = g.countOpinionFractionCluster(i)[0];
                 commOp0End[i] += frac0;
-            }
+            }*/
             count++;
         }
     }
@@ -374,13 +384,13 @@ void evolution_of_opinions(){
     opfile.close();
 
     // write community opinion 0 fractions at end of time evolution to file
-    ofstream commfile("Fraction_of_opinion0_comm_SBM_active_01_av_good_init_PR_003-0008_10x100_majT=02.txt");
+   /* ofstream commfile("Fraction_of_opinion0_comm_SBM-WS_active_01_av_good_init_REC_10-001-0001_10x100_T=0.txt");
     for (int i = 0; i < commOp0End.size(); i++){
         double frac0Begin = commOp0Begin[i]/100.;
         double frac0End = commOp0End[i]/100.;
         commfile << frac0Begin << ' ' << frac0End << endl;
     }
-    commfile.close();
+    commfile.close();*/
 }
 
 // function that calculates the degree distribution + the average degree distribution of a particular network
@@ -436,7 +446,7 @@ void Av_degree(){
     int K = 10;
     double p = 0.01;
     double initOp0Frac = 0.5;
-    double beta = 0.01; // should be small enough in order to deviate from random case
+    double beta = 0.07; // should be small enough in order to deviate from random case
     double p_bern = 0.1;
 
     // part needed for clustered random network
@@ -445,11 +455,12 @@ void Av_degree(){
     if(!file){
         cout << "No such file";
     }*/
-    double p_add = 0.008;
+    double p_add = 0.001;
    /* vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs = {};*/
-    vector<int> clusterSizes(100); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(100);
+    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(10);
+    vector<int> meanDegrees(10);
     /*double x;
     while (file >> x){
         clusterSizes.push_back(x);
@@ -462,17 +473,19 @@ void Av_degree(){
     }
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
-        clusterSizes[i] = 10;
-        edgeProbs[i] = 0.3;
+        clusterSizes[i] = 100;
+        edgeProbs[i] = 0.01;
+        meanDegrees[i] = 10;
     }
     int degree = 0;
-    Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+   // Clustered_Random_WS_Network g = Clustered_Random_WS_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
+    Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac, 0);
     for (int i = 0; i < g.nodelist().size(); i++){
         degree += g.nodelist()[i].neigh().size();
     }
-    double mod = g.calculateModularity();
+    //double mod = g.calculateModularity();
     double Av_degree = double(degree)/double(N);
-    cout << Av_degree << ' ' << mod << endl;
+    cout << Av_degree << ' ' << g.averageClustering() << endl;
 }
 
 // function to do small tests
@@ -489,10 +502,10 @@ void test(){
     if(!file){
         cout << "No such file";
     }*/
-    double p_add = 0.002;
-    vector<int> clusterSizes(5); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(5);
-    vector<int> meanDegrees(5);
+    double p_add = 0.001;
+    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(10);
+    vector<int> meanDegrees(10);
     /*double x;
     while (file >> x){
         clusterSizes.push_back(x);
@@ -500,14 +513,15 @@ void test(){
     }
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
-        clusterSizes[i] = 20;
+        clusterSizes[i] = 10;
         edgeProbs[i] = 0.01;
         meanDegrees[i] = 4;
     }
 
-    Clustered_Random_WS_Network g = Clustered_Random_WS_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
-    //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac);
-    cout << g.calculateModularity() << ' ' << g.averageClustering() << endl;
+    Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+    //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac, 0);
+   //Erdos_Renyi_Network g = Erdos_Renyi_Network(N, beta, p_bern, initOp0Frac, 0);
+   // cout << g.calculateModularity() << ' ' << g.averageClustering() << endl;
    /* int k = 0;
     for (int i = 0; i < clusterSizes.size(); i++){
         if (i%2){
@@ -533,34 +547,34 @@ void test(){
     }
     cout << stubborn << endl;*/
     //cout << g.calculateModularity() << endl;
-    //g.setNodesActive(p_bern);
-    //g.setNodeThreshold(0.5);
+    g.setNodesActive(p_bern);
+    g.setNodeThreshold(0.);
 
-    /*for (int i = 0; i < g.nodelist().size(); i++){
+    for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ' ' << g.nodelist()[i].cluster() << ": ";
         for (int index : g.nodelist()[i].neigh()){
-            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].cluster() << '\t';
+            cout << g.nodelist()[index] << '\t';
         }
         cout << endl;
-    }*/
+    }
 
-   /* g.changeOpinions();
+    g.changeOpinions();
     g.changeOpinions();
 
     for (int i = 0; i < g.nodelist().size(); i++){
         cout << g.nodelist()[i] << ": ";
         for (int index : g.nodelist()[i].neigh()){
-            cout << g.nodelist()[index] << ' ' << g.nodelist()[index].threshold() << '\t';
+            cout << g.nodelist()[index] << '\t';
         }
         cout << endl;
-    }*/
+    }
 }
 
 int main(){
     distr_of_friends();
-    evolution_of_opinions();
+    //evolution_of_opinions();
     //degree_distr();
-    //Av_degree();
+   // Av_degree();
     //test();
 
    /* ofstream clusFile("Clustering_coefficient_WS_vs_beta.txt");

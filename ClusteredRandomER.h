@@ -22,7 +22,7 @@ class Clustered_Random_Network : public Erdos_Renyi_Network{
     string _type; // tells whether you rewire or you add edges to make the clustered graph 
 
 public:
-    // define a constructor
+    // define a constructor for SBM-ER
     Clustered_Random_Network(int totalNumberOfNodes, vector<int> clusterSizes, vector<double> edgeProbs, double rewireAddProbability, string type);
 
     // declare member functions of class Clustered_Random_Network 

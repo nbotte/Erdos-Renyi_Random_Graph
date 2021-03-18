@@ -103,9 +103,9 @@ void Watts_Strogatz_Network::rewire(){
                 if (r < _rewireProb){
                     // make sure to compile with c++17 (than sample will not give a problem)
                     // choose a random node that is not equal to i and that is not a neighbor of i
-                    sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
+                    sample(_nodelist.begin() + _indexStart, _nodelist.begin() + _indexStart + _numberOfNodes, back_inserter(out), nelem, mt19937{random_device{}()});
                     while (out.back().index() == i || _nodelist[i].containsNeigh(out.back().index())){
-                        sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
+                        sample(_nodelist.begin() + _indexStart, _nodelist.begin() + _indexStart + _numberOfNodes, back_inserter(out), nelem, mt19937{random_device{}()});
                     }
                     _nodelist[i].addHelpNeigh(out.back().index());
                 }

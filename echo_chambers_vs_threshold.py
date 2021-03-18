@@ -24,19 +24,19 @@ echoSBM06 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=06.txt")
 echoSBM07 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=07.txt")
 echoSBM08 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=08.txt")
 echoSBM09 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=09.txt")
-echoSBM1 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=1.txt")
+echoSBM1 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=1.txt")'''
 
-echoSBML0 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=0.txt")
-echoSBML01 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=01.txt")
-echoSBML02 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=02.txt")
-echoSBML03 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=03.txt")
-echoSBML04 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=04.txt")
-echoSBML05 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=05.txt")
-echoSBML06 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=06.txt")
-echoSBML07 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=07.txt")
-echoSBML08 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=08.txt")
-echoSBML09 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=09.txt")
-echoSBML1 = np.loadtxt("Echo_chamber_SBM_REC_006-0007_100x10_T=1.txt")'''
+echoSBML0 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=0.txt")
+echoSBML01 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=01.txt")
+echoSBML02 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=02.txt")
+echoSBML03 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=03.txt")
+echoSBML04 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=04.txt")
+echoSBML05 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=05.txt")
+echoSBML06 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=06.txt")
+echoSBML07 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=07.txt")
+echoSBML08 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=08.txt")
+echoSBML09 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=09.txt")
+echoSBML1 = np.loadtxt("Echo_chamber_SBM_REC_003-0008_10x100_majT=1.txt")
 
 '''echoER0 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_ER_PR_001_res=0.txt")
 echoER02 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_ER_PR_001_res=02.txt")
@@ -89,11 +89,11 @@ echoWS[10] = np.mean(echoWS1[:,2])'''
 
 echoSBMH = np.zeros(11)
 
-echoSBMH[0] = np.mean(echoSBMH0[:,2])
+echoSBMH[0] = echoSBMH0[:,2][-1]
 echoSBMH[1] = np.mean(echoSBMH01[:,2])
-echoSBMH[2] = np.mean(echoSBMH02[:,2])
+echoSBMH[2] = echoSBMH02[:,2][-1]
 echoSBMH[3] = np.mean(echoSBMH03[:,2])
-echoSBMH[4] = np.mean(echoSBMH04[:,2])
+echoSBMH[4] = echoSBMH04[:,2][0]
 echoSBMH[5] = np.mean(echoSBMH05[:,2])
 echoSBMH[6] = np.mean(echoSBMH06[:,2])
 echoSBMH[7] = np.mean(echoSBMH07[:,2])
@@ -113,7 +113,7 @@ echoSBM[6] = echoSBM06[:,2][-1]
 echoSBM[7] = np.mean(echoSBM07[:,2])
 echoSBM[8] = np.mean(echoSBM08[:,2])
 echoSBM[9] = np.mean(echoSBM09[:,2])
-echoSBM[10] = np.mean(echoSBM1[:,2])
+echoSBM[10] = np.mean(echoSBM1[:,2])'''
 
 echoSBML = np.zeros(11)
 
@@ -127,7 +127,7 @@ echoSBML[6] = np.mean(echoSBML06[:,2])
 echoSBML[7] = np.mean(echoSBML07[:,2])
 echoSBML[8] = np.mean(echoSBML08[:,2])
 echoSBML[9] = np.mean(echoSBML09[:,2])
-echoSBML[10] = np.mean(echoSBML1[:,2])'''
+echoSBML[10] = np.mean(echoSBML1[:,2])
 
 
 
@@ -197,15 +197,15 @@ plt.plot(threshold, y, 'k--')
 '''plt.plot(xfSBM, func_quad(xfSBM, *poptSBM), 'g--')
 plt.plot(xfSBM1, func_lin(xfSBM1, *poptSBM1), 'g--')
 plt.plot(xfSBM2, func_quad(xfSBM2, *poptSBM2), 'g--')
-plt.errorbar(threshold, echoSBM, SBMerrREC, c='g', fmt='o', label = r'SBM, 50x20, $p_{cl} = 0.25; p_{add} = 0.0025$, medium mod')
+plt.errorbar(threshold, echoSBM, SBMerrREC, c='g', fmt='o', label = r'SBM, 50x20, $p_{cl} = 0.25; p_{add} = 0.0025$, medium mod')'''
 
-#plt.plot(threshold, echoSBML, 'yo', label = r'SBM, 100x10, $p_{cl} = 0.06; p_{add} = 0.007$, low mod')
-plt.plot(xfSBML, func_quad(xfSBML, *poptSBML), 'y--')
+plt.plot(threshold, echoSBML, 'yo', label = r'SBM, 10x100, $p_{cl} = 0.03; p_{add} = 0.008$, low mod')
+'''plt.plot(xfSBML, func_quad(xfSBML, *poptSBML), 'y--')
 plt.plot(xfSBML1, func_lin(xfSBML1, *poptSBML1), 'y--')
 plt.plot(xfSBML2, func_quad(xfSBML2, *poptSBML2), 'y--')
 plt.errorbar(threshold, echoSBML, SBMLerrREC, c='y', fmt='o', label = r'SBM, 100x10, $p_{cl} = 0.06; p_{add} = 0.007$, low mod')'''
 
-#plt.ylim(0, 40)
+plt.ylim(0, 105)
 plt.xlabel("Threshold to change opinion")
 plt.ylabel("Fraction of nodes with all neigbors having the same opinion \n(echo chamber size)")
 plt.legend(loc='upper right')

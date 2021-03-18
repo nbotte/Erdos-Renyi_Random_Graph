@@ -12,7 +12,7 @@ using namespace std;
 #ifndef ERDOSRENYI_H
 #define ERDOSRENYI_H
 
-class Erdos_Renyi_Network : public Graph{
+class Erdos_Renyi_Network : virtual public Graph{
 public:
 
     double _edgeProbability; // the probablility of having an edge between any pair of nodes

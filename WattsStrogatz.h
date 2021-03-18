@@ -12,7 +12,7 @@ using namespace std;
 #ifndef WATTSSTROGATZ_H
 #define WATTSSTROGATZ_H
 
-class Watts_Strogatz_Network : public Graph{
+class Watts_Strogatz_Network : virtual public Graph{
 public:
     // maybe I want the variables private, not sure yet
     int _meanDegree; // the mean degree of the network, should be an even integer (N >> K >> ln(N))
