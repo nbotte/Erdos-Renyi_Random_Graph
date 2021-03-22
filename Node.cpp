@@ -116,7 +116,7 @@ void Node::changeOpinion(){
     uniform_real_distribution<> dis(0.0, 1.0);
 
     double o = dis(gen); // generate a random number that will determine the new opinion of the node (see paper 8)
-    double r = dis(gen); // generate a random number that will if the resistant node changes its opinion or not
+    double r = dis(gen); // generate a random number that will determine if the resistant node changes its opinion or not
 
     // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
     if (_active){
@@ -141,7 +141,7 @@ void Node::changeOpinion(){
             //cout << fraction0 << ' ' << fraction1 << endl;
 
             // if fraction0 and fraction1 are both higher than the threshold to change opinion, you change to opinion 0 or 1 with a probability equal to the corresponding fraction
-            if (fraction0 > _threshold && fraction1 > _threshold){    
+            /*if (fraction0 > _threshold && fraction1 > _threshold){    
                 if (o < fraction0){
                     _opinion = 0;
                 }
@@ -162,8 +162,8 @@ void Node::changeOpinion(){
             }
             // if both fraction are under the threshold, you don't change your opinion 
             else if (fraction1 <= _threshold && fraction0 <= _threshold){
-                _opinion = _opinion;
-            }
+                _opinion = _opinion;PR
+            }*/
 
             // majority model with threshold 
           /*  if (fraction0 > fraction1 && fraction0 > _threshold){
@@ -175,6 +175,58 @@ void Node::changeOpinion(){
             else{
                 _opinion = _opinion;
             }*/
+
+            // my probabilistic threshold model
+           /* if (_opinion == 0){
+                // check if fraction of friends with the other opinion is higher than your threshold to switch to that opinion
+                if (fraction1 > _threshold){
+                    // change with a probability equal to fraction1 to the other opinion
+                    if (o < fraction1){
+                        _opinion = 1;
+                    }
+                    else{
+                        _opinion = _opinion;
+                    }
+                }
+                else{
+                    _opinion = _opinion;
+                }
+            }
+            else if (_opinion == 1){
+                // check if fraction of friends with the other opinion is higher than your threshold to switch to that opinion
+                if (fraction0 > _threshold){
+                    // change with a probability equal to fraction0 to the other opinion
+                    if (o < fraction0){
+                        _opinion = 0;
+                    }
+                    else{
+                        _opinion = _opinion;
+                    }
+                }
+                else{
+                    _opinion = _opinion;
+                }
+            }*/
+            // probabilistic model with all nodes having some fraction of stubbornness
+            if (o < fraction0){
+                if (r > _resistance){
+                    _opinion = 0;
+                }
+                else{
+                    _opinion = _opinion;
+                }
+            }
+            else if (o < fraction0 + fraction1){
+                if (r > _resistance){
+                    _opinion = 1;
+                }
+                else{
+                    _opinion = _opinion;
+                }
+            }
+            else{
+                _opinion = _opinion;
+            }
         }      
         
     }
