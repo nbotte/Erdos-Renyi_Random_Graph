@@ -80,17 +80,22 @@ bool Graph::checkEdge(Node u, Node v){
 // function that calculates the local clustering of a node
 double Graph::localClustering(Node n){
     int triangles = 0;
+    double localClus = 0;
     // check if there is an edge between any pair of neighbours
-    for (int index : n.neigh()){
-        for (int index2 : n.neigh()){
-            if (index2 != index){
-                if (checkEdge(_nodelist[index], _nodelist[index2]) || checkEdge(_nodelist[index2], _nodelist[index])){
-                    triangles++;
+    if (n.neigh().size() > 1){
+        for (int index : n.neigh()){
+            for (int index2 : n.neigh()){
+                if (index2 != index){
+                    if (checkEdge(_nodelist[index], _nodelist[index2]) || checkEdge(_nodelist[index2], _nodelist[index])){
+                        triangles++;
+                    }
                 }
             }
         }
+        localClus = double(triangles)/(double(n.neigh().size())*(double(n.neigh().size())-1));
+        cout << localClus << endl;
     }
-    double localClus = double(triangles)/(double(n.neigh().size())*(double(n.neigh().size())-1));
+    cout << localClus << endl;
     return localClus;
 }
 
@@ -100,6 +105,7 @@ double Graph::averageClustering(){
     for (int u = 0; u < _nodelist.size(); u++){
         clustering += localClustering(_nodelist[u]);
     }
+    cout << _nodelist.size() << ' ' << clustering << endl;
     return clustering/_nodelist.size();
 }
 
