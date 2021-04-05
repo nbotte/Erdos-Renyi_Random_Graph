@@ -20,6 +20,7 @@ class Clustered_Random_Network : public Erdos_Renyi_Network, public Watts_Stroga
     vector<int> _clusterSizes; // vector that contains the number of nodes for each cluster (sum should equal totalNumberOfNodes)
     vector<double> _edgeProbs; // vector that contains the edge probabilities for each cluster
     vector<int> _meanDegrees; // vector that contains the mean degrees of each constituent WS model (needed for SBM-WS)
+    vector<vector<int>> _clusters; // vector of vector, contains the communities
     double _rewireAddProbability; // probability of rewireing or adding edges between clusters (whether you rewire or add depends on 'type' parameter in constructor)
     string _type; // tells whether you rewire or you add edges to make the clustered graph 
     bool _ER; // boolean that tells whether we are making SBM-ER or not
@@ -32,6 +33,9 @@ public:
     // define a constructor for SBM-WS
     Clustered_Random_Network(int totalNumberOfNodes, vector<int> clusterSizes, vector<double> edgeProbs, vector<int> meanDegrees, double rewireAddProbability, string type);
 
+    // getters
+    vector<vector<int>> clusters() const;
+
     // declare member functions of class Clustered_Random_Network 
     vector<int> makeErdosRenyi(int numberOfNodes, double edgeProb, double initOp0Frac, int indexStart, int cluster); // function that makes an ER-graph + returns a vector with the indices of the nodes in that cluster
     vector<int> makeWattsStrogatz(int numberOfNodes, int meanDegree, double beta, double initOp0Frac, int indexStart, int cluster); // function that makes an WS-graph + returns a vector with the indices of the nodes in that cluster
@@ -40,6 +44,7 @@ public:
     void addEdges(vector<vector<int>>); // function that adds edges between clusters
     void makeRandomCommunityFractionStubborn(double fractionResistant); // function that makes a random fraction of communities stubborn
     double calculateModularity(); // function that calculates the modularity of the SBM (based on the clusters that construct the model!) (returns the calculated modularity)
+    double calculateModularityTest(vector<vector<int>> clusters);
     void setCommunityOpinion(double frac0, int cluster, int indexStart); // function that gives opinion to nodes in a community (possible to give opinions according to any distribution you want); argument are opinion distribution and int that determines which community we are talking about + indexStart that determines corresponding position of nodes in nodelist
 
     vector<double> countOpinionFractionCluster(int clusterNumber); // count the fractions of opinions in a particular cluster of the clustered graph

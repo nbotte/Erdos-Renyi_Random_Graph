@@ -39,6 +39,8 @@ Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, vecto
     makeGraph();
 }
 
+vector<vector<int>> Clustered_Random_Network::clusters() const {return _clusters;}
+
 Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, vector<int> clusterSizes, vector<double> edgeProbs, vector<int> meanDegrees, double rewireAddProbability, string type){
     _totalNumberOfNodes = totalNumberOfNodes; // total number of nodes in the clustered graph
     _clusterSizes = clusterSizes; // vector that contains the number of nodes for each cluster (sum should equal totalNumberOfNodes)
@@ -56,7 +58,6 @@ Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, vecto
 void Clustered_Random_Network::makeGraph(){
     // is there a nicer way to give indexStart a value?
     vector<int> cluster;
-    vector<vector<int>> clusters;
     int indexStart = 0;
     for (int i = 0; i < _clusterSizes.size(); i++){
         if (_ER == true && _WS == false){
@@ -65,17 +66,17 @@ void Clustered_Random_Network::makeGraph(){
         else if (_ER == false && _WS == true){
             cluster = makeWattsStrogatz(_clusterSizes[i], _meanDegrees[i], _edgeProbs[i], 0.5, indexStart, i);
         }
-        clusters.push_back(cluster);
+        _clusters.push_back(cluster);
         indexStart += _clusterSizes[i];
     }
 
     if (_type == "rewire"){
         // rewire edges
-        rewireEdges(clusters);
+        rewireEdges(_clusters);
     }
     else if (_type == "add"){
         // add edges between clusters
-        addEdges(clusters);
+        addEdges(_clusters);
     }
     else{
         cout << "Error: type not equal to one of the two possibilities 'rewire' or 'add'" << endl;
@@ -289,5 +290,31 @@ double Clustered_Random_Network::calculateModularity(){
     }
     // this is needed to add the modularity of the last cluster as well
     mod += (double(L_c)/double(L) - pow(double(k_c)/double(2*L), 2));
+    return mod;
+}
+
+// function that calculates the modularity (returns the calculated modularity)
+double Clustered_Random_Network::calculateModularityTest(vector<vector<int>> communities){
+    double mod = 0.; // total modularity
+    int L_c = 0; // total number of links in community C
+    int k_c = 0; // total degree of nodes in community C
+    int L = numberOfEdges(); // total number of links in graph
+    // loop over all communities
+    for (int i = 0; i < communities.size(); i++){
+        // for each community loop over all the constituent nodes
+        for (int j = 0; j < communities[i].size(); j++){
+            int index = communities[i][j];
+            for (int neigh : _nodelist[index].neigh()){
+                k_c++; // calculate the total degree of nodes in the community
+                // check if neigh is also in the community: if so, add the edge, if not, don't add the edge
+                if (find(communities[i].begin(), communities[i].end(), neigh) != communities[i].end()){
+                    L_c++;
+                }
+            }
+        }
+        mod += (double(L_c)/double(2*L) - pow(double(k_c)/double(2*L), 2));
+        L_c = 0;
+        k_c = 0;
+    }
     return mod;
 }

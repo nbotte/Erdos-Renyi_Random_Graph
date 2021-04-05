@@ -93,9 +93,7 @@ double Graph::localClustering(Node n){
             }
         }
         localClus = double(triangles)/(double(n.neigh().size())*(double(n.neigh().size())-1));
-        cout << localClus << endl;
     }
-    cout << localClus << endl;
     return localClus;
 }
 
@@ -105,7 +103,6 @@ double Graph::averageClustering(){
     for (int u = 0; u < _nodelist.size(); u++){
         clustering += localClustering(_nodelist[u]);
     }
-    cout << _nodelist.size() << ' ' << clustering << endl;
     return clustering/_nodelist.size();
 }
 

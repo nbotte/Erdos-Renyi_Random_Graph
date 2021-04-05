@@ -3,10 +3,10 @@ import networkx as nx
 from networkx.algorithms.community import greedy_modularity_communities
 import networkx.algorithms.community as nx_comm
 
-data = np.loadtxt('facebook_data.txt')
+data = np.loadtxt('lastfm_fin_edgelist.txt')
 
 G = nx.Graph()
-for i in range(4039):
+for i in range(8003):
     G.add_node(i)
 
 edge = np.zeros(2)
@@ -17,4 +17,11 @@ for i in range(len(data[:,0])):
 
 c = list(greedy_modularity_communities(G))
 mod = nx_comm.modularity(G, c)
+clus = nx.average_clustering(G)
 print(mod)
+print(clus)
+
+'''f = open("Communities_real_network.txt", "w+")
+for comm in c:
+    f.write(repr(comm) + "\n")
+f.close()'''

@@ -21,6 +21,11 @@ public:
 
     // declare member functions of class Real_World_Network
     void makeGraph(); // function that generates the corresponding real-world graph
+
+    double commDetection(); // function that performs a community detection, returns the max value of the modularity (modularity of best community division)
+    double calculateModularity(vector<vector<int>> communities); // function that calculates the modularity (returns the calculated modularity)
+    double calculateModularityChange(vector<int> commA, vector<int> commB); // funtcion that calculates the modularity change after merging the two communities A and B
+
 };
 
 #endif
