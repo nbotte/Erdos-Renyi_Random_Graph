@@ -1,6 +1,6 @@
 import numpy as np
 
-xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_REC_007-0004_10x100_fracRes=0_stubb=0_xvalues.txt")
+xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-006_fracRes=09_stubb=1_xvalues.txt")
 
 xAt0op0 = xvalues[:,0]
 xAt0op1 = xvalues[:,1]
