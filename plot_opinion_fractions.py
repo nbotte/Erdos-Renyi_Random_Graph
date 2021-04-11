@@ -85,7 +85,7 @@ sns.set_theme(font="DejaVu Serif", rc=rc_params, style="whitegrid", context="pap
 
 fig, ax = subplots(figsize=(8, 7))
 
-ax.errorbar(t[::50], fractions1[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'High mod, PR')
+ax.errorbar(t[::50], fractions1[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'WS, $N=10000,\ K = 6$')
 #ax.errorbar(t[::50], fractions2[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'Low mod, PR')
 #ax.errorbar(t[::50], fractions3[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'High mod, REC')
 #ax.errorbar(t[::50], fractions4[:,0][::50], np.sqrt(fractions4[:,2][::50]), label=r'Low mod, REC')
@@ -102,7 +102,7 @@ ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 ax.set_ylim(-0.05, 0.5)
 #ax.set_title('WS', fontsize=10)
 plt.tight_layout()
-plt.savefig("fraction_of_opinions_WS_10000-6_003-0008_PR_REC_20-80_8x7.png", dpi=500)
+plt.savefig("fraction_of_opinions_WS_10000-6_PR_20-80_8x7.png", dpi=500)
 plt.show()
 
 """fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))

@@ -1,6 +1,6 @@
 import numpy as np
 
-xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-006_fracRes=09_stubb=1_xvalues.txt")
+xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_REF_01-0001_10x100_fracRes=06_stubb=1_xvalues.txt")
 
 xAt0op0 = xvalues[:,0]
 xAt0op1 = xvalues[:,1]
@@ -29,11 +29,11 @@ print(stdAt0op0, stdAt0op1, stdAt500op0, stdAt500op1)
 X = xAt500op0
 X00Float = xAt0op0.astype(np.float) # convert elements to float (needed for np.reciprocal)
 
-Y = np.reciprocal(X00Float, where=X00Float!=0., dtype=float)
+Y = np.reciprocal(X00Float, where=X00Float!=0.0, dtype=float)
 
 X1 = xAt500op1
 X01Float = xAt0op1.astype(np.float)
-Y1 = np.reciprocal(X01Float, where=X01Float!=0., dtype=float)
+Y1 = np.reciprocal(X01Float, where=X01Float!=0.0, dtype=float)
 
 E_x = np.mean(X)
 E_y = np.mean(Y)
@@ -56,8 +56,8 @@ StdY1 = np.std(Y1)
 print(E_x, E_y, StdX, StdY)
 
 '''for i in range(len(Y)):
-    print(xAt0op0[i])
-    print(Y[i])'''
+    print(X01Float[i])
+    print(Y1[i])'''
 
 X2 = np.square(X)
 Y2 = np.square(Y)
