@@ -1,6 +1,6 @@
 import numpy as np
 
-xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-006_majT=1_xvalues.txt")
+xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_ER_REC_001_fracRes=08_stubb=1_20-80_xvalues.txt")
 
 xAt0op0 = xvalues[:,0]
 xAt0op1 = xvalues[:,1]
@@ -27,13 +27,24 @@ print(meanAt0op0, meanAt0op1, meanAt500op0, meanAt500op1)
 print(stdAt0op0, stdAt0op1, stdAt500op0, stdAt500op1)
 
 X = xAt500op0
-X00Float = xAt0op0.astype(np.float) # convert elements to float (needed for np.reciprocal)
+X00Float = xAt0op0.astype(float) # convert elements to float (needed for np.reciprocal)
 
-Y = np.reciprocal(X00Float, where=X00Float!=0.0, dtype=float)
+Y = np.reciprocal(X00Float, where=X00Float!=0., dtype=float)
 
 X1 = xAt500op1
-X01Float = xAt0op1.astype(np.float)
-Y1 = np.reciprocal(X01Float, where=X01Float!=0.0, dtype=float)
+X01Float = xAt0op1.astype(float)
+Y1 = np.reciprocal(X01Float, where=X01Float!=0., dtype=float)
+
+for i in range(len(Y)):
+    if Y[i] > 1000.:
+        Y[i] = 0.
+    if Y[i] < 0.00000001:
+        Y[i] = 0.
+for i in range(len(Y1)):
+    if Y1[i] > 1000.:
+        Y1[i] = 0.
+    if Y1[i] < 0.00000001:
+        Y1[i] = 0.
 
 E_x = np.mean(X)
 E_y = np.mean(Y)

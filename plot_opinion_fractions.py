@@ -62,10 +62,10 @@ def get_latex_preamble(use_libertine=True, use_fontenc=True, use_inputenc=True, 
             raise ValueError(f"Unsupported type of package: {type(package)}!")
     return preamble
 
-fractions1 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_WS_PR_10000-6-001_fracRes=0_stubb=0_20-80.txt')
-#fractions2 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_PR_003-0008_10x100_fracRes=0_stubb=0_20-80.txt')
-#fractions3 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_REC_01-0001_10x100_fracRes=0_stubb=0_20-80.txt')
-#fractions4 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_REC_003-0008_10x100_fracRes=0_stubb=0_20-80.txt')
+fractions1 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM-WS_REC_10-001-0001_10x100_majT=0_one_sim.txt')
+fractions2 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM-WS_PR_10-001-0001_10x100_majT=0_one_sim.txt')
+#fractions3 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_PR_01-0001_10x100_majT=0_one_sim.txt')
+#fractions4 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_PR_003-0008_10x100_majT=0_one_sim.txt')
 
 #fractions_sameComm02 = np.loadtxt('Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=01_other=44-56_PR_01-0001_10x100_T=0_sameComm.txt')
 #fractions_PR = np.loadtxt('Fraction_of_opinions_Clustered_Cluster5_01-0001_50_50_no_stubb_paper8_active_01_av_good_init_PR.txt')
@@ -78,17 +78,17 @@ y = np.zeros(500)
 
 for i in range(len(t)):
     t[i] = i
-    y[i] = 0.2
+    y[i] = 0.5
 
 rc_params = get_rc_params(latex_preamble=get_latex_preamble(use_libertine=True))
 sns.set_theme(font="DejaVu Serif", rc=rc_params, style="whitegrid", context="paper")
 
 fig, ax = subplots(figsize=(8, 7))
 
-ax.errorbar(t[::50], fractions1[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'WS, $N=10000,\ K = 6$')
-#ax.errorbar(t[::50], fractions2[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'Low mod, PR')
-#ax.errorbar(t[::50], fractions3[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'High mod, REC')
-#ax.errorbar(t[::50], fractions4[:,0][::50], np.sqrt(fractions4[:,2][::50]), label=r'Low mod, REC')
+ax.errorbar(t[::50], fractions1[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'REC')
+ax.errorbar(t[::50], fractions2[:,1][::50], np.sqrt(fractions2[:,2][::50]), label=r'PR')
+#ax.errorbar(t[::50], fractions3[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'High mod, PR')
+#ax.errorbar(t[::50], fractions4[:,1][::50], np.sqrt(fractions4[:,2][::50]), label=r'Low mod, PR')
 #plt.plot(t[::10], fractions_sameComm02[:,0][::10], label='0.4 community opinion 0 (same comm.), other 50/50; REC')
 ax.plot(t[::10], y[::10], 'k--')
 #plt.plot(t, fractions_25_av[:,0], label='Stubborness = 0.25')
@@ -96,13 +96,13 @@ ax.plot(t[::10], y[::10], 'k--')
 ax.set_xlabel(r"Time $t$", fontsize=10)
 ax.set_ylabel(r"Fraction of opinion 0 ($P_0(t)$)", fontsize=10)
 ax.tick_params(labelsize=10)
-legend = ax.legend(loc='upper right')
+legend = ax.legend(loc='upper left')
 legend.get_frame().set_linewidth(0.0)
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-ax.set_ylim(-0.05, 0.5)
+ax.set_ylim(0, 1)
 #ax.set_title('WS', fontsize=10)
 plt.tight_layout()
-plt.savefig("fraction_of_opinions_WS_10000-6_PR_20-80_8x7.png", dpi=500)
+plt.savefig("fraction_of_opinions_SBM-WS_majT=0_one_sim_8x7.png", dpi=500)
 plt.show()
 
 """fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))

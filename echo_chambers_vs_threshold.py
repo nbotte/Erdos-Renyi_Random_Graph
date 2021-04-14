@@ -64,17 +64,17 @@ def get_latex_preamble(use_libertine=True, use_fontenc=True, use_inputenc=True, 
             raise ValueError(f"Unsupported type of package: {type(package)}!")
     return preamble
 
-echoSBMH0 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=0.txt")
-echoSBMH01 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=01.txt")
-echoSBMH02 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=02.txt")
-echoSBMH03 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=03.txt")
-echoSBMH04 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=04.txt")
-echoSBMH05 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=05.txt")
-echoSBMH06 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=06.txt")
-echoSBMH07 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=07.txt")
-echoSBMH08 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=08.txt")
-echoSBMH09 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=09.txt")
-echoSBMH1 = np.loadtxt("Echo_chamber_SBM_PR_01-0001_10x100_majT=1.txt")
+'''echoSBMH0 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=0.txt")
+echoSBMH01 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=01.txt")
+echoSBMH02 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=02.txt")
+echoSBMH03 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=03.txt")
+echoSBMH04 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=04.txt")
+echoSBMH05 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=05.txt")
+echoSBMH06 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=06.txt")
+echoSBMH07 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=07.txt")
+echoSBMH08 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=08.txt")
+echoSBMH09 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=09.txt")
+echoSBMH1 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=1.txt")'''
 
 '''echoSBM0 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=0.txt")
 echoSBM01 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=01.txt")
@@ -88,53 +88,53 @@ echoSBM08 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=08.txt")
 echoSBM09 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=09.txt")
 echoSBM1 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=1.txt")'''
 
-echoSBML0 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=0.txt")
-echoSBML01 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=01.txt")
-echoSBML02 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=02.txt")
-echoSBML03 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=03.txt")
-echoSBML04 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=04.txt")
-echoSBML05 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=05.txt")
-echoSBML06 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=06.txt")
-echoSBML07 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=07.txt")
-echoSBML08 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=08.txt")
-echoSBML09 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=09.txt")
-echoSBML1 = np.loadtxt("Echo_chamber_SBM_PR_003-0008_10x100_majT=1.txt")
+'''echoSBML0 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=0.txt")
+echoSBML01 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=01.txt")
+echoSBML02 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=02.txt")
+echoSBML03 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=03.txt")
+echoSBML04 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=04.txt")
+echoSBML05 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=05.txt")
+echoSBML06 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=06.txt")
+echoSBML07 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=07.txt")
+echoSBML08 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=08.txt")
+echoSBML09 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=09.txt")
+echoSBML1 = np.loadtxt("Echo_chamber_SBM_REF_003-0008_10x100_majT=1.txt")
 
-echoER0 = np.loadtxt("Echo_chamber_ER_PR_001_majT=0.txt")
-echoER01 = np.loadtxt("Echo_chamber_ER_PR_001_majT=01.txt")
-echoER02 = np.loadtxt("Echo_chamber_ER_PR_001_majT=02.txt")
-echoER03 = np.loadtxt("Echo_chamber_ER_PR_001_majT=03.txt")
-echoER04 = np.loadtxt("Echo_chamber_ER_PR_001_majT=04.txt")
-echoER05 = np.loadtxt("Echo_chamber_ER_PR_001_majT=05.txt")
-echoER06 = np.loadtxt("Echo_chamber_ER_PR_001_majT=06.txt")
-echoER07 = np.loadtxt("Echo_chamber_ER_PR_001_majT=07.txt")
-echoER08 = np.loadtxt("Echo_chamber_ER_PR_001_majT=08.txt")
-echoER09 = np.loadtxt("Echo_chamber_ER_PR_001_majT=09.txt")
-echoER1 = np.loadtxt("Echo_chamber_ER_PR_001_majT=1.txt")
+echoER0 = np.loadtxt("Echo_chamber_ER_REF_001_majT=0.txt")
+echoER01 = np.loadtxt("Echo_chamber_ER_REF_001_majT=01.txt")
+echoER02 = np.loadtxt("Echo_chamber_ER_REF_001_majT=02.txt")
+echoER03 = np.loadtxt("Echo_chamber_ER_REF_001_majT=03.txt")
+echoER04 = np.loadtxt("Echo_chamber_ER_REF_001_majT=04.txt")
+echoER05 = np.loadtxt("Echo_chamber_ER_REF_001_majT=05.txt")
+echoER06 = np.loadtxt("Echo_chamber_ER_REF_001_majT=06.txt")
+echoER07 = np.loadtxt("Echo_chamber_ER_REF_001_majT=07.txt")
+echoER08 = np.loadtxt("Echo_chamber_ER_REF_001_majT=08.txt")
+echoER09 = np.loadtxt("Echo_chamber_ER_REF_001_majT=09.txt")
+echoER1 = np.loadtxt("Echo_chamber_ER_REF_001_majT=1.txt")
 
-echoWS0 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=0.txt")
-echoWS01 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=01.txt")
-echoWS02 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=02.txt")
-echoWS03 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=03.txt")
-echoWS04 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=04.txt")
-echoWS05 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=05.txt")
-echoWS06 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=06.txt")
-echoWS07 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=07.txt")
-echoWS08 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=08.txt")
-echoWS09 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=09.txt")
-echoWS1 = np.loadtxt("Echo_chamber_WS_PR_10-006_majT=1.txt")
+echoWS0 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=0.txt")
+echoWS01 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=01.txt")
+echoWS02 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=02.txt")
+echoWS03 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=03.txt")
+echoWS04 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=04.txt")
+echoWS05 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=05.txt")
+echoWS06 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=06.txt")
+echoWS07 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=07.txt")
+echoWS08 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=08.txt")
+echoWS09 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=09.txt")
+echoWS1 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=1.txt")
 
-echoSBMWS0 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=0.txt")
-echoSBMWS01 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=01.txt")
-echoSBMWS02 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=02.txt")
-echoSBMWS03 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=03.txt")
-echoSBMWS04 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=04.txt")
-echoSBMWS05 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=05.txt")
-echoSBMWS06 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=06.txt")
-echoSBMWS07 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=07.txt")
-echoSBMWS08 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=08.txt")
-echoSBMWS09 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=09.txt")
-echoSBMWS1 = np.loadtxt("Echo_chamber_SBM-WS_PR_10-001-0001_10x100_majT=1.txt")
+echoSBMWS0 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=0.txt")
+echoSBMWS01 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=01.txt")
+echoSBMWS02 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=02.txt")
+echoSBMWS03 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=03.txt")
+echoSBMWS04 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=04.txt")
+echoSBMWS05 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=05.txt")
+echoSBMWS06 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=06.txt")
+echoSBMWS07 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=07.txt")
+echoSBMWS08 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=08.txt")
+echoSBMWS09 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=09.txt")
+echoSBMWS1 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=1.txt")'''
 
 def func(x, a, b, c):
     return a*np.exp(b*x) + c
@@ -148,13 +148,13 @@ def func_trip(x, a, b, c, d):
 def func_quad(x, a, b, c):
     return a*x**2 + b*x + c
 
-threshold = np.zeros(11)
-y = np.zeros(11)
-for i in range(11):
+threshold = [0, 0.2, 0.4, 0.6, 0.8, 1]
+y = [1, 1, 1, 1, 1, 1]
+'''for i in range(11):
     threshold[i] = i/10
-    y[i] = 1
+    y[i] = 1'''
 
-echoWS = np.zeros(11)
+'''echoWS = np.zeros(11)
 
 echoWS[0] = np.mean(echoWS0[:,2])
 echoWS[1] = np.mean(echoWS01[:,2])
@@ -166,11 +166,12 @@ echoWS[6] = np.mean(echoWS06[:,2])
 echoWS[7] = np.mean(echoWS07[:,2])
 echoWS[8] = np.mean(echoWS08[:,2])
 echoWS[9] = np.mean(echoWS09[:,2])
-echoWS[10] = np.mean(echoWS1[:,2])
+echoWS[10] = np.mean(echoWS1[:,2])'''
 
-errWS = [22, 25.5, 17.5, 15, 22, 20.5, 16, 14, 5.5, 3, 2]
+echoWS = [1.91, 2.41, 2.02, 1.6, 1.27, 1]
+errWS = [0.49, 0.46, 0.3, 0.23, 0.18, 0.18]
 
-echoSBMH = np.zeros(11)
+'''echoSBMH = np.zeros(11)
 
 echoSBMH[0] = np.mean(echoSBMH0[:,2])
 echoSBMH[1] = np.mean(echoSBMH01[:,2])
@@ -182,11 +183,12 @@ echoSBMH[6] = np.mean(echoSBMH06[:,2])
 echoSBMH[7] = np.mean(echoSBMH07[:,2])
 echoSBMH[8] = np.mean(echoSBMH08[:,2])
 echoSBMH[9] = np.mean(echoSBMH09[:,2])
-echoSBMH[10] = np.mean(echoSBMH1[:,2])
+echoSBMH[10] = np.mean(echoSBMH1[:,2])'''
 
-errSBMH = [13.65, 12.78, 14.9, 12.67, 15.07, 12.39, 7.07, 2.21, 1.6, 1.33, 1]
+echoSBMH = [1.32, 1.33, 1.18, 1.09, 1.04, 1]
+errSBMH = [0.51, 0.31, 0.3, 0.21, 0.14, 0.14]
 
-echoER = np.zeros(11)
+'''echoER = np.zeros(11)
 
 echoER[0] = np.mean(echoER0[:,2])
 echoER[1] = np.mean(echoER01[:,2])
@@ -198,11 +200,12 @@ echoER[6] = np.mean(echoER06[:,2])
 echoER[7] = np.mean(echoER07[:,2])
 echoER[8] = np.mean(echoER08[:,2])
 echoER[9] = np.mean(echoER09[:,2])
-echoER[10] = np.mean(echoER1[:,2])
+echoER[10] = np.mean(echoER1[:,2])'''
 
-errER = [1.97, 2, 1.77, 2.02, 1.89, 1.65, 1.29, 1.02, 0.97, 1.02, 0.81]
+echoER = [1.13, 1.05, 1.09, 1.02, 1.02, 1]
+errER = [0.46, 0.28, 0.21, 0.17, 0.22, 0.22]
 
-echoSBML = np.zeros(11)
+'''echoSBML = np.zeros(11)
 
 echoSBML[0] = np.mean(echoSBML0[:,2])
 echoSBML[1] = np.mean(echoSBML01[:,2])
@@ -214,11 +217,12 @@ echoSBML[6] = np.mean(echoSBML06[:,2])
 echoSBML[7] = np.mean(echoSBML07[:,2])
 echoSBML[8] = np.mean(echoSBML08[:,2])
 echoSBML[9] = np.mean(echoSBML09[:,2])
-echoSBML[10] = np.mean(echoSBML1[:,2])
+echoSBML[10] = np.mean(echoSBML1[:,2])'''
 
-errSBML = [2.73, 2.05, 2.68, 1.34, 2.15, 1.62, 1.29, 1.17, 1.23, 1.03, 1.13]
+echoSBML = [1.1, 1.12, 1.06, 1.06, 1, 1]
+errSBML = [0.38, 0.33, 0.23, 0.23, 0.15, 0.15]
 
-echoSBMWS = np.zeros(11)
+'''echoSBMWS = np.zeros(11)
 
 echoSBMWS[0] = np.mean(echoSBMWS0[:,2])
 echoSBMWS[1] = np.mean(echoSBMWS01[:,2])
@@ -230,9 +234,10 @@ echoSBMWS[6] = np.mean(echoSBMWS06[:,2])
 echoSBMWS[7] = np.mean(echoSBMWS07[:,2])
 echoSBMWS[8] = np.mean(echoSBMWS08[:,2])
 echoSBMWS[9] = np.mean(echoSBMWS09[:,2])
-echoSBMWS[10] = np.mean(echoSBMWS1[:,2])
+echoSBMWS[10] = np.mean(echoSBMWS1[:,2])'''
 
-errSBMWS = [15.5, 16.5, 22.5, 17, 20.5, 13.5, 15, 8.5, 3.5, 2, 1.5]
+echoSBMWS = [1.69, 2.4, 1.98, 1.73, 1.31, 1]
+errSBMWS = [0.56, 0.47, 0.33, 0.28, 0.22, 0.22]
 
 '''poptWS, pcovWS = curve_fit(func_quad, threshold[:3], echoWS[:3])
 print(poptWS)
@@ -286,21 +291,21 @@ SBMLerrREC = [0.5/10, 0.6/10, 22.1/10, 22.1/10, 23/10, 24.6/10, 21/10, 23.4/10, 
 rc_params = get_rc_params(latex_preamble=get_latex_preamble(use_libertine=True))
 sns.set_theme(font="DejaVu Serif", rc=rc_params, style="whitegrid", context="paper")
 
-fig, ax = subplots(figsize=(12, 10))
+fig, ax = subplots(figsize=(8, 7))
 #ax.plot(threshold, echoWS, 'ro', label = r'WS, $K = 10; \beta = 0.06; clus \sim 0.55$')
 
 '''plt.plot(xfWS, func_quad(xfWS, *poptWS), 'r--')
 plt.plot(xfWS1, func_lin(xfWS1, *poptWS1), 'r--')
 plt.plot(xfWS2, func_quad(xfWS2, *poptWS2), 'r--')'''
-ax.errorbar(threshold, echoWS, yerr=np.array(errWS), xerr=None, c='r', fmt='o', label = r'WS')
+ax.errorbar(threshold, echoWS, yerr=np.array(errWS)/10., xerr=None, c='r', fmt='o', label = r'WS')
 
 #ax.plot(threshold, echoSBMH, 'bo', label = r'SBM, 10x100, $p_{cl} = 0.1; p_{add} = 0.001; clus \sim 0.08; mod \sim 0.9$')
 '''plt.plot(xfSBMH, func(xfSBMH, *poptSBMH), 'b--')
 plt.plot(xfSBMH1, func_lin(xfSBMH1, *poptSBMH1), 'b--')
 plt.plot(xfSBMH2, func_quad(xfSBMH2, *poptSBMH2), 'b--')'''
-ax.errorbar(threshold, echoSBMWS, yerr=np.array(errSBMWS), xerr=None, c='b', fmt='o', label = r'SBM-WS')
+ax.errorbar(threshold, echoSBMWS, yerr=np.array(errSBMWS)/10., xerr=None, c='b', fmt='o', label = r'SBM-WS')
 
-ax.errorbar(threshold, echoSBMH, yerr=np.array(errSBMH), xerr=None, c='m', fmt='o', label = r'SBM, high mod')
+ax.errorbar(threshold, echoSBMH, yerr=np.array(errSBMH)/10., xerr=None, c='m', fmt='o', label = r'SBM, high mod')
 
 ax.plot(threshold, y, 'k--')
 
@@ -313,17 +318,17 @@ plt.plot(xfSBM2, func_quad(xfSBM2, *poptSBM2), 'g--')'''
 '''plt.plot(xfSBML, func_quad(xfSBML, *poptSBML), 'y--')
 plt.plot(xfSBML1, func_lin(xfSBML1, *poptSBML1), 'y--')
 plt.plot(xfSBML2, func_quad(xfSBML2, *poptSBML2), 'y--')'''
-ax.errorbar(threshold, echoSBML, yerr=np.array(errSBML), xerr=None, c='y', fmt='o', label = r'SBM, low mod')
+ax.errorbar(threshold, echoSBML, yerr=np.array(errSBML)/10., xerr=None, c='y', fmt='o', label = r'SBM, low mod')
 
-ax.errorbar(threshold, echoER, yerr=np.array(errER), xerr=None, c='g', fmt='o', label = r'ER')
+ax.errorbar(threshold, echoER, yerr=np.array(errER)/10., xerr=None, c='g', fmt='o', label = r'ER')
 
-#ax.set_ylim(0, 35)
-ax.set_xlabel(r"Threshold $T$", fontsize=10)
+ax.set_ylim(0, 3.75)
+ax.set_xlabel(r"Fraction of stubborn nodes ($r_i = 1$), fracRes", fontsize=10)
 ax.set_ylabel("Echo chamber size", fontsize=10)
 ax.tick_params(labelsize=10)
 legend = ax.legend(loc='upper right')
 legend.get_frame().set_linewidth(0.0)
 #ax.set_title('Size of echo chamber versus stubbornness to change opinion, 50/50\n N = 1000, PR method \n10 x 10 averaged', fontsize=10)
 plt.tight_layout()
-plt.savefig("echo_chamber_vs_threshold_PR_12x10.png", dpi=500)
+plt.savefig("echo_chamber_vs_frac_compl_stubb_REC_20-80_8x7.png", dpi=500)
 plt.show()
