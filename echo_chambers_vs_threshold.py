@@ -168,8 +168,8 @@ echoWS[8] = np.mean(echoWS08[:,2])
 echoWS[9] = np.mean(echoWS09[:,2])
 echoWS[10] = np.mean(echoWS1[:,2])'''
 
-echoWS = [1.91, 2.41, 2.02, 1.6, 1.27, 1]
-errWS = [0.49, 0.46, 0.3, 0.23, 0.18, 0.18]
+echoWS = [1.92, 2.24, 2.24, 2.73, 3.1, 1]
+errWS = [0.49, 0.6, 0.59, 0.59, 0.6, 0.6]
 
 '''echoSBMH = np.zeros(11)
 
@@ -185,8 +185,8 @@ echoSBMH[8] = np.mean(echoSBMH08[:,2])
 echoSBMH[9] = np.mean(echoSBMH09[:,2])
 echoSBMH[10] = np.mean(echoSBMH1[:,2])'''
 
-echoSBMH = [1.32, 1.33, 1.18, 1.09, 1.04, 1]
-errSBMH = [0.51, 0.31, 0.3, 0.21, 0.14, 0.14]
+echoSBMH = [1.32, 1.41, 1.53, 1.55, 1.59, 1]
+errSBMH = [0.51, 0.5, 0.46, 0.47, 0.49, 0.49]
 
 '''echoER = np.zeros(11)
 
@@ -202,8 +202,8 @@ echoER[8] = np.mean(echoER08[:,2])
 echoER[9] = np.mean(echoER09[:,2])
 echoER[10] = np.mean(echoER1[:,2])'''
 
-echoER = [1.13, 1.05, 1.09, 1.02, 1.02, 1]
-errER = [0.46, 0.28, 0.21, 0.17, 0.22, 0.22]
+echoER = [1.13, 1.15, 1.04, 1.11, 1.18, 1]
+errER = [0.46, 0.48, 0.4, 0.48, 0.34, 0.34]
 
 '''echoSBML = np.zeros(11)
 
@@ -219,8 +219,8 @@ echoSBML[8] = np.mean(echoSBML08[:,2])
 echoSBML[9] = np.mean(echoSBML09[:,2])
 echoSBML[10] = np.mean(echoSBML1[:,2])'''
 
-echoSBML = [1.1, 1.12, 1.06, 1.06, 1, 1]
-errSBML = [0.38, 0.33, 0.23, 0.23, 0.15, 0.15]
+echoSBML = [1.1, 1.19, 1.19, 1.23, 1.12, 1]
+errSBML = [0.38, 0.39, 0.43, 0.5, 0.37, 0.37]
 
 '''echoSBMWS = np.zeros(11)
 
@@ -236,8 +236,8 @@ echoSBMWS[8] = np.mean(echoSBMWS08[:,2])
 echoSBMWS[9] = np.mean(echoSBMWS09[:,2])
 echoSBMWS[10] = np.mean(echoSBMWS1[:,2])'''
 
-echoSBMWS = [1.69, 2.4, 1.98, 1.73, 1.31, 1]
-errSBMWS = [0.56, 0.47, 0.33, 0.28, 0.22, 0.22]
+echoSBMWS = [1.69, 2.16, 2.13, 2.81, 2.97, 1]
+errSBMWS = [0.56, 0.75, 0.68, 0.78, 0.66, 0.66]
 
 '''poptWS, pcovWS = curve_fit(func_quad, threshold[:3], echoWS[:3])
 print(poptWS)
@@ -322,13 +322,13 @@ ax.errorbar(threshold, echoSBML, yerr=np.array(errSBML)/10., xerr=None, c='y', f
 
 ax.errorbar(threshold, echoER, yerr=np.array(errER)/10., xerr=None, c='g', fmt='o', label = r'ER')
 
-ax.set_ylim(0, 3.75)
-ax.set_xlabel(r"Fraction of stubborn nodes ($r_i = 1$), fracRes", fontsize=10)
+ax.set_ylim(0, 6)
+ax.set_xlabel(r"Stubbornness parameter of all the nodes, $r$", fontsize=10)
 ax.set_ylabel("Echo chamber size", fontsize=10)
 ax.tick_params(labelsize=10)
-legend = ax.legend(loc='upper right')
+legend = ax.legend(loc='upper left')
 legend.get_frame().set_linewidth(0.0)
 #ax.set_title('Size of echo chamber versus stubbornness to change opinion, 50/50\n N = 1000, PR method \n10 x 10 averaged', fontsize=10)
 plt.tight_layout()
-plt.savefig("echo_chamber_vs_frac_compl_stubb_REC_20-80_8x7.png", dpi=500)
+plt.savefig("echo_chamber_vs_all_frac_stubb_REC_20-80_8x7.png", dpi=500)
 plt.show()
