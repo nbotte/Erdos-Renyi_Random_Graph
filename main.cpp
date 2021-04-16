@@ -350,7 +350,7 @@ void evolution_of_opinions(){
     if(!file){
         cout << "No such file";
     }*/
-    double p_add = 0.001;
+    double p_add = 0.008;
     /*vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs = {};*/
     vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
@@ -369,11 +369,11 @@ void evolution_of_opinions(){
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
         clusterSizes[i] = 100;
-        edgeProbs[i] = 0.01;
+        edgeProbs[i] = 0.03;
         meanDegrees[i] = 10;
     }
 
-    ofstream opfile("Fraction_of_opinions_active_01_av_good_init_SBM-WS_REC_10-001-0001_10x100_fracRes=1_stubb=02_20-80.txt");
+    ofstream opfile("Fraction_of_opinions_active_01_av_good_init_SBM_REC_003-0008_fracRes=1_stubb=04_20-80.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -408,8 +408,8 @@ void evolution_of_opinions(){
 
     // loop over different networks to take averages of the fraction of opinions for each time step
     for (int n = 0; n < 10; n++){
-        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
-        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
         //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac, 0);
         //Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, initOp0Frac, 0);
        // g.setNodeThreshold(0.);
@@ -419,7 +419,7 @@ void evolution_of_opinions(){
             // reset the initial opinions
             g.resetInitOpinion(initOp0Frac);
            // g.setNodeThreshold(0.);
-            g.makeRandomFractionStubborn(1, 0.2); // make all nodes resistant (change how resistant they are from 0, 1)
+            g.makeRandomFractionStubborn(1., 0.4); // make all nodes resistant (change how resistant they are from 0, 1)
 
             // give each community opinions according to predefined distributions
             /*int indexStart = 0;
@@ -737,8 +737,8 @@ void test(){
 }
 
 int main(){
-    distr_of_friends();
-    //evolution_of_opinions();
+    //distr_of_friends();
+    evolution_of_opinions();
     //degree_distr();
    // Av_degree();
     //test();

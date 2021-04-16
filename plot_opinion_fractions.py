@@ -62,16 +62,17 @@ def get_latex_preamble(use_libertine=True, use_fontenc=True, use_inputenc=True, 
             raise ValueError(f"Unsupported type of package: {type(package)}!")
     return preamble
 
-fractions1 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM-WS_REC_10-001-0001_10x100_majT=0_one_sim.txt')
-fractions2 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM-WS_PR_10-001-0001_10x100_majT=0_one_sim.txt')
-#fractions3 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_PR_01-0001_10x100_majT=0_one_sim.txt')
-#fractions4 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_PR_003-0008_10x100_majT=0_one_sim.txt')
+fractions1 = np.loadtxt('Fraction_of_opinions_WS_active_01_av_good_init_PR_10-006_all_res_stubb=0.txt')
+fractions2 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_WS_PR_10-006_fracRes=1_stubb=04.txt')
+fractions3 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_WS_PR_10-006_fracRes=1_stubb=08.txt')
 
-#fractions_sameComm02 = np.loadtxt('Fraction_of_opinions_SBM_active_01_av_good_init_commOp0=01_other=44-56_PR_01-0001_10x100_T=0_sameComm.txt')
-#fractions_PR = np.loadtxt('Fraction_of_opinions_Clustered_Cluster5_01-0001_50_50_no_stubb_paper8_active_01_av_good_init_PR.txt')
-#fractions_50_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_50_bern_050_av.txt')
-#fractions_25_av = np.loadtxt('Fraction_of_opinions_1_20_80_50_stubb_25_bern_050_av.txt')
-#fractions_1_av = np.loadtxt('Fraction_of_opinions_1_70_30_all_stubb_100_bern_5_av.txt')
+'''fractions4 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_REC_01-0001_10x100_fracRes=0_stubb=0_20-80.txt')
+fractions5 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_REC_01-0001_10x100_fracRes=1_stubb=04_20-80.txt')
+fractions6 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_REC_01-0001_10x100_fracRes=1_stubb=08_20-80.txt')'''
+
+#fractions7 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_ER_REC_001_fracRes=08_stubb=1.txt')
+#fractions8 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_ER_REF_001_fracRes=08_stubb=1.txt')
+#fractions9 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_ER_PR_001_fracRes=08_stubb=1.txt')
 
 t = np.zeros(500)
 y = np.zeros(500)
@@ -85,10 +86,17 @@ sns.set_theme(font="DejaVu Serif", rc=rc_params, style="whitegrid", context="pap
 
 fig, ax = subplots(figsize=(8, 7))
 
-ax.errorbar(t[::50], fractions1[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'REC')
-ax.errorbar(t[::50], fractions2[:,1][::50], np.sqrt(fractions2[:,2][::50]), label=r'PR')
-#ax.errorbar(t[::50], fractions3[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'High mod, PR')
-#ax.errorbar(t[::50], fractions4[:,1][::50], np.sqrt(fractions4[:,2][::50]), label=r'Low mod, PR')
+ax.errorbar(t[::50], fractions1[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'$r = 0$')
+ax.errorbar(t[::50], fractions2[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'$r = 0.4$')
+ax.errorbar(t[::50], fractions3[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'$r = 0.8$')
+
+'''ax.errorbar(t[::50], fractions4[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'High mod, $r = 0$')
+ax.errorbar(t[::50], fractions5[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'High mod, $r = 0.4$')
+ax.errorbar(t[::50], fractions6[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'High mod, $r = 0.8$')'''
+
+#ax.errorbar(t[::50], fractions7[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'fracRes $= 0.8$')
+#ax.errorbar(t[::50], fractions8[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'REF, fracRes $= 0.8$')
+#ax.errorbar(t[::50], fractions9[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'fracRes $= 0.8$')
 #plt.plot(t[::10], fractions_sameComm02[:,0][::10], label='0.4 community opinion 0 (same comm.), other 50/50; REC')
 ax.plot(t[::10], y[::10], 'k--')
 #plt.plot(t, fractions_25_av[:,0], label='Stubborness = 0.25')
@@ -100,9 +108,10 @@ legend = ax.legend(loc='upper left')
 legend.get_frame().set_linewidth(0.0)
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 ax.set_ylim(0, 1)
+#ax.set_ylim(-0.2, 1.2)
 #ax.set_title('WS', fontsize=10)
 plt.tight_layout()
-plt.savefig("fraction_of_opinions_SBM-WS_majT=0_one_sim_8x7.png", dpi=500)
+plt.savefig("fraction_of_opinions_WS_all_frac_stubb_PR_8x7.png", dpi=500)
 plt.show()
 
 """fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
