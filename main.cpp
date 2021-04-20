@@ -24,7 +24,7 @@ void distr_of_friends(){
     int N = 1000;
     int K = 10;
     double p = 0.01;
-    double initOp0Frac = 0.5;
+    double initOp0Frac = 0.55;
     double beta = 0.06; // should be small enough in order to deviate from random case
     double p_bern = 0.1;
 
@@ -34,7 +34,7 @@ void distr_of_friends(){
     if(!file){
         cout << "No such file";
     }*/
-    double p_add = 0.001;
+    double p_add = 0.008;
     /*vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs = {};*/
     vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
@@ -53,7 +53,7 @@ void distr_of_friends(){
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
         clusterSizes[i] = 100;
-        edgeProbs[i] = 0.01;
+        edgeProbs[i] = 0.03;
         meanDegrees[i] = 10;
     }
 
@@ -125,18 +125,10 @@ void distr_of_friends(){
 
     Real_World_Network g = Real_World_Network(N, edges);*/
 
-    double stubbEchoBegin = 0.;
-    double stubbTotBegin = 0.;
-    double nonStubbEchoBegin = 0.;
-
-    double stubbEchoEnd = 0.;
-    double stubbTotEnd = 0.;
-    double nonStubbEchoEnd = 0.;
-
     // average over different networks
     for (int n = 0; n < 10; n++){
-        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
-        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
         //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac, 0);
        // Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, initOp0Frac, 0);
         //g.setNodeThreshold(0.);
@@ -150,7 +142,7 @@ void distr_of_friends(){
 
             // reset the initial opinions to start a new simulation for the same network + make nodes stubborn
             g.resetInitOpinion(initOp0Frac);
-            g.makeRandomFractionStubborn(0., 1.); // make all nodes resistant (change how resistant they are from 0, 1)
+            g.makeRandomFractionStubborn(0., 0.); // make all nodes resistant (change how resistant they are from 0, 1)
             //g.makeRandomFractionStubborn(0.1);
             //g.setNodeThreshold(0.);
 
@@ -177,10 +169,6 @@ void distr_of_friends(){
             for (int i = 0; i < g.nodelist().size(); i++){
                 int opinion1 = 0;
 
-                if (g.nodelist()[i].resistance() == 1.){
-                    stubbTotBegin += 0.001;
-                }
-
                 if (g.nodelist()[i].neigh().size() != 0){
                     for (int index : g.nodelist()[i].neigh()){
                         if (g.nodelist()[index].opinion() == 1){
@@ -192,22 +180,10 @@ void distr_of_friends(){
                     if (fractionAt0[i] == 0.){
                         x_0_0++;
                         xAt0op0++;
-                        if (g.nodelist()[i].resistance() == 1.){
-                            stubbEchoBegin += 0.001;
-                        }
-                        else if (g.nodelist()[i].resistance() == 0.){
-                            nonStubbEchoBegin += 0.001;
-                        }
                     }
                     if (fractionAt0[i] == 1.){
                         x_0_1++;
                         xAt0op1++;
-                        if (g.nodelist()[i].resistance() == 1.){
-                            stubbEchoBegin += 0.001;
-                        }
-                        else if (g.nodelist()[i].resistance() == 0.){
-                            nonStubbEchoBegin += 0.001;
-                        }
                     }
                     
                     // determine position of fraction in the histogram eg 0.111 lies in interval 0-0.1 so position is 0
@@ -243,10 +219,6 @@ void distr_of_friends(){
             for (int i = 0; i < g.nodelist().size(); i++){
                 int opinion1 = 0;
 
-                if (g.nodelist()[i].resistance() == 1.){
-                    stubbTotEnd += 0.001;
-                }
-
                 if (g.nodelist()[i].neigh().size() != 0){
                     for (int index : g.nodelist()[i].neigh()){
                         if (g.nodelist()[index].opinion() == 1){
@@ -259,12 +231,6 @@ void distr_of_friends(){
                     if (fractionAt500[i] == 0.){
                         x_500_0++;
                         xAt500op0++;
-                        if (g.nodelist()[i].resistance() == 1.){
-                            stubbEchoEnd += 0.001;
-                        }
-                        else if (g.nodelist()[i].resistance() == 0.){
-                            nonStubbEchoEnd += 0.001;
-                        }
                     }
                     if (fractionAt500[i] == 1.){
                         x_500_1++;
@@ -296,24 +262,14 @@ void distr_of_friends(){
             count++; 
         }
     } 
-
-    stubbEchoBegin = stubbEchoBegin/100.;
-    stubbEchoEnd = stubbEchoEnd/100.;
-    stubbTotBegin = stubbTotBegin/100.;
-    stubbTotEnd = stubbTotEnd/100.;
-    nonStubbEchoBegin = nonStubbEchoBegin/100.;
-    nonStubbEchoEnd = nonStubbEchoEnd/100.;
-
-    cout << "stubbEchoBegin = " << stubbEchoBegin << '\n' << "nonStubbEchoBegin = " << nonStubbEchoBegin << '\n' << "stubbTotBegin = " << stubbTotBegin << '\n' << "stubbEchoEnd = " << stubbEchoEnd << '\n' << "nonStubbEchoEnd = " << nonStubbEchoEnd << '\n' << "stubbTotEnd = " << stubbTotEnd << '\n';
-
-   /* neighOp1HistAt0[0] = x_0_0;
+    neighOp1HistAt0[0] = x_0_0;
     neighOp1HistAt0[neighOp1HistAt0.size() - 1] = x_0_1;
     neighOp1HistAt500[0] = x_500_0;
     neighOp1HistAt500[neighOp1HistAt500.size() - 1] = x_500_1;
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM-WS_REC_10-001-0001_10x100_fracRes=1_stubb=02_20-80.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_SBM_REC_003-0008_10x100_fracRes=0_stubb=0_55-45.txt");
    // ofstream varfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_res=0_10x100_mean_var_11_bins.txt");
-    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM-WS_REC_10-001-0001_10x100_fracRes=1_stubb=02_20-80_xvalues.txt");
-    ofstream echofile("Echo_chamber_SBM-WS_REC_10-001-0001_10x100_fracRes=1_stubb=02_20-80.txt");
+    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_SBM_REC_003-0008_10x100_fracRes=0_stubb=0_55-45_xvalues.txt");
+    ofstream echofile("Echo_chamber_SBM_REC_003-0008_10x100_fracRes=0_stubb=0_55-45.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -328,7 +284,7 @@ void distr_of_friends(){
     normfile.close();
     //varfile.close();
     xfile.close();
-    echofile.close();*/
+    echofile.close();
     /*stubborn = stubborn/100;
     cout << stubborn << endl;*/
 
@@ -737,8 +693,8 @@ void test(){
 }
 
 int main(){
-    //distr_of_friends();
-    evolution_of_opinions();
+    distr_of_friends();
+    //evolution_of_opinions();
     //degree_distr();
    // Av_degree();
     //test();

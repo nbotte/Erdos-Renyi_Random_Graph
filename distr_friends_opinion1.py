@@ -62,12 +62,12 @@ def get_latex_preamble(use_libertine=True, use_fontenc=True, use_inputenc=True, 
             raise ValueError(f"Unsupported type of package: {type(package)}!")
     return preamble
 
-hist = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_ER_PR_001_all_res_stubb=0.txt")
-hist1 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_003-0008_10x100_all_res_stubb=0.txt")
-hist2 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_10x100_probT=0.txt")
-hist3 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM-WS_PR_10-001-0001_10x100_T=0.txt")
-hist4 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-006_T=0.txt")
-hist5 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-001_T=0_test.txt")
+hist = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_10x100_fracRes=0_stubb=0_55-45.txt")
+hist1 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_003-0008_10x100_fracRes=0_stubb=0_55-45.txt")
+hist2 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_REC_01-0001_10x100_fracRes=0_stubb=0_55-45.txt")
+hist3 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_REC_003-0008_10x100_fracRes=0_stubb=0_55-45.txt")
+#hist4 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-006_T=0.txt")
+#hist5 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-001_T=0_test.txt")
 # probably need to change size of t and y back to 10!
 t = np.zeros(10)
 t1 = np.zeros(11)
@@ -86,12 +86,12 @@ sns.set_theme(font="DejaVu Serif", rc=rc_params, style="whitegrid", context="pap
 
 fig, ax = subplots(figsize=(8, 7))
 
-ax.plot(t, hist[:,2], linestyle='solid', label=r"ER")
-ax.plot(t, hist1[:,2], linestyle='solid', label=r"SBM, low mod")
-ax.plot(t, hist2[:,2], linestyle='solid', label=r"SBM, high mod")
-ax.plot(t, hist3[:,2], linestyle='solid', label=r"SBM-WS")
-ax.plot(t1, hist4[:,2], linestyle='solid', label=r"WS, $\left<C\right> \sim 0.55$")
-ax.plot(t, hist5[:,2], linestyle='solid', label=r"WS, $\left<C\right> \sim 0.60$")
+ax.plot(t, hist[:,2], linestyle='solid', label=r"High mod, PR")
+ax.plot(t, hist1[:,2], linestyle='solid', label=r"Low mod, PR")
+ax.plot(t, hist2[:,2], linestyle='solid', label=r"High mod, REC")
+ax.plot(t, hist3[:,2], linestyle='solid', label=r"Low mod, REC")
+#ax.plot(t1, hist4[:,2], linestyle='solid', label=r"WS, $\left<C\right> \sim 0.55$")
+#ax.plot(t, hist5[:,2], linestyle='solid', label=r"WS, $\left<C\right> \sim 0.60$")
 ax.plot(t, y, 'k--')
 
 
@@ -105,8 +105,8 @@ ax.tick_params(labelsize=10)
 legend = ax.legend(loc='upper right')
 legend.get_frame().set_linewidth(0.0)
 #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-ax.set_ylim(-5, 200)
+#ax.set_ylim(-0.5, 5)
 #ax.set_title('WS', fontsize=10)
 plt.tight_layout()
-plt.savefig("echo_chambers_no_stubb_50-50_PR_8x7.png", dpi=500)
+plt.savefig("echo_chambers_SBM_REC_PR_55-45_8x7.png", dpi=500)
 plt.show()

@@ -62,33 +62,98 @@ def get_latex_preamble(use_libertine=True, use_fontenc=True, use_inputenc=True, 
             raise ValueError(f"Unsupported type of package: {type(package)}!")
     return preamble
 
-fractions1 = np.loadtxt('Fraction_of_opinions_WS_active_01_av_good_init_PR_10-006_all_res_stubb=0.txt')
-fractions2 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_WS_PR_10-006_fracRes=1_stubb=04.txt')
-fractions3 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_WS_PR_10-006_fracRes=1_stubb=08.txt')
+fractions1 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=01_other=50-50_PR_01-0001_10x100_T=0.txt')
+fractions2 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=02_other=50-50_PR_01-0001_10x100_T=0.txt')
+fractions3 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=03_other=50-50_PR_01-0001_10x100_T=0.txt')
+fractions4 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=04_other=50-50_PR_01-0001_10x100_T=0.txt')
+fractions5 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=05_other=50-50_PR_01-0001_10x100_T=0.txt')
+fractions6 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=06_other=50-50_PR_01-0001_10x100_T=0.txt')
 
-'''fractions4 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_REC_01-0001_10x100_fracRes=0_stubb=0_20-80.txt')
-fractions5 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_REC_01-0001_10x100_fracRes=1_stubb=04_20-80.txt')
-fractions6 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_SBM_REC_01-0001_10x100_fracRes=1_stubb=08_20-80.txt')'''
+fractions7 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=01_other=50-50_PR_01-0001_10x100_T=0_random=55-45.txt')
+fractions8 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=02_other=50-50_PR_01-0001_10x100_T=0_random=60-40.txt')
+fractions9 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=03_other=50-50_PR_01-0001_10x100_T=0_random=65-35.txt')
+fractions10 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=04_other=50-50_PR_01-0001_10x100_T=0_random=70-30.txt')
+fractions11 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=05_other=50-50_PR_01-0001_10x100_T=0_random=75-25.txt')
+fractions12 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=06_other=50-50_PR_01-0001_10x100_T=0_random=80-20.txt')
 
-#fractions7 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_ER_REC_001_fracRes=08_stubb=1.txt')
-#fractions8 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_ER_REF_001_fracRes=08_stubb=1.txt')
-#fractions9 = np.loadtxt('Fraction_of_opinions_active_01_av_good_init_ER_PR_001_fracRes=08_stubb=1.txt')
+fractions13 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=01_other=50-50_PR_003-0008_10x100_T=0.txt')
+fractions14 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=02_other=50-50_PR_003-0008_10x100_T=0.txt')
+fractions15 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=03_other=50-50_PR_003-0008_10x100_T=0.txt')
+fractions16 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=04_other=50-50_PR_003-0008_10x100_T=0.txt')
+fractions17 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=05_other=50-50_PR_003-0008_10x100_T=0.txt')
+fractions18 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=06_other=50-50_PR_003-0008_10x100_T=0.txt')
+
+fractions19 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=01_other=50-50_PR_003-0008_10x100_T=0_random=55-45.txt')
+fractions20 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=02_other=50-50_PR_003-0008_10x100_T=0_random=60-40.txt')
+fractions21 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=03_other=50-50_PR_003-0008_10x100_T=0_random=65-35.txt')
+fractions22 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=04_other=50-50_PR_003-0008_10x100_T=0_random=70-30.txt')
+fractions23 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=05_other=50-50_PR_003-0008_10x100_T=0_random=75-25.txt')
+fractions24 = np.loadtxt('Fraction_of_opinion0_comm_SBM_active_01_av_good_init_commOp0=06_other=50-50_PR_003-0008_10x100_T=0_random=80-20.txt')
 
 t = np.zeros(500)
 y = np.zeros(500)
 
 for i in range(len(t)):
     t[i] = i
-    y[i] = 0.5
+    y[i] = 0.75
+
+x = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+
+begin = np.zeros(6)
+begin[0] = np.mean([np.mean(fractions1[:,0]), np.mean(fractions7[:,0]), np.mean(fractions13[:,0]), np.mean(fractions19[:,0])])
+begin[1] = np.mean([np.mean(fractions2[:,0]), np.mean(fractions8[:,0]), np.mean(fractions14[:,0]), np.mean(fractions20[:,0])])
+begin[2] = np.mean([np.mean(fractions3[:,0]), np.mean(fractions9[:,0]), np.mean(fractions15[:,0]), np.mean(fractions21[:,0])])
+begin[3] = np.mean([np.mean(fractions4[:,0]), np.mean(fractions10[:,0]), np.mean(fractions16[:,0]), np.mean(fractions22[:,0])])
+begin[4] = np.mean([np.mean(fractions5[:,0]), np.mean(fractions11[:,0]), np.mean(fractions17[:,0]), np.mean(fractions23[:,0])])
+begin[5] = np.mean([np.mean(fractions6[:,0]), np.mean(fractions12[:,0]), np.mean(fractions18[:,0]), np.mean(fractions24[:,0])])
+
+high_mod_comm = np.zeros(6)
+high_mod_comm[0] = np.mean(fractions1[:,1])
+high_mod_comm[1] = np.mean(fractions2[:,1])
+high_mod_comm[2] = np.mean(fractions3[:,1])
+high_mod_comm[3] = np.mean(fractions4[:,1])
+high_mod_comm[4] = np.mean(fractions5[:,1])
+high_mod_comm[5] = np.mean(fractions6[:,1])
+
+high_mod_rand = np.zeros(6)
+high_mod_rand[0] = np.mean(fractions7[:,1])
+high_mod_rand[1] = np.mean(fractions8[:,1])
+high_mod_rand[2] = np.mean(fractions9[:,1])
+high_mod_rand[3] = np.mean(fractions10[:,1])
+high_mod_rand[4] = np.mean(fractions11[:,1])
+high_mod_rand[5] = np.mean(fractions12[:,1])
+
+low_mod_comm = np.zeros(6)
+low_mod_comm[0] = np.mean(fractions13[:,1])
+low_mod_comm[1] = np.mean(fractions14[:,1])
+low_mod_comm[2] = np.mean(fractions15[:,1])
+low_mod_comm[3] = np.mean(fractions16[:,1])
+low_mod_comm[4] = np.mean(fractions17[:,1])
+low_mod_comm[5] = np.mean(fractions18[:,1])
+
+low_mod_rand = np.zeros(6)
+low_mod_rand[0] = np.mean(fractions19[:,1])
+low_mod_rand[1] = np.mean(fractions20[:,1])
+low_mod_rand[2] = np.mean(fractions21[:,1])
+low_mod_rand[3] = np.mean(fractions22[:,1])
+low_mod_rand[4] = np.mean(fractions23[:,1])
+low_mod_rand[5] = np.mean(fractions24[:,1])
+
 
 rc_params = get_rc_params(latex_preamble=get_latex_preamble(use_libertine=True))
 sns.set_theme(font="DejaVu Serif", rc=rc_params, style="whitegrid", context="paper")
 
 fig, ax = subplots(figsize=(8, 7))
 
-ax.errorbar(t[::50], fractions1[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'$r = 0$')
-ax.errorbar(t[::50], fractions2[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'$r = 0.4$')
-ax.errorbar(t[::50], fractions3[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'$r = 0.8$')
+#ax.errorbar(t[::50], fractions1[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'$0.5$ community opinion 0, rest $50/50$')
+#ax.errorbar(t[::50], fractions2[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'all communities $75/25$')
+#ax.errorbar(t[::50], fractions3[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'$r = 0.8$')
+
+ax.plot(x, begin, 'k', label=r'Average fraction opinion 0 at $t=0$')
+ax.plot(x, high_mod_rand, 'cornflowerblue', linestyle='--', label=r'High mod, random distributed')
+ax.plot(x, high_mod_comm, 'peru', linestyle='--', label=r'High mod, comm. distributed')
+ax.plot(x, low_mod_rand, 'forestgreen', linestyle='--', label=r'Low mod, random distributed')
+ax.plot(x, low_mod_comm, 'firebrick', linestyle='--', label=r'Low mod, comm. distributed')
 
 '''ax.errorbar(t[::50], fractions4[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'High mod, $r = 0$')
 ax.errorbar(t[::50], fractions5[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'High mod, $r = 0.4$')
@@ -98,20 +163,20 @@ ax.errorbar(t[::50], fractions6[:,0][::50], np.sqrt(fractions3[:,2][::50]), labe
 #ax.errorbar(t[::50], fractions8[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'REF, fracRes $= 0.8$')
 #ax.errorbar(t[::50], fractions9[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'fracRes $= 0.8$')
 #plt.plot(t[::10], fractions_sameComm02[:,0][::10], label='0.4 community opinion 0 (same comm.), other 50/50; REC')
-ax.plot(t[::10], y[::10], 'k--')
+#ax.plot(t[::10], y[::10], 'k--')
 #plt.plot(t, fractions_25_av[:,0], label='Stubborness = 0.25')
 #plt.plot(t, fractions_1_av[:,1], label='Stubborness = 1')
-ax.set_xlabel(r"Time $t$", fontsize=10)
-ax.set_ylabel(r"Fraction of opinion 0 ($P_0(t)$)", fontsize=10)
+ax.set_xlabel(r"Fraction of single opinion 0 communities", fontsize=10)
+ax.set_ylabel(r"Average fraction of opinion 0", fontsize=10)
 ax.tick_params(labelsize=10)
 legend = ax.legend(loc='upper left')
 legend.get_frame().set_linewidth(0.0)
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-ax.set_ylim(0, 1)
+ax.set_ylim(0.5, 1.75)
 #ax.set_ylim(-0.2, 1.2)
 #ax.set_title('WS', fontsize=10)
 plt.tight_layout()
-plt.savefig("fraction_of_opinions_WS_all_frac_stubb_PR_8x7.png", dpi=500)
+plt.savefig("fraction_of_opinions_SBM_commOp0_other=50-50_PR_8x7.png", dpi=500)
 plt.show()
 
 """fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
