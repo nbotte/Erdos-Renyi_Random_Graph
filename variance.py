@@ -1,8 +1,13 @@
 import numpy as np
 
-xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_REC_10-006_fracRes=1_stubb=08_20-80_xvalues.txt")
+xvalues = np.loadtxt("clustering_WS.txt")
 
-xAt0op0 = xvalues[:,0]
+mean = np.mean(xvalues)
+std = np.std(xvalues)
+print(mean, std)
+
+
+'''xAt0op0 = xvalues[:,0]
 xAt0op1 = xvalues[:,1]
 xAt500op0 = xvalues[:,2]
 xAt500op1 = xvalues[:,3]
@@ -64,13 +69,13 @@ VarY1 = np.var(Y1)
 StdX1 = np.std(X1)
 StdY1 = np.std(Y1)
 
-print(E_x, E_y, StdX, StdY)
+print(E_x, E_y, StdX, StdY)'''
 
 '''for i in range(len(Y)):
     print(X01Float[i])
     print(Y1[i])'''
 
-X2 = np.square(X)
+'''X2 = np.square(X)
 Y2 = np.square(Y)
 
 E_X2 = np.mean(X2)
@@ -94,4 +99,4 @@ Var1XY = E_X12 * E_Y12 - E_y1**2 * E_x1**2
 meanVar = (VarXY + Var1XY)/2
 meanSTD = (np.sqrt(VarXY) + np.sqrt(Var1XY))/2
 print(np.sqrt(meanVar), meanSTD)
-print(E_y*E_x, np.sqrt(VarXY), E_y1*E_x1, np.sqrt(Var1XY))
+print(E_y*E_x, np.sqrt(VarXY), E_y1*E_x1, np.sqrt(Var1XY))'''
