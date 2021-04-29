@@ -1,6 +1,6 @@
 import numpy as np
 
-xvalues = np.loadtxt("clustering_WS.txt")
+xvalues = np.loadtxt("modularity_SBM.txt")
 
 mean = np.mean(xvalues)
 std = np.std(xvalues)
