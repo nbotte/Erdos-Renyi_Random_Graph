@@ -1,6 +1,6 @@
 import numpy as np
 
-xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-006_fracRes=1_stubb=08_20-80_xvalues.txt")
+xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_REC_10-006_majT=1_xvalues.txt")
 
 '''mean = np.mean(xvalues)
 std = np.std(xvalues)
