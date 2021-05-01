@@ -1,6 +1,6 @@
 import numpy as np
 
-xvalues = np.loadtxt("modularity_SBM.txt")
+xvalues = np.loadtxt("avDeg_SBM_low.txt")
 
 mean = np.mean(xvalues)
 std = np.std(xvalues)
