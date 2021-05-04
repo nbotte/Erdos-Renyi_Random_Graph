@@ -21,11 +21,11 @@ using namespace std;
 
 // function that calculates the distribution of friends with the same opinion 1 for a particular network (according to paper 8)
 void distr_of_friends(){
-    int N = 8003;
-    int K = 10;
+    int N = 10680;
+    int K = 4;
     double p = 0.01;
     double initOp0Frac = 0.5;
-    double beta = 0.06; // should be small enough in order to deviate from random case
+    double beta = 0.15; // should be small enough in order to deviate from random case
     double p_bern = 0.1;
 
     // part needed for clustered random network
@@ -107,18 +107,20 @@ void distr_of_friends(){
     uniform_real_distribution<> dis(0.0, 1.0);
     
     ifstream file;
-    file.open("lastfm_fin_edgelist.txt", ios::in);
+    file.open("PGP.txt", ios::in);
     if(!file){
         cout << "No such file";
     }
 
     int x;
     int y;
+    int z; // only needed if there are three columns in edgelist
     vector<int> edge(2);
     vector<vector<int>> edges = {};
-    while (file >> x >> y){
-        edge[0] = x;
-        edge[1] = y;
+    while (file >> x >> y >> z){
+        // if nodes start from 1: x-1 and y-1; else if nodes start from 0: x and y
+        edge[0] = x - 1;
+        edge[1] = y - 1;
         edges.push_back(edge);
     }
     file.close();
@@ -266,10 +268,10 @@ void distr_of_friends(){
     neighOp1HistAt0[neighOp1HistAt0.size() - 1] = x_0_1;
     neighOp1HistAt500[0] = x_500_0;
     neighOp1HistAt500[neighOp1HistAt500.size() - 1] = x_500_1;
-    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_real_network_lastfm_REC_8003_fracRes=075_stubb=1_av10x5.txt");
+    ofstream normfile("Hist_500_and_0_fraction_friends_opinion1_real_network_PGP_PR_10680_fracRes=075_stubb=1_av10x5.txt");
    // ofstream varfile("Hist_500_and_0_fraction_friends_opinion1_SBM_PR_01-0001_res=0_10x100_mean_var_11_bins.txt");
-    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_real_network_lastfm_REC_8003_fracRes=075_stubb=1_av10x5_xvalues.txt");
-    ofstream echofile("Echo_chamber_real_network_lastfm_REC_8003_fracRes=075_stubb=1_av10x5.txt");
+    ofstream xfile("Hist_500_and_0_fraction_friends_opinion1_real_network_PGP_PR_10680_fracRes=075_stubb=1_av10x5_xvalues.txt");
+    ofstream echofile("Echo_chamber_real_network_PGP_PR_10680_fracRes=075_stubb=1_av10x5.txt");
     for (int i = 0; i < neighOp1HistAt500.size(); i++){
         double norm = double(neighOp1HistAt500[i]) / double(neighOp1HistAt0[i]);
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
@@ -293,11 +295,11 @@ void distr_of_friends(){
 
 // function that calculates the evolution of opinions in a particular network
 void evolution_of_opinions(){
-    int N = 8003;
-    int K = 10;
+    int N = 10680;
+    int K = 4;
     double p = 0.01;
     double initOp0Frac = 0.5;
-    double beta = 0.06; // should be small enough in order to deviate from random case
+    double beta = 0.15; // should be small enough in order to deviate from random case
     double p_bern = 0.1;
 
     // part needed for clustered random network
@@ -329,7 +331,7 @@ void evolution_of_opinions(){
         meanDegrees[i] = 4;
     }
   
-    ofstream opfile("Fraction_of_opinions_active_01_av_good_init_real_network_lastfm_REC_8003_fracRes=075_stubb=1_av10x5.txt");
+    ofstream opfile("Fraction_of_opinions_active_01_av_good_init_real_network_PGP_PR_10680_fracRes=075_stubb=1_av10x5.txt");
     vector<double> mean0(500); // contains the average fraction of opinion 0 in the graph at each timestep
     vector<double> mean1(500); // contains the average fraction of opinion 1 in the graph at each timestep
     vector<double> variance0(500); // calculate variance of opinion 0 according to Welford's algorithm
@@ -344,18 +346,20 @@ void evolution_of_opinions(){
     uniform_real_distribution<> dis(0.0, 1.0);
 
     ifstream file;
-    file.open("lastfm_fin_edgelist.txt", ios::in);
+    file.open("PGP.txt", ios::in);
     if(!file){
         cout << "No such file";
     }
 
     int x;
     int y;
+    int z; // only needed if there are three columns in edgelist
     vector<int> edge(2);
     vector<vector<int>> edges = {};
-    while (file >> x >> y){
-        edge[0] = x;
-        edge[1] = y;
+    while (file >> x >> y >> z){
+        // if nodes start from 1: x-1 and y-1; else if nodes start from 0: x and y
+        edge[0] = x - 1;
+        edge[1] = y - 1;
         edges.push_back(edge);
     }
     file.close();
@@ -363,7 +367,7 @@ void evolution_of_opinions(){
     Real_World_Network g = Real_World_Network(N, edges);
 
     // loop over different networks to take averages of the fraction of opinions for each time step
-    for (int n = 0; n < 1; n++){
+    for (int n = 0; n < 10; n++){
        // Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
        // Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
         //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac, 0);
@@ -371,7 +375,7 @@ void evolution_of_opinions(){
        // g.setNodeThreshold(0.);
         cout << "Graph: " << n << endl;
         // for each network, run different simulations --> can this be implemented faster?
-        for (int s = 0; s < 1; s++){
+        for (int s = 0; s < 5; s++){
             // reset the initial opinions
             g.resetInitOpinion(initOp0Frac);
           //  g.setNodeThreshold(0.);
@@ -441,7 +445,7 @@ void evolution_of_opinions(){
 
 // function that calculates the degree distribution + the average degree distribution of a particular network
 void degree_distr(){
-    int N = 8003;
+    int N = 10680;
     int K = 6;
     double p = 0.01;
     double initOp0Frac = 0.5;
@@ -458,30 +462,33 @@ void degree_distr(){
     }*/
     
     ifstream file;
-    file.open("lastfm_fin_edgelist.txt", ios::in);
+    file.open("PGP.txt", ios::in);
     if(!file){
         cout << "No such file";
     }
 
     int x;
     int y;
+    int z; // only needed if there are three columns in edgelist
     vector<int> edge(2);
     vector<vector<int>> edges = {};
-    while (file >> x >> y){
-        edge[0] = x;
-        edge[1] = y;
+    while (file >> x >> y >> z){
+        // if nodes start from 1: x-1 and y-1; else if nodes start from 0: x and y
+        edge[0] = x - 1;
+        edge[1] = y - 1;
         edges.push_back(edge);
     }
     file.close();
 
     Real_World_Network g = Real_World_Network(N, edges);
 
-    vector<int> degreeDistr(70);
+    vector<int> degreeDistr(150);
    // Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, initOp0Frac, 0);
     for (int i = 0; i < g.nodelist().size(); i++){
+        cout << g.nodelist()[i].neigh().size() << endl;
         degreeDistr[g.nodelist()[i].neigh().size()] += 1;
     }
-    ofstream degreeFile("Degree_distribution_real_network_lastfm_fin.txt");
+    ofstream degreeFile("Degree_distribution_real_network_PGP.txt");
     for (int i = 0; i < degreeDistr.size(); i++){
         degreeFile << i << ' ' << degreeDistr[i] << '\n';
     }
@@ -507,7 +514,7 @@ void degree_distr(){
 
 // function that calculates the average degree of a graph
 void Av_degree(){
-    int N = 1000;
+    int N = 10680;
     int K = 6;
     double p = 0.01;
     double initOp0Frac = 0.5;
@@ -542,54 +549,58 @@ void Av_degree(){
         edgeProbs[i] = 0.03;
         meanDegrees[i] = 10;
     }
-   /* ifstream file;
-    file.open("lastfm_fin_edgelist.txt", ios::in);
+    ifstream file;
+    file.open("PGP.txt", ios::in);
     if(!file){
         cout << "No such file";
     }
 
     int x;
     int y;
+    int z; // only needed if there are three columns in edgelist
     vector<int> edge(2);
     vector<vector<int>> edges = {};
-    while (file >> x >> y){
-        edge[0] = x;
-        edge[1] = y;
+    while (file >> x >> y >> z){
+        // if nodes start from 1: x-1 and y-1; else if nodes start from 0: x and y
+        edge[0] = x-1;
+        edge[1] = y-1;
         edges.push_back(edge);
     }
-    file.close();*/
+    file.close();
 
-    //Real_World_Network g = Real_World_Network(8003, edges);
+    Real_World_Network g = Real_World_Network(N, edges);
 
-    //int degree = 0;
+    int degree = 0;
     //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
    // Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
-    /*for (int i = 0; i < g.nodelist().size(); i++){
+    for (int i = 0; i < g.nodelist().size(); i++){
         degree += g.nodelist()[i].neigh().size();
     }
-    double mod = g.calculateModularity();
-    double modTest = g.calculateModularityTest(g.clusters());
-    double Av_degree = double(degree)/double(N);*/
-    ofstream clusFile("avDeg_SBM_low.txt");
-    for (int i = 0; i < 100; i++){
+    //double mod = g.calculateModularity();
+    //double modTest = g.calculateModularityTest(g.clusters());
+    double Av_degree = double(degree)/double(N);
+    double clus = g.averageClustering();
+   // ofstream clusFile("avDeg_real_network_lastfm.txt");
+    /*for (int i = 0; i < 1; i++){
         //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac, 0);
-        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
         //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
         //Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, initOp0Frac, 0);
         //double mod = g.calculateModularity();
         int degree = 0;
         for (int i = 0; i < g.nodelist().size(); i++){
-            degree += g.nodelist()[i].neigh().size();
+            degree = g.nodelist()[i].neigh().size();
+            clusFile << degree << '\n';
         }
-        double Av_degree = double(degree)/double(N);
-        clusFile << Av_degree << '\n';
+        //double Av_degree = double(degree)/double(N);
+        
 
     }
-    clusFile.close();
+    clusFile.close();*/
     
     
-   /* int edges_tot = g.numberOfEdges();
-    cout << clus << ' ' << Av_degree << ' ' << mod << ' ' << modTest << ' ' << edges_tot << endl;*/
+    int edges_tot = g.numberOfEdges();
+    cout << clus << ' ' << Av_degree << ' ' << edges_tot << endl;
 }
 
 // function to do small tests

@@ -3,10 +3,10 @@ import networkx as nx
 from networkx.algorithms.community import greedy_modularity_communities
 import networkx.algorithms.community as nx_comm
 
-data = np.loadtxt('lastfm_fin_edgelist.txt')
+data = np.loadtxt('PGP.txt')
 
 G = nx.Graph()
-for i in range(8003):
+for i in range(10680):
     G.add_node(i)
 
 edge = np.zeros(2)

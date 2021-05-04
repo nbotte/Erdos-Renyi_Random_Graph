@@ -1,6 +1,6 @@
 import numpy as np
 
-xvalues = np.loadtxt("avDeg_SBM_low.txt")
+xvalues = np.loadtxt("avDeg_real_network_lastfm.txt")
 
 mean = np.mean(xvalues)
 std = np.std(xvalues)
