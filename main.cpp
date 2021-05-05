@@ -277,7 +277,7 @@ void distr_of_friends(){
         normfile << neighOp1HistAt500[i] << ' ' << neighOp1HistAt0[i] << ' ' << norm << endl;
     }
     //varfile << meanAt0op0 << ' ' << varAt0op0/double(count - 2) << '\n' << meanAt0op1 << ' ' << varAt0op1/double(count - 2) << '\n' <<  meanAt500op0 << ' ' << varAt500op0/double(count - 2) << '\n' << meanAt500op1 << ' ' << varAt500op1/double(count - 2) << endl;
-    for (int i = 0; i < 100; i++){
+    for (int i = 0; i < 50; i++){
         xfile << xVecAt0op0[i] << ' ' << xVecAt0op1[i] << ' ' << xVecAt500op0[i] << ' ' << xVecAt500op1[i] << endl;
     }
     double echo_0 = double(x_500_0)/double(x_0_0);
@@ -514,11 +514,11 @@ void degree_distr(){
 
 // function that calculates the average degree of a graph
 void Av_degree(){
-    int N = 10680;
-    int K = 6;
+    int N = 8003;
+    int K = 4;
     double p = 0.01;
     double initOp0Frac = 0.5;
-    double beta = 0.01; // should be small enough in order to deviate from random case
+    double beta = 0.15; // should be small enough in order to deviate from random case
     double p_bern = 0.1;
 
     // part needed for clustered random network
@@ -527,12 +527,12 @@ void Av_degree(){
     if(!file){
         cout << "No such file";
     }*/
-    double p_add = 0.008;
+    double p_add = 0.0001;
    /* vector<int> clusterSizes = {}; // length of this vector determines the number of cluster and the elements determine the size of each cluster
     vector<double> edgeProbs = {};*/
-    vector<int> clusterSizes(10); // length of this vector determines the number of cluster and the elements determine the size of each cluster
-    vector<double> edgeProbs(10);
-    vector<int> meanDegrees(10);
+    vector<int> clusterSizes(53); // length of this vector determines the number of cluster and the elements determine the size of each cluster
+    vector<double> edgeProbs(53);
+    vector<int> meanDegrees(53);
     /*double x;
     while (file >> x){
         clusterSizes.push_back(x);
@@ -545,11 +545,11 @@ void Av_degree(){
     }
     file.close();*/
     for (int i = 0; i < clusterSizes.size(); i++){
-        clusterSizes[i] = 100;
-        edgeProbs[i] = 0.03;
-        meanDegrees[i] = 10;
+        clusterSizes[i] = 151;
+        edgeProbs[i] = 0.025;
+        meanDegrees[i] = 4;
     }
-    ifstream file;
+   /* ifstream file;
     file.open("PGP.txt", ios::in);
     if(!file){
         cout << "No such file";
@@ -568,39 +568,39 @@ void Av_degree(){
     }
     file.close();
 
-    Real_World_Network g = Real_World_Network(N, edges);
+    Real_World_Network g = Real_World_Network(N, edges);*/
 
-    int degree = 0;
+    //int degree = 0;
     //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
    // Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
-    for (int i = 0; i < g.nodelist().size(); i++){
+    /*for (int i = 0; i < g.nodelist().size(); i++){
         degree += g.nodelist()[i].neigh().size();
-    }
+    }*/
     //double mod = g.calculateModularity();
     //double modTest = g.calculateModularityTest(g.clusters());
-    double Av_degree = double(degree)/double(N);
-    double clus = g.averageClustering();
-   // ofstream clusFile("avDeg_real_network_lastfm.txt");
-    /*for (int i = 0; i < 1; i++){
-        //Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac, 0);
-        //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
+    //double Av_degree = double(degree)/double(N);
+    //double clus = g.averageClustering();
+    /*ofstream clusFile("avDeg_SBM.txt");
+    for (int i = 0; i < 10; i++){
+        cout << i << endl;
+       // Watts_Strogatz_Network g = Watts_Strogatz_Network(N, K, beta, initOp0Frac, 0);
+        Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, p_add, "add");
         //Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
         //Erdos_Renyi_Network g = Erdos_Renyi_Network(N, p, p_bern, initOp0Frac, 0);
         //double mod = g.calculateModularity();
+       // double clus = g.averageClustering();
         int degree = 0;
         for (int i = 0; i < g.nodelist().size(); i++){
-            degree = g.nodelist()[i].neigh().size();
-            clusFile << degree << '\n';
+            degree += g.nodelist()[i].neigh().size();
         }
-        //double Av_degree = double(degree)/double(N);
-        
-
+        double Av_degree = double(degree)/double(N);
+        clusFile << Av_degree << '\n';      
     }
     clusFile.close();*/
     
-    
+    Clustered_Random_Network g = Clustered_Random_Network(N, clusterSizes, edgeProbs, meanDegrees, p_add, "add");
     int edges_tot = g.numberOfEdges();
-    cout << clus << ' ' << Av_degree << ' ' << edges_tot << endl;
+    cout <<  edges_tot << endl;
 }
 
 // function to do small tests
@@ -720,10 +720,10 @@ void test(){
 }
 
 int main(){
-    //distr_of_friends();
-    //evolution_of_opinions();
+    distr_of_friends();
+    evolution_of_opinions();
     //degree_distr();
-    Av_degree();
+    //Av_degree();
     //test();
 
    /* ofstream clusFile("Clustering_coefficient_WS_vs_beta.txt");

@@ -1,11 +1,10 @@
 import numpy as np
 
-xvalues = np.loadtxt("avDeg_real_network_lastfm.txt")
+xvalues = np.loadtxt("avDeg_SBM.txt")
 
 mean = np.mean(xvalues)
 std = np.std(xvalues)
 print(mean, std)
-
 
 '''xAt0op0 = xvalues[:,0]
 xAt0op1 = xvalues[:,1]
@@ -69,13 +68,9 @@ VarY1 = np.var(Y1)
 StdX1 = np.std(X1)
 StdY1 = np.std(Y1)
 
-print(E_x, E_y, StdX, StdY)'''
+print(E_x, E_y, StdX, StdY)
 
-'''for i in range(len(Y)):
-    print(X01Float[i])
-    print(Y1[i])'''
-
-'''X2 = np.square(X)
+X2 = np.square(X)
 Y2 = np.square(Y)
 
 E_X2 = np.mean(X2)
