@@ -1,4 +1,4 @@
-// Nina Botte
+// Nina Botte -- Master thesis: Opinion dynamics on social networks with stubborn actors
 
 #include <cmath>
 #include <memory>
@@ -21,7 +21,7 @@ using namespace std;
 Graph::~Graph(){};
 
 // implementation of the getters, provides access to data member with corresponding name
-vector<Node> Graph::nodelist() {return _nodelist;}
+vector<Node> Graph::nodelist() {return _nodelist;} // returns the nodes of the graph
 vector<Edge> Graph::edgelist() {return _edgelist;} // --> Not needed anymore?
 
 // virtual function makeGraph
@@ -37,7 +37,7 @@ void Graph::addNode(Node n){
 void Graph::addEdge(Edge e){
     // check if edge is already there
     if (contains(_edgelist, e) == false){
-        //_edgelist.push_back(e); //--> takes long time?
+        //_edgelist.push_back(e); //--> takes long time --> DO NOT USE
         int indexIn = e.inNode()->index();
         int indexOut = e.outNode()->index();
         _nodelist[indexIn].addNeigh(indexOut); // add outNode of edge to neighbours of inNode of edge
@@ -116,7 +116,7 @@ int Graph::numberOfEdges(){
     return totalEdges;
 }
 
-// function to change the opinions of the nodes in graph based on majority model
+// function to change the opinions of the active nodes in graph
 void Graph::changeOpinions(){ 
     // first: each active node sends it current opinion to its neighbours
     for (int i = 0; i < _nodelist.size(); i++){
@@ -143,30 +143,28 @@ void Graph::changeOpinions(){
     }
 }
 
+// function that changes opinion of a randomly selected node (opinion dynamics model used in this function may be different than main model used in thesis --> change accordingly)
+// NOTE: std::sample needs c++17 or higher to compile
 void Graph::changeRandomOpinion(){
     size_t nelem = 1;
     vector<Node> out;
 
+    // sample random node
     sample(_nodelist.begin(), _nodelist.end(), back_inserter(out), nelem, mt19937{random_device{}()});
-    //cout << _nodelist[out.back().index()] << ": ";
+
     for (int index : _nodelist[out.back().index()].neigh()){
         // if the neighbour is active: add its opinion to the neighOpinion list of the current Node
         if (_nodelist[index].active()){
             _nodelist[out.back().index()].addNeighOpinion(_nodelist[index].opinion());
-           // cout << _nodelist[index] << ' ';
         }
     }
-   // cout << endl;
     _nodelist[out.back().index()].changeOpinion(); // changeOpinion checks if the node is active, so only active nodes can update their opinion
-  //  _nodelist[out.back().index()].setNewOpinion();
     _nodelist[out.back().index()].removeAllNeighOpinion();
 }
 
-// function to deactivate all the nodes in the network, but first the current active nodes need to set their wasActive variable to true
-// this function might be unneccessary!
+// function to deactivate all the nodes in the network
 void Graph::deactivateNodes(){
     for (int i = 0; i < _nodelist.size(); i++){
-        //_nodelist[i].setWasActive();
         _nodelist[i].deactivate();
     }
 }
@@ -192,14 +190,14 @@ void Graph::resetInitOpinion(double initOp0Frac){
     int N = 0;
     int opinion;
     while (v.size()){
-        int index = getRandomElement(v, _nodelist.size() - 1);
+        int index = getRandomElement(v, _nodelist.size() - 1); // get a random node
         if (N < int(_nodelist.size()*initOp0Frac)){
             opinion = 0;
         }
         else{
             opinion = 1;
         }
-        _nodelist[index].setOpinion(opinion);
+        _nodelist[index].setOpinion(opinion); // set opinion of random node
         N++;
     }
 }
@@ -247,6 +245,7 @@ vector<double> Graph::countOpinionFraction(){
 }
 
 // print function for a graph --> prints nodes and edges
+// NOT UP TO DATE
 void Graph::print(){
     cout << "Nodes: ";
     for (int i = 0; i < _nodelist.size(); ++i){
@@ -266,6 +265,7 @@ bool Graph::contains(const vector<Edge> vec, Edge e){
     return find(vec.begin(), vec.end(), e) != vec.end();
 }
 
+// function to get a random element from a vector
 int getRandomElement(vector<int>& v, int length){
     random_device rd; // will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
@@ -273,6 +273,7 @@ int getRandomElement(vector<int>& v, int length){
     int n = v.size();
     int index = dis(gen) % n; // random number between 0 and 999 --> but make sure that it is always in the range of v (size of v changes!)
     int elem = v[index]; // get random element from vector
+    // remove the obtained element from v so that you can only draw each number once
     swap(v[index], v[n-1]);
     v.pop_back();
     return elem;    

@@ -1,4 +1,4 @@
-// Nina Botte
+// Nina Botte -- Master thesis: Opinion dynamics on social networks with stubborn actors
 
 #define _USE_MATH_DEFINES
 #include <iomanip>
@@ -22,23 +22,14 @@ public:
     // define constructor
     Edge(shared_ptr<Node>, shared_ptr<Node>);
 
-    // define copy constructor
-   // Edge(const Edge &e);
-
-    // define a destructor
- //   ~Edge();
-
     // define getters, provides access to data member with corresponding name
     shared_ptr<Node> inNode() const;
     shared_ptr<Node> outNode() const;
 
-    // operator assignement
-  //  Edge& operator= (const Edge &e);
-
-    // operator overload << (make it a friend of Edge)
+    // operator overload << (make it a friend of Edge class)
     friend ostream& operator<<(ostream& os, const Edge& e);
 
-    // operator overload == (make it a friend of Edge)
+    // operator overload == (make it a friend of Edge class)
     friend bool operator==(Edge e1, Edge e2);
 };
 

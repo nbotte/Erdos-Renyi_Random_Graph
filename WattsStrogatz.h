@@ -1,4 +1,4 @@
-// Nina Botte
+// Nina Botte -- Master thesis: Opinion dynamics on social networks with stubborn actors
 
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -14,7 +14,6 @@ using namespace std;
 
 class Watts_Strogatz_Network : virtual public Graph{
 public:
-    // maybe I want the variables private, not sure yet
     int _meanDegree; // the mean degree of the network, should be an even integer (N >> K >> ln(N))
     double _rewireProb; // probability to rewire the edges of the regular lattice
     double _initOp0Frac; // initial fraction of nodes with opinion 0

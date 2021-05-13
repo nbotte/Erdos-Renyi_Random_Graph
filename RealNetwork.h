@@ -1,4 +1,4 @@
-// Nina Botte
+// Nina Botte -- Master thesis: Opinion dynamics on social networks with stubborn actors
 
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -14,18 +14,14 @@ using namespace std;
 
 class Real_World_Network : virtual public Graph{
 public:
-    vector<vector<int>> _edges; // vector that contains the edges (= vector with the inNode and the outNode)
+    vector<vector<int>> _edges; // vector that contains the edges (= vector with the inNode and the outNode of each edge)
 
     // constructor
     Real_World_Network(int numberOfNodes, vector<vector<int>> edges);
 
     // declare member functions of class Real_World_Network
     void makeGraph(); // function that generates the corresponding real-world graph
-
-    double commDetection(); // function that performs a community detection, returns the max value of the modularity (modularity of best community division)
     double calculateModularity(vector<vector<int>> communities); // function that calculates the modularity (returns the calculated modularity)
-    double calculateModularityChange(vector<int> commA, vector<int> commB); // funtcion that calculates the modularity change after merging the two communities A and B
-
 };
 
 #endif

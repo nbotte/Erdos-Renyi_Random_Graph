@@ -1,4 +1,4 @@
-// Nina Botte
+// Nina Botte -- Master thesis: Opinion dynamics on social networks with stubborn actors
 
 #include <cmath>
 #include <memory>
@@ -23,11 +23,11 @@ Erdos_Renyi_Network::Erdos_Renyi_Network(){};
 
 // constructor, construct graph by making the nodes and the edges with a given probability
 Erdos_Renyi_Network::Erdos_Renyi_Network(int numberOfNodes, double edgeProbability, double bernouilliProbability, double initOp0Frac, int indexStart){
-    _numberOfNodes = numberOfNodes;
-    _edgeProbability = edgeProbability;
-    _bernouilliProbability = bernouilliProbability;
-    _indexStart = indexStart;
-    _initOp0Frac = initOp0Frac;
+    _numberOfNodes = numberOfNodes; // set the total number of nodes in the graph
+    _edgeProbability = edgeProbability; // set the edge probability
+    _bernouilliProbability = bernouilliProbability; // set the bernouilli probability for being active
+    _indexStart = indexStart; // set the index from which the node names start --> mainly used when constructing a SBM where each community is made by a seperate ER graph
+    _initOp0Frac = initOp0Frac; // set the initial fraction of nodes with opinion 0
 
     // reserve enough memory space for the vectors
     _nodelist.resize(_numberOfNodes); 
@@ -44,8 +44,6 @@ void Erdos_Renyi_Network::makeGraph(){
 
     bernoulli_distribution disBern(_bernouilliProbability);
 
-    // add nodes to the graph with some distribution of the 2 possible opinions
-    double fractionResistance = 0.; // set the fraction of stubborn/resistant nodes
     double resistance; // variable that determines the resistance of a node
     int opinion; // variable that determines the opinion of a node
     bool active; // variable that determines if node is active
@@ -57,17 +55,13 @@ void Erdos_Renyi_Network::makeGraph(){
     }
 
     // first 500 indices obtained from the permutated vector v will have an opinion zero, others get opinion 1
-    // resistance of node is not implemented yet
     int N = 0;
     while (v.size()){
         active = 0.; // default: no nodes are active
         double r = dis(gen); // random number that will determine if node is stubborn or not
-        if (r < fractionResistance){
-            resistance = 0.; // if node is resistant it is completely stubborn (for now)
-        }
-        else{ 
-            resistance = 0.;
-        }        
+        
+        resistance = 0.; // set default resistance to zero
+               
         int index = getRandomElement(v, _numberOfNodes - 1) + _indexStart;
         // Note: _numberOfNodes should be even, otherwise you will get a bias!
         if (N < int(_numberOfNodes*_initOp0Frac)){
@@ -80,19 +74,7 @@ void Erdos_Renyi_Network::makeGraph(){
         addNode(n);
         N++;
     }
-   /* for (int i = 0; i < _numberOfNodes/2; i++){
-        double k = dis(gen); // random number to determine if node is stubborn
-        if (k <= fractionResistance){
-            resistance = 0.;
-        }
-        else{
-            resistance = 0.;
-        }
-        active = 0.;
-        int index = _indexStart + i;
-        Node n = Node(index, opinion, resistance, active);
-        addNode(n);
-    } */
+
     // add edge between any pair of nodes with a certain probability
     for (int i = 0; i < _numberOfNodes; i++){
         for (int j = i+1; j < _numberOfNodes; j++){

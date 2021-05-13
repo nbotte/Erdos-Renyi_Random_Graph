@@ -1,4 +1,4 @@
-// Nina Botte
+// Nina Botte -- Master thesis: Opinion dynamics on social networks with stubborn actors
 
 #include <cmath>
 #include "ClusteredRandom.h"
@@ -21,52 +21,54 @@
 #include <algorithm>
 using namespace std;
 
-// seems to be good!
-
-// for now this class seems to work, but can it be implemented nicer/more efficient? what about use of inheritance?
-// TO DO: implement opinion dynamics + make random graphs with number of nodes drawn from log-log distribution
-
+// constructor for SBM-ER
 Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, vector<int> clusterSizes, vector<double> edgeProbs, double rewireAddProbability, string type){
     _totalNumberOfNodes = totalNumberOfNodes; // total number of nodes in the clustered graph
-    _clusterSizes = clusterSizes; // vector that contains the number of nodes for each cluster (sum should equal totalNumberOfNodes)
-    _edgeProbs = edgeProbs; // vector that contains the edge probabilities for each cluster
-    _rewireAddProbability = rewireAddProbability;
+    _clusterSizes = clusterSizes; // vector that contains the number of nodes for each community (sum should equal totalNumberOfNodes); length of this vector determines number of communities
+    _edgeProbs = edgeProbs; // vector that contains the edge probabilities for each community
+    _rewireAddProbability = rewireAddProbability; // probability to rewire or add edges between communities; rewiring or adding depends on the 'type' parameter
     _type = type; // choice between 'rewire' and 'add'
-    _ER = true;
+    _ER = true; 
     _WS = false;
 
+    // reserve enough memory space
     _nodelist.resize(_totalNumberOfNodes);
+    // make a SBM-ER graph
     makeGraph();
 }
 
-vector<vector<int>> Clustered_Random_Network::clusters() const {return _clusters;}
-
+// constructor for SBM-WS
 Clustered_Random_Network::Clustered_Random_Network(int totalNumberOfNodes, vector<int> clusterSizes, vector<double> edgeProbs, vector<int> meanDegrees, double rewireAddProbability, string type){
     _totalNumberOfNodes = totalNumberOfNodes; // total number of nodes in the clustered graph
-    _clusterSizes = clusterSizes; // vector that contains the number of nodes for each cluster (sum should equal totalNumberOfNodes)
-    _edgeProbs = edgeProbs; // vector that contains the edge probabilities for each cluster (= the beta parameter for the WS model)
+    _clusterSizes = clusterSizes; // vector that contains the number of nodes for each community (sum should equal totalNumberOfNodes); length of this vector determines number of communities
+    _edgeProbs = edgeProbs; // vector that contains the edge probabilities for each community (= the beta parameter for the WS model)
     _meanDegrees = meanDegrees; // vector that contains the mean degrees of each constituent WS model
-    _rewireAddProbability = rewireAddProbability;
+    _rewireAddProbability = rewireAddProbability; // probability to rewire or add edges between communities; rewiring or adding depends on the 'type' parameter
     _type = type; // choice between 'rewire' and 'add'
     _ER = false;
     _WS = true;
 
+    // reserve enough memory space
     _nodelist.resize(_totalNumberOfNodes);
+    // make a SBM-WS graph
     makeGraph();
 }
 
+// implementation of getter
+vector<vector<int>> Clustered_Random_Network::clusters() const {return _clusters;}
+
 void Clustered_Random_Network::makeGraph(){
-    // is there a nicer way to give indexStart a value?
     vector<int> cluster;
     int indexStart = 0;
     for (int i = 0; i < _clusterSizes.size(); i++){
+        // each community is either an ER graph (for SBM-ER) or a WS graph (for SBM-WS)
         if (_ER == true && _WS == false){
             cluster = makeErdosRenyi(_clusterSizes[i], _edgeProbs[i], 0.5, indexStart, i);
         }
         else if (_ER == false && _WS == true){
             cluster = makeWattsStrogatz(_clusterSizes[i], _meanDegrees[i], _edgeProbs[i], 0.5, indexStart, i);
         }
-        _clusters.push_back(cluster);
+        _clusters.push_back(cluster); // add the community to the vector that contains the communities
         indexStart += _clusterSizes[i];
     }
 
@@ -75,7 +77,7 @@ void Clustered_Random_Network::makeGraph(){
         rewireEdges(_clusters);
     }
     else if (_type == "add"){
-        // add edges between clusters
+        // add edges between communities
         addEdges(_clusters);
     }
     else{
@@ -83,63 +85,68 @@ void Clustered_Random_Network::makeGraph(){
     }
 }
 
-// function that makes a clustered graph
-// maybe add resistance, opinion, active, etc. as arguments so that you can make clusters with different properties
+// function that makes the ER communities
 vector<int> Clustered_Random_Network::makeErdosRenyi(int numberOfNodes, double edgeProb, double initOp0Frac, int indexStart, int clust){
-    _numberOfNodes = numberOfNodes;
-    _edgeProbability = edgeProb;
+    _numberOfNodes = numberOfNodes; // number of nodes in specific community
+    _edgeProbability = edgeProb; // edge probability of the ER graph that makes the community
+
+    // set indexStart and initial fraction of opinion 0 in the community
     Erdos_Renyi_Network::_indexStart = indexStart;
     Erdos_Renyi_Network::_initOp0Frac = initOp0Frac;
-    this->Erdos_Renyi_Network::makeGraph();
+
+    this->Erdos_Renyi_Network::makeGraph(); // make the community
     vector<int> cluster;
     for (int i = indexStart; i < indexStart + numberOfNodes; i++){
         cluster.push_back(i);
-        _nodelist[i].setCluster(clust); // set to which cluster the node belongs
+        _nodelist[i].setCluster(clust); // set to which community the nodes belongs
     }
-    return cluster;
+    return cluster; // return the vector that contains the indices of the nodes inside that community
 }
 
+// function that makes the WS communities
 vector<int> Clustered_Random_Network::makeWattsStrogatz(int numberOfNodes, int meanDegree, double beta, double initOp0Frac, int indexStart, int clust){
-    _numberOfNodes = numberOfNodes;
-    _meanDegree = meanDegree;
-    _rewireProb = beta;
+    _numberOfNodes = numberOfNodes; // number of nodes in specific community
+    _meanDegree = meanDegree; // mean degree in that community
+    _rewireProb = beta; // rewire probability of the WS graph that makes the community
+
+    // set indexStart and initial fraction of opinion 0 in the community
     Watts_Strogatz_Network::_indexStart = indexStart;
     Watts_Strogatz_Network::_initOp0Frac = initOp0Frac;
-    this->Watts_Strogatz_Network::makeGraph();
+
+    this->Watts_Strogatz_Network::makeGraph(); // make the community
     vector<int> cluster;
     for (int i = indexStart; i < indexStart + numberOfNodes; i++){
         cluster.push_back(i);
-        _nodelist[i].setCluster(clust); // set to which cluster the node belongs
+        _nodelist[i].setCluster(clust); // set to which community the node belongs
     }
-    return cluster;
+    return cluster; // return the vector that contains the indices of the nodes inside that community
 }
 
-// function that rewires the edges of the graph with a certain probability --> put this in clustered graph section?
-// if you would throw away edgelist, than loop over nodes + loop over each neighbour and for each neighbour change it with some probability (draw random node from nodelist) --> faster run time
+// function that rewires the edges of the graph with a certain probability
 void Clustered_Random_Network::rewireEdges(vector<vector<int>> clusters){
     random_device rd; // will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
     uniform_real_distribution<> dis(0.0, 1.0);
 
     size_t nelem = 1;
-    vector<vector<int>> clus; // will contain the random cluster to which you will rewire
-    vector<int> out; // will contain the node in that random cluster to which you rewire
+    vector<vector<int>> clus; // will contain the random community to which you will rewire
+    vector<int> out; // will contain the node in that random community to which you rewire
 
-    // loop over clusters
+    // loop over communities
     for (int c = 0; c < clusters.size(); c++){
-        // move current cluster to beginning
+        // move current community to beginning
         std::swap(clusters[0], clusters[c]);
-        // for each cluster, loop over its nodes
+        // for each community, loop over its nodes
         for (int i = 0; i < clusters[0].size(); i++){
             for (int index : _nodelist[clusters[0][i]].neigh()){
                 if (index > _nodelist[clusters[0][i]].index()){
                     double r = dis(gen); // random number that will decide if edge is rewired or not
                     if (r < _rewireAddProbability){
                         // make sure to compile with c++17 (than sample will not give a problem)
-                        // choose a random cluster to which you will rewire (current cluster not included)
+                        // choose a random community to which you will rewire (current community not included)
                         sample(clusters.begin() + 1, clusters.end(), back_inserter(clus), nelem, mt19937{random_device{}()});
                         vector<int> cluster = clus.back(); 
-                        // choose a random node whithin that cluster
+                        // choose a random node whithin that community
                         sample(cluster.begin(), cluster.end(), back_inserter(out), nelem, mt19937{random_device{}()});
                         _nodelist[clusters[0][i]].addHelpNeigh(out.back());
                     }
@@ -149,7 +156,7 @@ void Clustered_Random_Network::rewireEdges(vector<vector<int>> clusters){
                 }     
             }
         }
-        // move current cluster back to its original position
+        // move current community back to its original position
         std::swap(clusters[0], clusters[c]);
     }
 
@@ -170,15 +177,15 @@ void Clustered_Random_Network::addEdges(vector<vector<int>> clusters){
     mt19937 gen(rd()); // standard mersenne twister engine seeded with rd()
     uniform_real_distribution<> dis(0.0, 1.0);
 
-    // loop over clusters
+    // loop over community
     for (int c = 0; c < clusters.size(); c++){
-        // move current cluster to beginning
+        // move current community to beginning
         std::swap(clusters[0], clusters[c]);
-        // for each cluster, loop over its nodes
+        // for each community, loop over its nodes
         for (int i = 0; i < clusters[0].size(); i++){
-            // for each node loop over the other clusters, but make sure that you go only once over each possible edge instead of twice (count from c+1 instead of 1)
+            // for each node loop over the other community, but make sure that you go only once over each possible edge instead of twice (count from c+1 instead of 1)
             for (int k = c+1; k < clusters.size(); k++){
-                // loop over the nodes in that cluster
+                // loop over the nodes in that community
                 for (int n = 0; n < clusters[k].size(); n++){
                     double r = dis(gen); // random number that will decide if edge is added between the nodes or not
                     if (r < _rewireAddProbability){
@@ -190,7 +197,7 @@ void Clustered_Random_Network::addEdges(vector<vector<int>> clusters){
             }
             
         }    
-        // move current cluster back to its original position
+        // move current community back to its original position
         std::swap(clusters[0], clusters[c]);
     }
 }
@@ -203,7 +210,7 @@ void Clustered_Random_Network::makeRandomCommunityFractionStubborn(double fracti
 
     int k = 0;
     for (int i = 0; i < _clusterSizes.size(); i++){
-        double r = dis(gen); // random number that will determine if cluster is stubborn or not
+        double r = dis(gen); // random number that will determine if community is stubborn or not
         if (r < fractionResistant){
             for (int j = k; j < k + _clusterSizes[i]; j++){
                _nodelist[j].setResistance(1.);
@@ -242,13 +249,13 @@ void Clustered_Random_Network::setCommunityOpinion(double frac0, int cluster, in
 }
 
 
-// function that counts the fractions of opinions in a particular cluster of the clustered random graph
+// function that counts the fractions of opinions in a particular community of the clustered random graph
 vector<double> Clustered_Random_Network::countOpinionFractionCluster(int clusterNumber){
     int opinion0 = 0;
     int opinion1 = 0;
     vector<double> fractions;
     int clusterLength = _clusterSizes[clusterNumber];
-    // Attention: this for loop only works if all clusters have equal sizes, if not this should be addapted
+    // Attention: this for loop only works if all community have equal sizes, if not this should be addapted
     for (int i = (clusterNumber*clusterLength); i < ((clusterNumber + 1)*clusterLength); i++){
         if (_nodelist[i].opinion() == 0){
             opinion0++;
@@ -262,7 +269,7 @@ vector<double> Clustered_Random_Network::countOpinionFractionCluster(int cluster
     return fractions;
 }
 
-// function that calculates the modularity of the SBM (based on the clusters that construct the model!) (returns the calculated modularity)
+// function that calculates the modularity of the SBM (based on the communities that construct the model!) (returns the calculated modularity)
 double Clustered_Random_Network::calculateModularity(){
     int refClus = 0;
     double mod = 0.; // total modularity
@@ -271,16 +278,22 @@ double Clustered_Random_Network::calculateModularity(){
     int L = numberOfEdges(); // total number of links in graph
     int i = 0;
     while (i < _nodelist.size()){
-        int cluster = _nodelist[i].cluster();
+        int cluster = _nodelist[i].cluster(); // set current community
+        // check if node belongs the the current community
         if (cluster == refClus){
             for (int neigh : _nodelist[i].neigh()){
-                k_c++;
+                k_c++; // calculate the total degree of the nodes in the current community
+                // check if neighbor of node belongs to the same community --> if so: add edge to L_c
                 if (_nodelist[neigh].cluster() == cluster){
-                    L_c++;
+                    L_c++; 
                 }
             }
             i++;
         }
+        // if node doesn't belong to the current community 
+        // --> calculate the modularity of the current community with the obtained values for L_c and k_c
+        // --> set L_c and k_c to zero (so you can calculate them for the next community)
+        // --> swith to the next community
         else{
             mod += (double(L_c)/double(2*L) - pow(double(k_c)/double(2*L), 2));
             L_c = 0;
@@ -288,33 +301,7 @@ double Clustered_Random_Network::calculateModularity(){
             refClus = cluster;
         }
     }
-    // this is needed to add the modularity of the last cluster as well
+    // this is needed to add the modularity of the last community as well
     mod += (double(L_c)/double(L) - pow(double(k_c)/double(2*L), 2));
-    return mod;
-}
-
-// function that calculates the modularity (returns the calculated modularity)
-double Clustered_Random_Network::calculateModularityTest(vector<vector<int>> communities){
-    double mod = 0.; // total modularity
-    int L_c = 0; // total number of links in community C
-    int k_c = 0; // total degree of nodes in community C
-    int L = numberOfEdges(); // total number of links in graph
-    // loop over all communities
-    for (int i = 0; i < communities.size(); i++){
-        // for each community loop over all the constituent nodes
-        for (int j = 0; j < communities[i].size(); j++){
-            int index = communities[i][j];
-            for (int neigh : _nodelist[index].neigh()){
-                k_c++; // calculate the total degree of nodes in the community
-                // check if neigh is also in the community: if so, add the edge, if not, don't add the edge
-                if (find(communities[i].begin(), communities[i].end(), neigh) != communities[i].end()){
-                    L_c++;
-                }
-            }
-        }
-        mod += (double(L_c)/double(2*L) - pow(double(k_c)/double(2*L), 2));
-        L_c = 0;
-        k_c = 0;
-    }
-    return mod;
+    return mod; // return the calculated modularity of the graph
 }

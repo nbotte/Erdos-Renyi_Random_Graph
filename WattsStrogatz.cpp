@@ -1,4 +1,4 @@
-// Nina Botte
+// Nina Botte -- Master thesis: Opinion dynamics on social networks with stubborn actors
 
 #include <cmath>
 #include <memory>
@@ -25,12 +25,13 @@ Watts_Strogatz_Network::Watts_Strogatz_Network(){};
 
 // implement constructor
 Watts_Strogatz_Network::Watts_Strogatz_Network(int numberOfNodes, int meanDegree, double rewireProb, double initOp0Frac, int indexStart){
-    _numberOfNodes = numberOfNodes;
-    _meanDegree = meanDegree;
-    _rewireProb = rewireProb;
-    _initOp0Frac = initOp0Frac;
-    _indexStart = indexStart;
+    _numberOfNodes = numberOfNodes; // set the total number of nodes in the graph
+    _meanDegree = meanDegree; // set the mean degree 
+    _rewireProb = rewireProb; // set the rewire probability
+    _initOp0Frac = initOp0Frac; // set the initial fraction of nodes with opinion 0
+    _indexStart = indexStart; // set the index from which the node names start --> mainly used in SBM-WS where each community is a separate WS graph
 
+    // reserve enough memory
     _nodelist.resize(_numberOfNodes); 
 
     // make Watts-Strogatz network by calling the function makeGraph()
@@ -77,12 +78,14 @@ void Watts_Strogatz_Network::makeRegularLattice(){
     // add edges of the regular lattice
     for (int i = _indexStart; i < _numberOfNodes + _indexStart; i++){
         for (int j = i; j < _numberOfNodes + _indexStart; j++){
-           if (0 < abs(i-j)%(_numberOfNodes-1-(_meanDegree/2)) && abs(i-j)%(_numberOfNodes-1-(_meanDegree/2)) <= (_meanDegree/2)){
-                auto N = make_shared<Node>(_nodelist[i]);
-                auto M = make_shared<Node>(_nodelist[j]);
-                Edge e = Edge(N, M);
-                addEdge(e);
-           } 
+            if ((_numberOfNodes-1-(_meanDegree/2)) != 0){
+                if (0 < abs(i-j)%(_numberOfNodes-1-(_meanDegree/2)) && abs(i-j)%(_numberOfNodes-1-(_meanDegree/2)) <= (_meanDegree/2)){
+                    auto N = make_shared<Node>(_nodelist[i]);
+                    auto M = make_shared<Node>(_nodelist[j]);
+                    Edge e = Edge(N, M);
+                    addEdge(e);
+                } 
+            }
         }
     }
 }
@@ -98,6 +101,7 @@ void Watts_Strogatz_Network::rewire(){
 
     for (int i = _indexStart; i < _indexStart + _numberOfNodes; i++){
         for (int index : _nodelist[i].neigh()){
+            // only rewire the rightmost neighbors of the node
             if (i < index && index <= (i + (_meanDegree/2))){
                 double r = dis(gen); // draw a random number that will determine whether the edge is rewired or not
                 if (r < _rewireProb){
@@ -107,30 +111,30 @@ void Watts_Strogatz_Network::rewire(){
                     while (out.back().index() == i || _nodelist[i].containsNeigh(out.back().index())){
                         sample(_nodelist.begin() + _indexStart, _nodelist.begin() + _indexStart + _numberOfNodes, back_inserter(out), nelem, mt19937{random_device{}()});
                     }
-                    _nodelist[i].addHelpNeigh(out.back().index());
+                    _nodelist[i].addHelpNeigh(out.back().index()); // if rewired: add new neighbor to helpNeigh list of the node
                 }
                 else{
-                    _nodelist[i].addHelpNeigh(index);
+                    _nodelist[i].addHelpNeigh(index); // if not rewired: add the current neighbor to helpNeigh list of the node
                 }
             }
+            // add the leftmost neighbors of the node to the helpNeigh list of the node
             else if (index > (i + (_meanDegree/2))){
                 _nodelist[i].addHelpNeigh(index);
             }
         }
     }
+    // remove all the old neighbors from the neighList of the node
     for (int i = _indexStart; i < _numberOfNodes + _indexStart; i++){
         _nodelist[i].removeAllNeigh();
     }
-    ofstream pairFile("Pairs.txt");
+    // add the new, rewired neighbors in the helpNeigh list to the neighList of the node
     for (int i = _indexStart; i < _numberOfNodes + _indexStart; i++){
         for (int index : _nodelist[i].helpNeigh()){
             _nodelist[i].addNeigh(index);
-            pairFile << i << '\t' << index << '\n';
             _nodelist[index].addNeigh(_nodelist[i].index());
         }
-        _nodelist[i].removeAllHelpNeigh();
+        _nodelist[i].removeAllHelpNeigh(); // remove the helpNeigh
     }
-    pairFile.close();
 }
 
 // function that calculates the number of triangles in the graph
@@ -141,7 +145,7 @@ int Watts_Strogatz_Network::numberOfTriangles(){
         // for each node: check if there is an edge between any pair of neighbours --> counts each tiangle three times
         for (int index : _nodelist[i].neigh()){
             for (int index2 : _nodelist[i].neigh()){
-                // counts each triangle twice
+                // counts each edge twice
                 if (index2 != index){
                     if (checkEdge(_nodelist[index], _nodelist[index2]) || checkEdge(_nodelist[index2], _nodelist[index])){
                         triangles++; 

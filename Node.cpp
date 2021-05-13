@@ -1,10 +1,9 @@
-// Nina Botte
+// Nina Botte -- Master thesis: Opinion dynamics on social networks with stubborn actors
 
 #include "Node.h"
 #include "Edge.h"
 #include <iomanip>
 #include <iostream>
-#include "boost/circular_buffer.hpp"
 #include <list>
 #include <vector>
 #include <random>
@@ -12,7 +11,6 @@
 using namespace std;
 
 // attention: try not to copy nodes, becauses no proper copy constructor is written (and I do not see how to do this with neighbours that point to nodes itself)
-// how to implement copy constructor?
 
 // default constructor
 Node::Node(){};
@@ -23,13 +21,10 @@ Node::Node(int index, int opinion, double resistance, bool active){
     _neigh = list<int>(); 
     _helpNeigh = list<int>();
     _opinion = opinion; 
-   // _oldOpinion;
-    _newOpinion; 
-    _opinionlist.set_capacity(20); // only keep the 20 newest opinions of the neighbours
+    _oldOpinion;
     _resistance = resistance; 
     _active = active;
     _threshold = 0.; // default threshold is 0. (no "stubborness")
-   // _wasActive = true;
     _neighOpinion = vector<int>(); // this is the hidden list (use vector dataset) with the opinions that the neighbors posted since the last time the node was active (see paper 8)
     _cluster = 0; // variable that determines to what cluster the node belongs; mainly used in the SBM, BUT can also be used to optimize modularity etc...; Default zero 
 
@@ -41,36 +36,33 @@ list<int> Node::neigh() const {return _neigh;}
 list<int> Node::helpNeigh() const {return _helpNeigh;}
 int Node::opinion() const {return _opinion;}
 int Node::oldOpinion() const {return _oldOpinion;}
-int Node::newOpinion() const {return _newOpinion;}
-boost::circular_buffer<int> Node::opinionlist() const {return _opinionlist;}
 double Node::resistance() const {return _resistance;}
 double Node::threshold() const {return _threshold;}
 bool Node::active() const {return _active;}
 int Node::cluster() const {return _cluster;}
-
 vector<int> Node::neighOpinion() const {return _neighOpinion;}
 
-// function to add an index of a neighbour to the list of indices of neighbours of a node
+// function to add an index of a neighbor to the list of indices of neighbours of a node
 void Node::addNeigh(int index){
    _neigh.emplace_back(index);
 }
 
-// function to add a help-neighbour when rewiring the clustered graph
+// function to add a help-neighbor when rewiring the clustered graph
 void Node::addHelpNeigh(int index){
     _helpNeigh.emplace_back(index);
 }
 
-// function to remove an index of a neighbour to the list of indices of neighbours of a node, NOT TESTED
+// function to remove an index of a neighbor to the list of indices of neighbors of a node, NOT TESTED
 void Node::removeNeigh(int index){
     _neigh.remove(index);
 }
 
-// function to remove all the neighbours of a node
+// function to remove all the neighbors of a node
 void Node::removeAllNeigh(){
     _neigh.clear();
 }
 
-// function to remove all the help-neighbours
+// function to remove all the help-neighbors
 void Node::removeAllHelpNeigh(){
     _helpNeigh.clear();
 }
@@ -107,7 +99,6 @@ void Node::orderOpinionsREF(){
 }
 
 // function to change the opinion of the node
-// Need to change this according to opinion dynamics of paper 8? --> did this, but no resistance implemented yet!
 void Node::changeOpinion(){
     int opinion0 = 0; // counter that counts the number of neighbours with opinion 0
 
@@ -118,10 +109,10 @@ void Node::changeOpinion(){
     double o = dis(gen); // generate a random number that will determine the new opinion of the node (see paper 8)
     double r = dis(gen); // generate a random number that will determine if the resistant node changes its opinion or not
 
-    // change the opinion of the active node according to the majority model and if the random number is bigger than the resistance of the node
+    // change the opinion of the active node
     if (_active){
         // first: order the hidden list neighOpinion according to some rule and only look at first 20 opinions
-        orderOpinionsPR();
+        orderOpinionsREC();
 
         // count the number of opinion 0 and 1 of the first 20 opinions in the ordered list
         if (_neighOpinion.size() != 0){
@@ -135,35 +126,11 @@ void Node::changeOpinion(){
                 }
             }
 
+            // determine fraction of neighbors with opinion 0 and fraction with opinion 1
             double fraction0 = double(opinion0)/_neighOpinion.size();
             double fraction1 = 1. - fraction0;
 
             //cout << fraction0 << ' ' << fraction1 << endl;
-
-            // if fraction0 and fraction1 are both higher than the threshold to change opinion, you change to opinion 0 or 1 with a probability equal to the corresponding fraction
-            /*if (fraction0 > _threshold && fraction1 > _threshold){    
-                if (o < fraction0){
-                    _opinion = 0;
-                }
-                else if (o < fraction0 + fraction1){
-                    _opinion = 1;
-                }
-                else{
-                    _opinion = _opinion;
-                }
-            }
-            // if fraction0 is higher than the threshold and fraction1 lower, you adopt opinion 0
-            else if (fraction0 > _threshold && fraction1 <= _threshold){
-                _opinion = 0;
-            }
-            // if fraction1 is higher than the threshold and fraction0 lower, you adopt opinion 1
-            else if (fraction1 > _threshold && fraction0 <= _threshold){
-                _opinion = 1;
-            }
-            // if both fraction are under the threshold, you don't change your opinion 
-            else if (fraction1 <= _threshold && fraction0 <= _threshold){
-                _opinion = _opinion;PR
-            }*/
 
             // majority model with threshold 
             /*if (fraction0 > fraction1 && fraction0 > _threshold){
@@ -176,37 +143,6 @@ void Node::changeOpinion(){
                 _opinion = _opinion;
             }*/
 
-            // my probabilistic threshold model
-           /* if (_opinion == 0){
-                // check if fraction of friends with the other opinion is higher than your threshold to switch to that opinion
-                if (fraction1 > _threshold){
-                    // change with a probability equal to fraction1 to the other opinion
-                    if (o < fraction1){
-                        _opinion = 1;
-                    }
-                    else{
-                        _opinion = _opinion;
-                    }
-                }
-                else{
-                    _opinion = _opinion;
-                }
-            }
-            else if (_opinion == 1){
-                // check if fraction of friends with the other opinion is higher than your threshold to switch to that opinion
-                if (fraction0 > _threshold){
-                    // change with a probability equal to fraction0 to the other opinion
-                    if (o < fraction0){
-                        _opinion = 0;
-                    }
-                    else{
-                        _opinion = _opinion;
-                    }
-                }
-                else{
-                    _opinion = _opinion;
-                }
-            }*/
             // probabilistic model with all nodes having some fraction of stubbornness
             if (o < fraction0){
                 if (r > _resistance){
@@ -237,11 +173,7 @@ void Node::setOpinion(int opinion){
     _opinion = opinion;
 }
 
-// function that adds an opinion to the opinionlist
-void Node::addOpinion(int opinion){
-    _opinionlist.push_back(opinion);
-}
-
+// function that sets the variable oldOpinion 
 void Node::setOldOpinion(int opinion){
     _oldOpinion = opinion;
 }
@@ -261,13 +193,6 @@ void Node::setCluster(int cluster){
     _cluster = cluster;
 }
 
-// function that sends the opinion of the node to the opinionlist of its neighbours
-/*void Node::sendOpinion(){
-    for (shared_ptr<Node> n: _neigh){
-        n->addOpinion(_opinion);
-    }
-}*/
-
 // function that deactivates the node
 void Node::deactivate(){
     _active = false;
@@ -278,15 +203,12 @@ void Node::setActive(bool active){
     _active = active;
 }
 
-// function that sets the wasActiveness of a node
-/*void Node::setWasActive(){
-    _wasActive = _active;
-}*/
-
 // add opinion to the hidden list of posted opinions of neighbors
 void Node::addNeighOpinion(int opinion){
     _neighOpinion.push_back(opinion);
 }
+
+// function to remove all the opinions of the neighbors
 void Node::removeAllNeighOpinion(){
     _neighOpinion.clear();
 }
@@ -297,7 +219,6 @@ bool Node::containsNeigh(int n){
 }
 
 // function that overwrites the == operator to compare 2 nodes
-// ATTENTION: maybe also check opinion and active or not!!
 bool operator==(Node n1, Node n2){
     if (n1._index == n2._index){
         return true;

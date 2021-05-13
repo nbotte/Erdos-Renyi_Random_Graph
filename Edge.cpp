@@ -1,4 +1,4 @@
-// Nina Botte
+// Nina Botte -- Master thesis: Opinion dynamics on social networks with stubborn actors
 
 #define _USE_MATH_DEFINES
 #include "Edge.h"
@@ -6,8 +6,6 @@
 #include <iomanip>
 #include <iostream>
 using namespace std;
-
-// use copy constructor when working with clustered graphs!
 
 // default constructor
 Edge::Edge(){};
@@ -18,49 +16,9 @@ Edge::Edge(shared_ptr<Node> inNode, shared_ptr<Node> outNode){
     _outNode = outNode;
 }
 
-/*Edge::Edge(Node* inNode, Node* outNode){
-    // allocate the memory to hold a node
-    _inNode = new Node;
-    _outNode = new Node;
-
-    // Attention: this implies that nodes are properly copied --> not the case, only a problem for the neighbours
-    *_inNode = *inNode; 
-    *_outNode = *outNode;
-}
-
-// implementation of the copy constructor
-Edge::Edge(const Edge &e){
-    // allocate memory first
-    _inNode = new Node;
-    _outNode = new Node;
-
-    // then copy the value from the passed object
-    *_inNode = *e._inNode; 
-    *_outNode = *e._outNode;
-}
-
-// destructor
-Edge::~Edge(){
-    // release the memory allocated
-    delete _inNode;
-    delete _outNode;
-    _inNode = NULL;
-    _outNode = NULL;
-}*/
-
 // implementation of getters, provides access to data member with corresponding name
 shared_ptr<Node> Edge::inNode() const {return _inNode;}
 shared_ptr<Node> Edge::outNode() const {return _outNode;}
-
-// implementation of operator assignement
-/*Edge & Edge::operator=(const Edge &e){
-    // check for self assignement
-    if (this != &e){
-        *_inNode = *(e._inNode);
-        *_outNode = *(e._outNode);
-    }
-    return *this;
-}*/
 
 // function that overwrites the << operator to print edges to screen
 ostream& operator<<(ostream& os, const Edge& e){

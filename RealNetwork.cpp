@@ -1,4 +1,4 @@
-// Nina Botte
+// Nina Botte -- Master thesis: Opinion dynamics on social networks with stubborn actors
 
 #include <cmath>
 #include <memory>
@@ -19,18 +19,20 @@ using namespace std;
 
 // implement constructor
 Real_World_Network::Real_World_Network(int totalNumberOfNodes, vector<vector<int>> edges){
-    _numberOfNodes = totalNumberOfNodes;
-    _edges = edges;
+    _numberOfNodes = totalNumberOfNodes; // total number of nodes in the real-world network
+    _edges = edges; // edges of the real-world network
     
+    // reserve enough memory space
     _nodelist.resize(_numberOfNodes); 
 
+    // construct the real-world network
     makeGraph();
 }
 
 void Real_World_Network::makeGraph(){
     // add nodes to nodelist
     for (int i = 0; i < _numberOfNodes; i++){
-        // defualt have resistance, opinion and activeness equal to 0;
+        // defualt: resistance, opinion and activeness equal to 0;
         double resistance = 0.; // variable that determines the resistance of a node
         int opinion = 0; // variable that determines the opinion of a node
         bool active = 0.; // variable that determines if node is active
@@ -48,69 +50,6 @@ void Real_World_Network::makeGraph(){
         Edge e = Edge(N, M);
         addEdge(e);
     }
-}
-
-// function that performs a community detection, returns the max value of the modularity (modularity of best community division)
-// ATTENTION: this works REALLY SLOW --> use python code instead!!
-double Real_World_Network::commDetection(){
-    vector<vector<int>> communities; // vector that contains the communities (one community is represented as a vector with the indices of the nodes it contains)
-    vector<int> comm; // vector that contains one community
-    vector<vector<int>> helpComm; // helpvector, will be used to update the community vector
-
-    double mod = 0.; // modularity
-    double deltaMod = 0.; // modularity difference after merging 2 communities
-    bool start = true; // used to start the while loop
-
-    // first assign each node to a different community
-    for (int i = 0; i < _nodelist.size(); i++){
-        comm.push_back(i);
-        communities.push_back(comm);
-        comm.clear();
-    }
-    mod = calculateModularity(communities);
-    int indexCommA; // used to keep track of which communities should be merged
-    int indexCommB;
-    // as long as the modularity increases, the best community division is not obtained
-    while (deltaMod > 0.  || start==true){
-        start = false;
-        // calculate modularity change for merging each pair of communities, keep largest deltaMod
-        for (int i = 0; i < communities.size(); i++){
-            for (int k = i+1; k < communities.size(); k++){
-                double change = calculateModularityChange(communities[i], communities[k]);
-                if (change > deltaMod){
-                    deltaMod = change;
-                    indexCommA = i;
-                    indexCommB = k;
-                }
-            }
-        }
-        // merge the communities
-        for (int i = 0; i < communities.size(); i++){
-            if (i != indexCommA && i != indexCommB){
-                helpComm.push_back(communities[i]);
-            }
-            else if (i == indexCommA){
-                for (int j = 0; j < communities[i].size(); j++){
-                    comm.push_back(communities[i][j]);
-                }
-            }
-            else if (i == indexCommB){
-                for (int j = 0; j < communities[i].size(); j++){
-                    comm.push_back(communities[i][j]);
-                }
-            }
-        }
-        helpComm.push_back(comm);
-        comm.clear();
-        communities.clear();
-        for (int i = 0; i < helpComm.size(); i++){
-            communities.push_back(helpComm[i]);
-        }
-        helpComm.clear();
-        mod += deltaMod;
-    }
-    cout << calculateModularity(communities) << endl;
-    return mod;
 }
 
 // function that calculates the modularity (returns the calculated modularity)
@@ -137,31 +76,4 @@ double Real_World_Network::calculateModularity(vector<vector<int>> communities){
         k_c = 0;
     }
     return mod;
-}
-
-// funtcion that calculates the modularity change after merging the two communities A and B
-double Real_World_Network::calculateModularityChange(vector<int> commA, vector<int> commB){
-    int l_AB = 0; // number of edges between A and B
-    int k_A = 0; // total degree of nodes in commA
-    int k_B = 0; // total degree of nodes in commB
-    double deltaMod = 0.; // modularity change after merging A and B
-    int L = numberOfEdges(); // total number of edges
-    // loop over nodes in community A and check how many edges they have with nodes in community B
-    for (int i = 0; i < commA.size(); i++){
-        int index = commA[i];
-        k_A += _nodelist[index].neigh().size();
-        // loop over neighbors and check which neighbor is in commB
-        for (int neigh : _nodelist[index].neigh()){
-            if (find(commB.begin(), commB.end(), neigh) != commB.end()){
-                    l_AB++;
-                }
-        }
-    }
-    // calculate k_B
-    for (int i = 0; i < commB.size(); i++){
-        int index = commB[i];
-        k_B += _nodelist[index].neigh().size();
-    }
-    deltaMod = double(l_AB)/double(L) - (double(k_A)*double(k_B)/(2*pow(double(L), 2)));
-    return deltaMod;
 }
