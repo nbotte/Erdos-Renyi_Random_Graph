@@ -1,12 +1,12 @@
 import numpy as np
 
-xvalues = np.loadtxt("avDeg_SBM.txt")
+xvalues = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10680-4-02_fracRes=075_stubb=1_av10x5_xvalues.txt")
 
-mean = np.mean(xvalues)
+'''mean = np.mean(xvalues)
 std = np.std(xvalues)
-print(mean, std)
+print(mean, std)'''
 
-'''xAt0op0 = xvalues[:,0]
+xAt0op0 = xvalues[:,0]
 xAt0op1 = xvalues[:,1]
 xAt500op0 = xvalues[:,2]
 xAt500op1 = xvalues[:,3]
@@ -94,4 +94,4 @@ Var1XY = E_X12 * E_Y12 - E_y1**2 * E_x1**2
 meanVar = (VarXY + Var1XY)/2
 meanSTD = (np.sqrt(VarXY) + np.sqrt(Var1XY))/2
 print(np.sqrt(meanVar), meanSTD)
-print(E_y*E_x, np.sqrt(VarXY), E_y1*E_x1, np.sqrt(Var1XY))'''
+print(E_y*E_x, np.sqrt(VarXY), E_y1*E_x1, np.sqrt(Var1XY))

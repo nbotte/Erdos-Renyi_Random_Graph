@@ -65,10 +65,10 @@ def get_latex_preamble(use_libertine=True, use_fontenc=True, use_inputenc=True, 
             raise ValueError(f"Unsupported type of package: {type(package)}!")
     return preamble
 
-echoSBMH0 = np.loadtxt("Echo_chamber_real_network_SBM_REC_8003-0023-00001_53x151_fracRes=0_stubb=0.txt")
-echoSBMH01 = np.loadtxt("Echo_chamber_SBM_REC_8003-0023-00001_53x151_fracRes=025_stubb=1_av10x5.txt")
-echoSBMH02 = np.loadtxt("Echo_chamber_SBM_REC_8003-0023-00001_53x151_fracRes=05_stubb=1_av10x5.txt")
-echoSBMH03 = np.loadtxt("Echo_chamber_SBM_REC_8003-0023-00001_53x151_fracRes=075_stubb=1_av10x5.txt")
+echoSBMH0 = np.loadtxt("Echo_chamber_SBM_PR_10680-002-000005_60x178_fracRes=0_stubb=0_av10x5.txt")
+echoSBMH01 = np.loadtxt("Echo_chamber_SBM_PR_10680-002-000005_60x178_fracRes=025_stubb=1_av10x5.txt")
+echoSBMH02 = np.loadtxt("Echo_chamber_SBM_PR_10680-002-000005_60x178_fracRes=05_stubb=1_av10x5.txt")
+echoSBMH03 = np.loadtxt("Echo_chamber_SBM_PR_10680-002-000005_60x178_fracRes=075_stubb=1_av10x5.txt")
 '''echoSBMH04 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=04.txt")
 echoSBMH05 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=05.txt")
 echoSBMH06 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=06.txt")
@@ -77,10 +77,10 @@ echoSBMH08 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=08.txt")
 echoSBMH09 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=09.txt")
 echoSBMH1 = np.loadtxt("Echo_chamber_SBM_REF_01-0001_10x100_majT=1.txt")'''
 
-echoREAL0 = np.loadtxt("Echo_chamber_real_network_lastfm_REC_8003_fracRes=0_stubb=0.txt")
-echoREAL01 = np.loadtxt("Echo_chamber_real_network_lastfm_REC_8003_fracRes=025_stubb=1_av10x5.txt")
-echoREAL02 = np.loadtxt("Echo_chamber_real_network_lastfm_REC_8003_fracRes=05_stubb=1_av10x5.txt")
-echoREAL03 = np.loadtxt("Echo_chamber_real_network_lastfm_REC_8003_fracRes=075_stubb=1_av10x5.txt")
+echoREAL0 = np.loadtxt("Echo_chamber_real_network_PGP_PR_10680_fracRes=0_stubb=0_av10x5.txt")
+echoREAL01 = np.loadtxt("Echo_chamber_real_network_PGP_PR_10680_fracRes=025_stubb=1_av10x5.txt")
+echoREAL02 = np.loadtxt("Echo_chamber_real_network_PGP_PR_10680_fracRes=05_stubb=1_av10x5.txt")
+echoREAL03 = np.loadtxt("Echo_chamber_real_network_PGP_PR_10680_fracRes=075_stubb=1_av10x5.txt")
 '''echoREAL04 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=04.txt")
 echoREAL05 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=05.txt")
 echoREAL06 = np.loadtxt("Echo_chamber_SBM_REC_025-00025_50x20_T=06.txt")
@@ -113,10 +113,10 @@ echoER08 = np.loadtxt("Echo_chamber_ER_REF_001_majT=08.txt")
 echoER09 = np.loadtxt("Echo_chamber_ER_REF_001_majT=09.txt")
 echoER1 = np.loadtxt("Echo_chamber_ER_REF_001_majT=1.txt")'''
 
-echoWS0 = np.loadtxt("Echo_chamber_real_network_WS_REC_8003-4-015_fracRes=0_stubb=0.txt")
-echoWS01 = np.loadtxt("Echo_chamber_WS_REC_8003-4-015_fracRes=025_stubb=1_av10x5.txt")
-echoWS02 = np.loadtxt("Echo_chamber_WS_REC_8003-4-015_fracRes=05_stubb=1_av10x5.txt")
-echoWS03 = np.loadtxt("Echo_chamber_WS_REC_8003-4-015_fracRes=075_stubb=1_av10x5.txt")
+echoWS0 = np.loadtxt("Echo_chamber_WS_PR_10680-4-02_fracRes=0_stubb=0_av10x5.txt")
+echoWS01 = np.loadtxt("Echo_chamber_WS_PR_10680-4-02_fracRes=025_stubb=1_av10x5.txt")
+echoWS02 = np.loadtxt("Echo_chamber_WS_PR_10680-4-02_fracRes=05_stubb=1_av10x5.txt")
+echoWS03 = np.loadtxt("Echo_chamber_WS_PR_10680-4-02_fracRes=075_stubb=1_av10x5.txt")
 '''echoWS04 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=04.txt")
 echoWS05 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=05.txt")
 echoWS06 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=06.txt")
@@ -125,10 +125,10 @@ echoWS08 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=08.txt")
 echoWS09 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=09.txt")
 echoWS1 = np.loadtxt("Echo_chamber_WS_REF_10-006_majT=1.txt")'''
 
-echoSBMWS0 = np.loadtxt("Echo_chamber_SBM-WS_REC_8003-4-0025-00001_53x151_fracRes=0_stubb=0_av10x5.txt")
-echoSBMWS01 = np.loadtxt("Echo_chamber_SBM-WS_REC_8003-4-0025-00001_53x151_fracRes=025_stubb=1_av10x5.txt")
-echoSBMWS02 = np.loadtxt("Echo_chamber_SBM-WS_REC_8003-4-0025-00001_53x151_fracRes=05_stubb=1_av10x5.txt")
-echoSBMWS03 = np.loadtxt("Echo_chamber_SBM-WS_REC_8003-4-0025-00001_53x151_fracRes=075_stubb=1_av10x5.txt")
+echoSBMWS0 = np.loadtxt("Echo_chamber_SBM-WS_PR_10680-4-012-000007_60x178_fracRes=0_stubb=0_av10x5.txt")
+echoSBMWS01 = np.loadtxt("Echo_chamber_SBM-WS_PR_10680-4-012-000007_60x178_fracRes=025_stubb=1_av10x5.txt")
+echoSBMWS02 = np.loadtxt("Echo_chamber_SBM-WS_PR_10680-4-012-000007_60x178_fracRes=05_stubb=1_av10x5.txt")
+echoSBMWS03 = np.loadtxt("Echo_chamber_SBM-WS_PR_10680-4-012-000007_60x178_fracRes=075_stubb=1_av10x5.txt")
 '''echoSBMWS04 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=04.txt")
 echoSBMWS05 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=05.txt")
 echoSBMWS06 = np.loadtxt("Echo_chamber_SBM-WS_REF_10-001-0001_10x100_majT=06.txt")
@@ -171,7 +171,7 @@ echoWS[9] = np.mean(echoWS09[:,2])
 echoWS[10] = np.mean(echoWS1[:,2])'''
 
 #echoWS = [1.92, 2.24, 2.24, 2.73, 3.1, 1]
-errWS = [0.11, 0.12, 0.1, 0.08, 0.08]
+errWS = [0.18, 0.28, 0.23, 0.11, 0.11]
 
 echoSBMH = np.zeros(5)
 
@@ -189,7 +189,7 @@ echoSBMH[9] = np.mean(echoSBMH09[:,2])
 echoSBMH[10] = np.mean(echoSBMH1[:,2])'''
 
 #echoSBMH = [1.32, 1.41, 1.53, 1.55, 1.59, 1]
-errSBMH = [0.07, 0.07, 0.06, 0.06, 0.06]
+errSBMH = [0.1, 0.1, 0.07, 0.05, 0.05]
 
 echoREAL = np.zeros(5)
 
@@ -207,7 +207,7 @@ echoER[9] = np.mean(echoER09[:,2])
 echoER[10] = np.mean(echoER1[:,2])'''
 
 #echoER = [1.13, 1.15, 1.04, 1.11, 1.18, 1]
-errREAL = [0.06, 0.05, 0.05, 0.04, 0.04]
+errREAL = [0.05, 0.05, 0.05, 0.04, 0.04]
 
 '''echoSBML = np.zeros(11)
 
@@ -241,7 +241,7 @@ echoSBMWS[9] = np.mean(echoSBMWS09[:,2])
 echoSBMWS[10] = np.mean(echoSBMWS1[:,2])'''
 
 #echoSBMWS = [1.69, 2.16, 2.13, 2.81, 2.97, 1]
-errSBMWS = [0.14, 0.18, 0.15, 0.09, 0.09]
+errSBMWS = [0.35, 0.35, 0.28, 0.13, 0.13]
 
 '''poptWS, pcovWS = curve_fit(func_quad, threshold[:3], echoWS[:3])
 print(poptWS)
@@ -324,9 +324,9 @@ plt.plot(xfSBML1, func_lin(xfSBML1, *poptSBML1), 'y--')
 plt.plot(xfSBML2, func_quad(xfSBML2, *poptSBML2), 'y--')'''
 #ax.errorbar(threshold, echoSBML, yerr=np.array(errSBML)/10., xerr=None, c='y', fmt='o', label = r'SBM, low mod')
 
-ax.errorbar(threshold, echoREAL, yerr=np.array(errREAL), xerr=None, c='g', fmt='o', label = r'Last.fm network')
+ax.errorbar(threshold, echoREAL, yerr=np.array(errREAL), xerr=None, c='g', fmt='o', label = r'PGP network')
 
-ax.set_ylim(0.8, 2.75)
+#ax.set_ylim(0.85, 2.2)
 ax.set_xlabel(r"fracRes", fontsize=10)
 ax.set_ylabel("Echo chamber size", fontsize=10)
 ax.tick_params(labelsize=10, color='darkgrey')
@@ -334,5 +334,5 @@ legend = ax.legend(loc='upper right')
 legend.get_frame().set_linewidth(0.0)
 #ax.set_title('Size of echo chamber versus stubbornness to change opinion, 50/50\n N = 1000, PR method \n10 x 10 averaged', fontsize=10)
 plt.tight_layout()
-plt.savefig("echo_chamber_vs_fracRes_REC_real_network_8x7.png", dpi=500)
+plt.savefig("echo_chamber_vs_fracRes_PR_real_network_PGP_8x7.png", dpi=500)
 plt.show()
