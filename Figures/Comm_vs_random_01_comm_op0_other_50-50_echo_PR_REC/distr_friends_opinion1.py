@@ -63,10 +63,10 @@ def get_latex_preamble(use_libertine=True, use_fontenc=True, use_inputenc=True, 
             raise ValueError(f"Unsupported type of package: {type(package)}!")
     return preamble
 
-hist = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=05_other=50-50_PR_01-0001_10x100_T=0.txt")
-hist1 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=05_other=50-50_PR_01-0001_10x100_T=0_random=75-25.txt")
-hist2 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=05_other=50-50_PR_003-0008_10x100_T=0.txt")
-hist3 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=05_other=50-50_PR_003-0008_10x100_T=0_random=75-25.txt")
+hist = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=01_other=50-50_PR_01-0001_10x100_T=0.txt")
+hist1 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=01_other=50-50_PR_01-0001_10x100_T=0_random=55-45.txt")
+hist2 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=01_other=50-50_PR_003-0008_10x100_T=0.txt")
+hist3 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_SBM_commOp0=01_other=50-50_PR_003-0008_10x100_T=0_random=55-45.txt")
 #hist4 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-006_T=0.txt")
 #hist5 = np.loadtxt("Hist_500_and_0_fraction_friends_opinion1_WS_PR_10-001_T=0_test.txt")
 # probably need to change size of t and y back to 10!
@@ -91,7 +91,6 @@ ax.plot(t, hist1[:,2], linestyle='solid', label=r"Random")
 ax.plot(t, hist3[:,2], linestyle='solid', label=r"Random")
 ax.plot(t, hist[:,2], linestyle='solid', label=r"Comm.")
 ax.plot(t, hist2[:,2], linestyle='solid', label=r"Comm.")
-
 #ax.plot(t1, hist4[:,2], linestyle='solid', label=r"WS, $\left<cc\right> = 0.557 \pm 0.007$")
 #ax.plot(t, hist5[:,2], linestyle='solid', label=r"WS, $\left<cc\right> = 0.648 \pm 0.003$")
 ax.plot(t, y, 'k--')
@@ -111,8 +110,8 @@ labels = [r"High $Q$:", r"Low $Q$:"] + l
 legend = ax.legend(handles, labels, ncol=3, handletextpad=0.1, borderpad=0.1, handlelength=1.5, loc="upper right")
 legend.get_frame().set_linewidth(0.0)
 #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-#ax.set_ylim(0, 6.7)
+#ax.set_ylim(0, 2.7)
 #ax.set_title('WS', fontsize=10)
 plt.tight_layout()
-plt.savefig("echo_chambers_SBM_comm05_distr_PR_8x7.png", dpi=500)
+plt.savefig("echo_chambers_SBM_comm01_distr_PR_8x7.png", dpi=500)
 plt.show()

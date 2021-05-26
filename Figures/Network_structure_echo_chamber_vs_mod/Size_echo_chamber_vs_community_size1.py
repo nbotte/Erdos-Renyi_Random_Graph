@@ -154,8 +154,9 @@ ax.errorbar(mod, echoREC, errREC/10, xerr=None, c='r', ls='', marker='o', label 
 #ax.plot(xf, func_trip(xf, *popt), 'b--')
 #ax.plot(xf, func_trip(xf, *popt1), 'r--')
 
+y = [1, 1, 1, 1, 1]
 
-#ax.plot(t[::10], y[::10], 'k--')
+ax.plot(mod, y, 'k--')
 #plt.plot(t, fractions_25_av[:,0], label='Stubborness = 0.25')
 #plt.plot(t, fractions_1_av[:,1], label='Stubborness = 1')
 ax.set_xlabel(r"$Q$", fontsize=10)

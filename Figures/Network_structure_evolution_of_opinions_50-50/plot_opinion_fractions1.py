@@ -146,10 +146,10 @@ sns.set_theme(font="DejaVu Serif", rc=rc_params, style="ticks", context="paper")
 
 fig, ax = subplots(figsize=(8, 7))
 
-ax.errorbar(t[::50], fractions1[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'High $Q$, PR')
-ax.errorbar(t[::50], fractions2[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'Low $Q$, PR')
-ax.errorbar(t[::50], fractions3[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'High $Q$, REC')
-ax.errorbar(t[::50], fractions4[:,0][::50], np.sqrt(fractions4[:,2][::50]), label=r'Low $Q$, REC')
+ax.errorbar(t[::50], fractions1[:,0][::50], np.sqrt(fractions1[:,2][::50]), label=r'PR')
+ax.errorbar(t[::50], fractions2[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'PR')
+ax.errorbar(t[::50], fractions3[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'REC')
+ax.errorbar(t[::50], fractions4[:,0][::50], np.sqrt(fractions4[:,2][::50]), label=r'REC')
 
 '''ax.plot(x, begin, 'k', label=r'Average fraction opinion 0 at $t=0$')
 ax.plot(x, high_mod_rand, 'cornflowerblue', linestyle='--', label=r'High mod, random distributed')
@@ -165,13 +165,17 @@ ax.errorbar(t[::50], fractions6[:,0][::50], np.sqrt(fractions3[:,2][::50]), labe
 #ax.errorbar(t[::50], fractions8[:,0][::50], np.sqrt(fractions2[:,2][::50]), label=r'REF, fracRes $= 0.8$')
 #ax.errorbar(t[::50], fractions9[:,0][::50], np.sqrt(fractions3[:,2][::50]), label=r'fracRes $= 0.8$')
 #plt.plot(t[::10], fractions_sameComm02[:,0][::10], label='0.4 community opinion 0 (same comm.), other 50/50; REC')
-#ax.plot(t[::10], y[::10], 'k--')
+ax.plot(t[::10], y[::10], 'k--')
 #plt.plot(t, fractions_25_av[:,0], label='Stubborness = 0.25')
 #plt.plot(t, fractions_1_av[:,1], label='Stubborness = 1')
 ax.set_xlabel(r"$t$", fontsize=10)
 ax.set_ylabel(r"$P_\text{A}(t)$", fontsize=10)
 ax.tick_params(labelsize=10, color='darkgrey')
-legend = ax.legend(loc='upper left', ncol=2)
+h, l = ax.get_legend_handles_labels()
+ph = [plt.plot([], marker="", ls="")[0]]*2
+handles = ph + h
+labels = [r"High $Q$:", r"Low $Q$:"] + l
+legend = ax.legend(handles, labels, ncol=3, handletextpad=0.2, borderpad=0.3, handlelength=1.5, loc="upper left")
 legend.get_frame().set_linewidth(0.0)
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 ax.set_ylim(0.4, 0.6)

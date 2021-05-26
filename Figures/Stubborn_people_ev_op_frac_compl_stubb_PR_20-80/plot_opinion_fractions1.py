@@ -174,8 +174,8 @@ ax.tick_params(labelsize=10, color='darkgrey')
 h, l = ax.get_legend_handles_labels()
 ph = [plt.plot([], marker="", ls="")[0]]*3
 handles = ph + h
-labels = [r"$f_s = 0$", r"$f_s = 0.4$", r"$f_s = 0.8$"] + l
-legend = ax.legend(handles, labels, ncol=3, handletextpad=0.2, borderpad=0.3, handlelength=1.5)
+labels = [r"$f_s = 0$:", r"$f_s = 0.4$:", r"$f_s = 0.8$:"] + l
+legend = ax.legend(handles, labels, ncol=3, handletextpad=0.2, borderpad=0.2, handlelength=1.5)
 legend.get_frame().set_linewidth(0.0)
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 ax.set_ylim(-0.05, 0.4)
